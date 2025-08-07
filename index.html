@@ -310,14 +310,32 @@
             </div>
         </section>
 
+        <!-- Latest Insights Section -->
+        <section id="latest-insights" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Latest Insights from Our Blog</h2>
+                    <p class="mt-4 text-lg text-gray-600">Stay informed with our latest articles and updates.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto">
+                    {{LATEST_POSTS}}
+                </div>
+                <div class="mt-12 text-center">
+                    <a href="blog.html" class="inline-block bg-brand-blue text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-blue-900 hover:shadow-xl cta-button">
+                        View All Posts
+                    </a>
+                </div>
+            </div>
+        </section>
+
         <!-- Contact Section -->
-        <section id="contact" class="py-20 bg-gray-50">
+        <section id="contact" class="py-20 bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Ready for a True Technology Partner?</h2>
                     <p class="mt-4 text-lg text-gray-600">Let's discuss which plan is right for you and how our strategic approach can fuel your growth.</p>
                 </div>
-                <div class="max-w-xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-lg">
+                <div class="max-w-xl mx-auto bg-gray-50 p-8 md:p-12 rounded-xl shadow-lg">
                     <!-- Netlify Form -->
                     <form name="contact-v2" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thank-you.html">
                         <!-- This hidden field is required for Netlify to identify the form -->
