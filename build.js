@@ -24,84 +24,129 @@ async function build() {
         accessToken: ACCESS_TOKEN,
     });
 
-    // 2. Fetch all blog post entries from Contentful
+    // 2. Fetch all blog post entries from Contentful, sorted by publication date
     console.log('Fetching blog posts from Contentful...');
-    const entries = await client.getEntries({ content_type: 'blogPost' }); // Assumes your Content Model ID is 'blogPost'
+    const entries = await client.getEntries({ 
+        content_type: 'blogPost',
+        order: '-fields.publicationDate' // Sort by publication date, newest first
+    });
+
+    // Read the HTML templates
+    console.log('Reading HTML templates...');
+    const indexTemplate = fs.readFileSync(path.join(BUILD_DIR, 'index.html'), 'utf-8');
+    const blogTemplate = fs.readFileSync(path.join(BUILD_DIR, 'blog.html'), 'utf-8');
+    const postTemplate = fs.readFileSync(path.join(BUILD_DIR, 'post-template.html'), 'utf-8');
 
     if (!entries.items || entries.items.length === 0) {
-        console.log('No blog posts found. A blank blog page will be created.');
-        // Still create a blog page, but with a "no posts" message
-        const blogTemplate = fs.readFileSync(path.join(BUILD_DIR, 'blog.html'), 'utf-8');
+        console.log('No blog posts found. Creating blank blog page and homepage section.');
+        // Create a blank blog page
         const noPostsHtml = '<p class="text-center col-span-full">No blog posts have been published yet. Check back soon!</p>';
         const finalBlogPageHtml = blogTemplate.replace('{{BLOG_POSTS_LIST}}', noPostsHtml);
         fs.writeFileSync(path.join(BUILD_DIR, 'blog.html'), finalBlogPageHtml);
+        
+        // Create a blank "Latest Insights" section on the homepage
+        const finalIndexPageHtml = indexTemplate.replace('{{LATEST_POSTS}}', noPostsHtml);
+        fs.writeFileSync(path.join(BUILD_DIR, 'index.html'), finalIndexPageHtml);
+        
         console.log('Build process finished.');
         return;
     }
     console.log(`Found ${entries.items.length} blog posts.`);
 
-    // 3. Read the HTML templates
-    console.log('Reading HTML templates...');
-    const blogTemplate = fs.readFileSync(path.join(BUILD_DIR, 'blog.html'), 'utf-8');
-    const postTemplate = fs.readFileSync(path.join(BUILD_DIR, 'post-template.html'), 'utf-8');
-
-    // 4. Generate individual blog post pages
+    // 3. Generate individual blog post pages
     console.log('Generating individual post pages...');
     for (const post of entries.items) {
+        const fields = post.fields;
+        if (!fields.slug) {
+            console.warn(`- Skipping post with missing slug: "${fields.title || 'Untitled'}"`);
+            continue;
+        }
+
         let newPostHtml = postTemplate;
 
-        // Replace simple placeholders
-        newPostHtml = newPostHtml.replace(/{{POST_TITLE}}/g, post.fields.title);
-        newPostHtml = newPostHtml.replace(/{{POST_DATE}}/g, new Date(post.fields.publicationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
-        newPostHtml = newPostHtml.replace(/{{POST_AUTHOR}}/g, post.fields.author);
+        newPostHtml = newPostHtml.replace(/{{POST_TITLE}}/g, fields.title || 'Untitled Post');
+        const postDate = fields.publicationDate ? new Date(fields.publicationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'No Date';
+        newPostHtml = newPostHtml.replace(/{{POST_DATE}}/g, postDate);
+        newPostHtml = newPostHtml.replace(/{{POST_AUTHOR}}/g, fields.author || 'Anonymous');
         
-        // Handle potential missing images gracefully
-        if (post.fields.featuredImage && post.fields.featuredImage.fields.file) {
-            newPostHtml = newPostHtml.replace(/{{POST_IMAGE_URL}}/g, `https:${post.fields.featuredImage.fields.file.url}`);
-            newPostHtml = newPostHtml.replace(/{{POST_IMAGE_ALT}}/g, post.fields.featuredImage.fields.description || post.fields.title);
+        if (fields.featuredImage && fields.featuredImage.fields.file) {
+            newPostHtml = newPostHtml.replace(/{{POST_IMAGE_URL}}/g, `https:${fields.featuredImage.fields.file.url}`);
+            newPostHtml = newPostHtml.replace(/{{POST_IMAGE_ALT}}/g, fields.featuredImage.fields.description || fields.title || 'Blog post image');
         } else {
-            // Provide a fallback if no image is set
             newPostHtml = newPostHtml.replace(/{{POST_IMAGE_URL}}/g, 'https://placehold.co/1200x600/1e3a8a/ffffff?text=Image+Not+Available');
             newPostHtml = newPostHtml.replace(/{{POST_IMAGE_ALT}}/g, 'Placeholder image');
         }
 
-        // Use the official renderer for the rich text body
-        const bodyHtml = documentToHtmlString(post.fields.body);
+        const bodyHtml = fields.body ? documentToHtmlString(fields.body) : '<p>This post has no content.</p>';
         newPostHtml = newPostHtml.replace('{{POST_BODY}}', bodyHtml);
 
-        // Write the new HTML file
-        const postFileName = `${post.fields.slug}.html`;
+        const postFileName = `${fields.slug}.html`;
         fs.writeFileSync(path.join(BUILD_DIR, postFileName), newPostHtml);
         console.log(`- Created ${postFileName}`);
     }
 
-    // 5. Generate the main blog listing page
+    // 4. Generate the main blog listing page
     console.log('Generating main blog listing page...');
     let blogListHtml = '';
     for (const post of entries.items) {
-        const imageUrl = (post.fields.featuredImage && post.fields.featuredImage.fields.file) 
-            ? `https:${post.fields.featuredImage.fields.file.url}` 
+        const fields = post.fields;
+        if (!fields.slug) continue;
+
+        const imageUrl = (fields.featuredImage && fields.featuredImage.fields.file) 
+            ? `https:${fields.featuredImage.fields.file.url}` 
             : 'https://placehold.co/600x400/1e3a8a/ffffff?text=Image';
-        const imageAlt = (post.fields.featuredImage && post.fields.featuredImage.fields.description) 
-            ? post.fields.featuredImage.fields.description 
-            : post.fields.title;
+        const imageAlt = (fields.featuredImage && fields.featuredImage.fields.description) 
+            ? fields.featuredImage.fields.description 
+            : fields.title || 'Blog post image';
+        const postDate = fields.publicationDate ? new Date(fields.publicationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'No Date';
 
         blogListHtml += `
             <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <a href="${post.fields.slug}.html">
+                <a href="${fields.slug}.html">
                     <img class="h-56 w-full object-cover" src="${imageUrl}" alt="${imageAlt}">
                     <div class="p-6">
-                        <p class="text-sm text-gray-500">${new Date(post.fields.publicationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                        <h3 class="mt-2 text-xl font-bold text-gray-900">${post.fields.title}</h3>
+                        <p class="text-sm text-gray-500">${postDate}</p>
+                        <h3 class="mt-2 text-xl font-bold text-gray-900">${fields.title || 'Untitled Post'}</h3>
                     </div>
                 </a>
             </div>
         `;
     }
-
     const finalBlogPageHtml = blogTemplate.replace('{{BLOG_POSTS_LIST}}', blogListHtml);
     fs.writeFileSync(path.join(BUILD_DIR, 'blog.html'), finalBlogPageHtml);
     console.log('- Updated blog.html with all posts.');
+
+    // 5. Generate the "Latest Insights" section for the homepage
+    console.log('Generating "Latest Insights" section for homepage...');
+    const latestPosts = entries.items.slice(0, 3); // Get the 3 most recent posts
+    let latestPostsHtml = '';
+    for (const post of latestPosts) {
+        const fields = post.fields;
+        if (!fields.slug) continue;
+
+        const imageUrl = (fields.featuredImage && fields.featuredImage.fields.file) 
+            ? `https:${fields.featuredImage.fields.file.url}` 
+            : 'https://placehold.co/600x400/1e3a8a/ffffff?text=Image';
+        const imageAlt = (fields.featuredImage && fields.featuredImage.fields.description) 
+            ? fields.featuredImage.fields.description 
+            : fields.title || 'Blog post image';
+        const postDate = fields.publicationDate ? new Date(fields.publicationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'No Date';
+
+        latestPostsHtml += `
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <a href="${fields.slug}.html">
+                    <img class="h-56 w-full object-cover" src="${imageUrl}" alt="${imageAlt}">
+                    <div class="p-6">
+                        <p class="text-sm text-gray-500">${postDate}</p>
+                        <h3 class="mt-2 text-xl font-bold text-gray-900">${fields.title || 'Untitled Post'}</h3>
+                    </div>
+                </a>
+            </div>
+        `;
+    }
+    const finalIndexPageHtml = indexTemplate.replace('{{LATEST_POSTS}}', latestPostsHtml);
+    fs.writeFileSync(path.join(BUILD_DIR, 'index.html'), finalIndexPageHtml);
+    console.log('- Updated index.html with latest posts.');
 
     console.log('Build process finished successfully! 🎉');
 }
