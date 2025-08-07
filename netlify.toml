@@ -2,15 +2,12 @@
 
 # This section defines the build settings for your site.
 [build]
-  # Base directory: Tells Netlify where your site's source code is located.
-  base = "caprock-site-files"
+  # This command tells Netlify to first enter your site's folder,
+  # then install dependencies, and finally run your build script.
+  command = "cd caprock-site-files && npm install && npm run build"
   
-  # This is the command Netlify will run to build your site.
-  command = "npm run build"
-  
-  # Publish directory: The folder that contains the final HTML files after the build.
-  # Since the build happens inside the 'base' directory, this should be the root of that folder.
-  publish = "/"
+  # This tells Netlify where to find the finished HTML files.
+  publish = "caprock-site-files"
 
 # This section specifies the Node.js version to use.
 # This setting has the highest priority and will override any other configurations.
