@@ -2,14 +2,13 @@
 
 # This section defines the build settings for your site.
 [build]
-  # This command tells Netlify to first enter your site's folder,
-  # then install dependencies, and finally run your build script.
-  command = "cd caprock-site-files && npm install && npm run build"
+  # This command tells Netlify to install dependencies and then run your build script.
+  # It runs from the root of your repository, where your package.json is located.
+  command = "npm install && npm run build"
   
-  # This tells Netlify where to find the finished HTML files.
-  publish = "caprock-site-files"
+  # This tells Netlify that the finished HTML files are in the root of the repository.
+  publish = "/"
 
 # This section specifies the Node.js version to use.
-# This setting has the highest priority and will override any other configurations.
 [build.environment]
   NODE_VERSION = "16"
