@@ -1,0 +1,15 @@
+# netlify.toml
+
+# This section defines the build settings for your site.
+[build]
+  # This is the command Netlify will run to build your site.
+  command = "npm run build"
+  
+  # This is the folder that contains the final HTML files after the build is complete.
+  # Since your build script places files in the root, this is the correct setting.
+  publish = "/"
+
+# This section specifies the Node.js version to use.
+# This setting has the highest priority and will override any other configurations.
+[build.environment]
+  NODE_VERSION = "16"
