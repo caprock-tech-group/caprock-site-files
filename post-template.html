@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{POST_TITLE}} - Caprock Tech</title>
+    <meta name="description" content="{{POST_SUMMARY}}">
+    <link rel="icon" type="image/png" href="caprock logo transparent BG 1.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-blue': '#1e3a8a',
+                        'brand-green': '#65a30d',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .prose h2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-top: 2.5em;
+            margin-bottom: 1em;
+        }
+        .prose h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2em;
+            margin-bottom: 0.8em;
+        }
+        .prose p {
+            line-height: 1.75;
+            margin-bottom: 1.25em;
+        }
+        .prose a {
+            color: #1e3a8a;
+            text-decoration: underline;
+        }
+        .prose ul {
+            list-style-type: disc;
+            padding-left: 1.5em;
+            margin-bottom: 1.25em;
+        }
+        .prose li {
+            margin-bottom: 0.5em;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- Header & Navigation (Identical to index.html) -->
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-gray-200">
+        <div class="container mx-auto px-6 py-2">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center">
+                    <img src="caprock logo transparent BG 2.png" alt="Caprock Tech Logo" class="h-16">
+                </a>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="index.html#services" class="text-gray-600 hover:text-brand-blue transition-colors">Services</a>
+                    <a href="index.html#philosophy" class="text-gray-600 hover:text-brand-blue transition-colors">Philosophy</a>
+                    <a href="index.html#pricing" class="text-gray-600 hover:text-brand-blue transition-colors">Pricing</a>
+                    <a href="blog.html" class="text-brand-blue font-semibold transition-colors">Blog</a>
+                    <a href="index.html#contact" class="text-gray-600 hover:text-brand-blue transition-colors">Contact</a>
+                </nav>
+
+                <!-- CTA Button -->
+                <a href="index.html#contact" class="hidden md:inline-block bg-brand-blue text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:bg-blue-900 transition-all duration-300">
+                    Free Consultation
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-700 hover:text-brand-blue">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <nav class="flex flex-col space-y-4">
+                <a href="index.html#services" class="mobile-nav-link text-gray-600 hover:text-brand-blue">Services</a>
+                <a href="index.html#philosophy" class="mobile-nav-link text-gray-600 hover:text-brand-blue">Philosophy</a>
+                <a href="index.html#pricing" class="mobile-nav-link text-gray-600 hover:text-brand-blue">Pricing</a>
+                <a href="blog.html" class="mobile-nav-link text-brand-blue font-semibold">Blog</a>
+                <a href="index.html#contact" class="mobile-nav-link text-gray-600 hover:text-brand-blue">Contact</a>
+                <a href="index.html#contact" class="mobile-nav-link w-full text-center bg-brand-blue text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:bg-blue-900">
+                    Free Consultation
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Article Content -->
+        <article class="py-20">
+            <div class="container mx-auto px-6 max-w-3xl">
+                <div class="text-center mb-12">
+                    <h1 class="mt-2 text-4xl md:text-5xl font-bold text-gray-900">{{POST_TITLE}}</h1>
+                    <p class="mt-4 text-lg text-gray-500">Published on {{POST_DATE}} by {{POST_AUTHOR}}</p>
+                </div>
+
+                <img class="w-full rounded-xl shadow-lg mb-12" src="{{POST_IMAGE_URL}}" alt="{{POST_IMAGE_ALT}}">
+
+                <div class="prose prose-lg max-w-none text-gray-700">
+                    {{POST_BODY}}
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <!-- Footer (Identical to index.html) -->
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto px-6 py-12">
+            <div class="md:grid md:grid-cols-3 md:gap-8">
+                <div class="space-y-4">
+                     <a href="index.html" class="inline-block bg-gray-200 p-2 rounded-md">
+                        <img src="caprock logo transparent BG 2.png" alt="Caprock Tech Logo" class="h-16">
+                    </a>
+                    <p class="text-gray-400">Your strategic IT partner in the Texas Panhandle.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/caprocktech/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white"><span class="sr-only">Facebook</span><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg></a>
+                        <a href="https://www.linkedin.com/company/caprocktech" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white"><span class="sr-only">LinkedIn</span><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd" /></svg></a>
+                    </div>
+                </div>
+                <div class="mt-10 md:mt-0 md:col-span-2">
+                     <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                        <div>
+                            <h3 class="text-sm font-semibold tracking-wider uppercase text-gray-300">Services</h3>
+                            <ul class="mt-4 space-y-2">
+                                <li><a href="index.html#pricing" class="text-gray-400 hover:text-white">Managed Plans</a></li>
+                                <li><a href="index.html#pricing" class="text-gray-400 hover:text-white">HaaS Offerings</a></li>
+                                <li><a href="index.html#services" class="text-gray-400 hover:text-white">Cybersecurity</a></li>
+                                <li><a href="index.html#services" class="text-gray-400 hover:text-white">Strategic Consulting</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-semibold tracking-wider uppercase text-gray-300">Company</h3>
+                            <ul class="mt-4 space-y-2">
+                                <li><a href="index.html#philosophy" class="text-gray-400 hover:text-white">Our Philosophy</a></li>
+                                <li><a href="blog.html" class="text-gray-400 hover:text-white">Blog</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-semibold tracking-wider uppercase text-gray-300">Contact</h3>
+                            <ul class="mt-4 space-y-2 text-gray-400">
+                                <li>4108 Parker St</li>
+                                <li>Amarillo, Texas 79110</li>
+                                <li>806-400-6842</li>
+                                <li>info@caprocktech.com</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-gray-700 pt-8 text-center">
+                <p class="text-base text-gray-400">&copy; 2025 Caprock Tech. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        const mobileMenuLinks = document.querySelectorAll('.mobile-nav-link');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    </script>
+
+</body>
+</html>

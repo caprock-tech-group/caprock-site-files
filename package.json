@@ -1,0 +1,13 @@
+{
+  "name": "caprock-tech-website",
+  "version": "1.0.0",
+  "description": "Static site for Caprock Tech with a blog.",
+  "main": "build.js",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "dependencies": {
+    "contentful": "^10.6.14",
+    "dotenv": "^16.3.1"
+  }
+}
