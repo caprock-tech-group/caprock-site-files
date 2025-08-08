@@ -19,7 +19,10 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'G-5CE6ER2YGR');
+      // The analytics tracking function will be called only after consent is given.
+      function initializeAnalytics() {
+        gtag('config', 'G-5CE6ER2YGR');
+      }
     </script>
 
     <script>
@@ -517,18 +520,27 @@
             });
         });
 
-        // Cookie Consent Banner
+        // Cookie Consent and Analytics
         document.addEventListener('DOMContentLoaded', () => {
             const banner = document.getElementById('cookie-consent-banner');
             const acceptButton = document.getElementById('cookie-consent-button');
 
-            if (!localStorage.getItem('cookieConsent')) {
+            // Check if consent has already been given
+            if (localStorage.getItem('cookieConsent') === 'true') {
+                if (typeof initializeAnalytics === 'function') {
+                    initializeAnalytics();
+                }
+            } else {
                 banner.style.display = 'flex';
             }
 
+            // When the accept button is clicked
             acceptButton.addEventListener('click', () => {
                 localStorage.setItem('cookieConsent', 'true');
                 banner.style.display = 'none';
+                if (typeof initializeAnalytics === 'function') {
+                    initializeAnalytics();
+                }
             });
         });
     </script>
