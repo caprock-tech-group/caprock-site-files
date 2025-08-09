@@ -14,16 +14,28 @@ const BUILD_DIR = path.join(__dirname);
 async function build() {
     console.log('Starting the Markdown-based build process...');
 
+    // --- Diagnostic Logging ---
+    console.log(`Current script directory (__dirname): ${__dirname}`);
+    try {
+        const rootContents = fs.readdirSync(__dirname);
+        console.log(`Contents of current directory: [${rootContents.join(', ')}]`);
+    } catch (e) {
+        console.error('Error reading current directory:', e);
+    }
+    // --- End Diagnostic Logging ---
+
     // 1. Read all Markdown files from the 'posts' directory
     if (!fs.existsSync(POSTS_DIR)) {
-        console.log("No 'posts' directory found. Skipping blog generation.");
+        console.error(`Error: The 'posts' directory was not found at the expected path: ${POSTS_DIR}`);
+        // Create blank pages to avoid a total build failure
+        createBlankPages();
         return;
     }
     const postFiles = fs.readdirSync(POSTS_DIR).filter(file => file.endsWith('.md'));
 
     if (postFiles.length === 0) {
-        console.log('No blog posts found in the /posts directory.');
-        // Handle the case where there are no posts (optional)
+        console.log('No blog posts found in the /posts directory. Creating blank pages.');
+        createBlankPages();
         return;
     }
 
@@ -102,6 +114,18 @@ async function build() {
     console.log('- Updated index.html with latest posts.');
 
     console.log('Build process finished successfully! 🎉');
+}
+
+function createBlankPages() {
+    const indexTemplate = fs.readFileSync(path.join(BUILD_DIR, 'index.html'), 'utf-8');
+    const blogTemplate = fs.readFileSync(path.join(BUILD_DIR, 'blog.html'), 'utf-8');
+    const noPostsHtml = '<p class="text-center col-span-full">No blog posts have been published yet. Check back soon!</p>';
+    
+    const finalBlogPageHtml = blogTemplate.replace('{{BLOG_POSTS_LIST}}', noPostsHtml);
+    fs.writeFileSync(path.join(BUILD_DIR, 'blog.html'), finalBlogPageHtml);
+
+    const finalIndexPageHtml = indexTemplate.replace('{{LATEST_POSTS}}', noPostsHtml);
+    fs.writeFileSync(path.join(BUILD_DIR, 'index.html'), finalIndexPageHtml);
 }
 
 build().catch(error => {
