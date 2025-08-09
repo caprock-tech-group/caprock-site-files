@@ -1,4 +1,4 @@
- # From Farm to Law Firm: How Custom IT Solutions Boost Efficiency in Panhandle Industries
+# From Farm to Law Firm: How Custom IT Solutions Boost Efficiency in Panhandle Industries
 
 ![heroImage](https://marblism-ai-agents-public.s3.us-west-2.amazonaws.com/public/apps/3af4e54e-6c6c-476b-ad8d-4508e6a30b56/sessions/20bdb11f-c15d-46ac-86a2-0c710ae50ad6/agent-output/9c967963-335d-432a-a514-5f87beb708f5-hero-picture.webp)
 
