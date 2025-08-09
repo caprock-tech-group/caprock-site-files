@@ -39,8 +39,8 @@ async function build() {
     const posts = postFiles.map(fileName => {
         const fileContents = fs.readFileSync(path.join(POSTS_DIR, fileName), 'utf8');
         
-        // Auto-extract Title (first H1)
-        const titleMatch = fileContents.match(/^# (.*)/);
+        // Auto-extract Title (first H1 on any line)
+        const titleMatch = fileContents.match(/^# (.*)/m); // 'm' flag for multiline matching
         const title = titleMatch ? titleMatch[1] : 'Untitled Post';
 
         // Auto-extract Featured Image (first image in the post)
@@ -49,7 +49,7 @@ async function build() {
         const featuredImageAlt = imageMatch ? imageMatch[1] : 'Blog post image';
 
         // Remove the title and first image from the body content before rendering
-        let bodyContent = fileContents.replace(/^# (.*)/, '').replace(/!\[(.*?)\]\((.*?)\)/, '').trim();
+        let bodyContent = fileContents.replace(/^# (.*)/m, '').replace(/!\[(.*?)\]\((.*?)\)/, '').trim();
         
         return {
             title: title,
