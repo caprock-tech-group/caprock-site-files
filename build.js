@@ -39,8 +39,8 @@ async function build() {
     const posts = postFiles.map(fileName => {
         const fileContents = fs.readFileSync(path.join(POSTS_DIR, fileName), 'utf8');
         
-        // Auto-extract Title (first H1 on any line)
-        const titleMatch = fileContents.match(/^# (.*)/m); // 'm' flag for multiline matching
+        // Auto-extract Title (first H1, allowing for leading whitespace)
+        const titleMatch = fileContents.match(/^\s*# (.*)/m); // 'm' flag for multiline matching
         const title = titleMatch ? titleMatch[1] : 'Untitled Post';
 
         // Auto-extract Featured Image (first image in the post)
@@ -49,13 +49,13 @@ async function build() {
         const featuredImageAlt = imageMatch ? imageMatch[1] : 'Blog post image';
 
         // Remove the title and first image from the body content before rendering
-        let bodyContent = fileContents.replace(/^# (.*)/m, '').replace(/!\[(.*?)\]\((.*?)\)/, '').trim();
+        let bodyContent = fileContents.replace(/^\s*# (.*)/m, '').replace(/!\[(.*?)\]\((.*?)\)/, '').trim();
         
         return {
             title: title,
             slug: slugify(title),
             author: "Nick Stevens, Founder/Owner at Caprock Technology Group",
-            publicationDate: new Date().toISOString(), // Use current date
+            publicationDate: new Date().toISOString(), // Use current date for simplicity
             featuredImage: featuredImage,
             featuredImageAlt: featuredImageAlt,
             body: marked(bodyContent),
@@ -73,8 +73,9 @@ async function build() {
     console.log('Generating individual post pages...');
     posts.forEach(post => {
         let newPostHtml = postTemplate;
+        const displayDate = new Date(post.publicationDate).toLocaleDateString('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'long', day: 'numeric' });
         newPostHtml = newPostHtml.replace(/{{POST_TITLE}}/g, post.title);
-        newPostHtml = newPostHtml.replace(/{{POST_DATE}}/g, new Date(post.publicationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+        newPostHtml = newPostHtml.replace(/{{POST_DATE}}/g, displayDate);
         newPostHtml = newPostHtml.replace(/{{POST_AUTHOR}}/g, post.author);
         newPostHtml = newPostHtml.replace(/{{POST_IMAGE_URL}}/g, post.featuredImage);
         newPostHtml = newPostHtml.replace(/{{POST_IMAGE_ALT}}/g, post.featuredImageAlt);
@@ -89,12 +90,13 @@ async function build() {
     console.log('Generating main blog listing page...');
     let blogListHtml = '';
     posts.forEach(post => {
+        const displayDate = new Date(post.publicationDate).toLocaleDateString('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'long', day: 'numeric' });
         blogListHtml += `
             <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
                 <a href="${post.slug}.html">
                     <img class="h-56 w-full object-cover" src="${post.featuredImage}" alt="${post.featuredImageAlt}">
                     <div class="p-6">
-                        <p class="text-sm text-gray-500">${new Date(post.publicationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                        <p class="text-sm text-gray-500">${displayDate}</p>
                         <h3 class="mt-2 text-xl font-bold text-gray-900">${post.title}</h3>
                     </div>
                 </a>
@@ -110,12 +112,13 @@ async function build() {
     const latestPosts = posts.slice(0, 3);
     let latestPostsHtml = '';
     latestPosts.forEach(post => {
+        const displayDate = new Date(post.publicationDate).toLocaleDateString('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'long', day: 'numeric' });
         latestPostsHtml += `
             <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
                 <a href="${post.slug}.html">
                     <img class="h-56 w-full object-cover" src="${post.featuredImage}" alt="${post.featuredImageAlt}">
                     <div class="p-6">
-                        <p class="text-sm text-gray-500">${new Date(post.publicationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                        <p class="text-sm text-gray-500">${displayDate}</p>
                         <h3 class="mt-2 text-xl font-bold text-gray-900">${post.title}</h3>
                     </div>
                 </a>
