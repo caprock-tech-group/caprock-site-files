@@ -3,51 +3,64 @@
 // Import necessary tools
 const fs = require('fs');
 const path = require('path');
-const matter = require('gray-matter'); // For parsing metadata from Markdown files
 const { marked } = require('marked');   // For converting Markdown body to HTML
 
 // --- Configuration ---
 const POSTS_DIR = path.join(__dirname, 'posts');
 const BUILD_DIR = path.join(__dirname); 
 
+// --- Helper Functions ---
+function slugify(text) {
+    return text.toString().toLowerCase()
+        .replace(/\s+/g, '-')           // Replace spaces with -
+        .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+        .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+        .replace(/^-+/, '')             // Trim - from start of text
+        .replace(/-+$/, '');            // Trim - from end of text
+}
+
 // --- Main Build Function ---
 async function build() {
-    console.log('Starting the Markdown-based build process...');
-
-    // --- Diagnostic Logging ---
-    console.log(`Current script directory (__dirname): ${__dirname}`);
-    try {
-        const rootContents = fs.readdirSync(__dirname);
-        console.log(`Contents of current directory: [${rootContents.join(', ')}]`);
-    } catch (e) {
-        console.error('Error reading current directory:', e);
-    }
-    // --- End Diagnostic Logging ---
+    console.log('Starting the smart Markdown build process...');
 
     // 1. Read all Markdown files from the 'posts' directory
     if (!fs.existsSync(POSTS_DIR)) {
-        console.error(`Error: The 'posts' directory was not found at the expected path: ${POSTS_DIR}`);
-        // Create blank pages to avoid a total build failure
-        createBlankPages();
+        console.log("No 'posts' directory found. Skipping blog generation.");
         return;
     }
     const postFiles = fs.readdirSync(POSTS_DIR).filter(file => file.endsWith('.md'));
 
     if (postFiles.length === 0) {
-        console.log('No blog posts found in the /posts directory. Creating blank pages.');
-        createBlankPages();
+        console.log('No blog posts found in the /posts directory.');
         return;
     }
 
-    // 2. Parse each post file to get its content and metadata
+    // 2. Parse each post file to automatically extract its content and metadata
     const posts = postFiles.map(fileName => {
         const fileContents = fs.readFileSync(path.join(POSTS_DIR, fileName), 'utf8');
-        const { data, content } = matter(fileContents);
+        
+        // Auto-extract Title (first H1)
+        const titleMatch = fileContents.match(/^# (.*)/);
+        const title = titleMatch ? titleMatch[1] : 'Untitled Post';
+
+        // Auto-extract Featured Image (first image in the post)
+        const imageMatch = fileContents.match(/!\[(.*?)\]\((.*?)\)/);
+        const featuredImage = imageMatch ? imageMatch[2] : 'https://placehold.co/1200x600/1e3a8a/ffffff?text=Image+Not+Available';
+        const featuredImageAlt = imageMatch ? imageMatch[1] : 'Blog post image';
+
+        // Remove the title and first image from the body content before rendering
+        let bodyContent = fileContents.replace(/^# (.*)/, '').replace(/!\[(.*?)\]\((.*?)\)/, '').trim();
+        
         return {
-            ...data, // This will be the metadata: title, slug, date, etc.
-            body: marked(content), // This converts the Markdown content to HTML
+            title: title,
+            slug: slugify(title),
+            author: "Nick Stevens, Founder/Owner at Caprock Technology Group",
+            publicationDate: new Date().toISOString(), // Use current date
+            featuredImage: featuredImage,
+            featuredImageAlt: featuredImageAlt,
+            body: marked(bodyContent),
         };
-    }).sort((a, b) => new Date(b.publicationDate) - new Date(a.publicationDate)); // Sort posts by date, newest first
+    }).sort((a, b) => new Date(b.publicationDate) - new Date(a.publicationDate));
 
     console.log(`Found and processed ${posts.length} blog posts.`);
 
@@ -114,18 +127,6 @@ async function build() {
     console.log('- Updated index.html with latest posts.');
 
     console.log('Build process finished successfully! 🎉');
-}
-
-function createBlankPages() {
-    const indexTemplate = fs.readFileSync(path.join(BUILD_DIR, 'index.html'), 'utf-8');
-    const blogTemplate = fs.readFileSync(path.join(BUILD_DIR, 'blog.html'), 'utf-8');
-    const noPostsHtml = '<p class="text-center col-span-full">No blog posts have been published yet. Check back soon!</p>';
-    
-    const finalBlogPageHtml = blogTemplate.replace('{{BLOG_POSTS_LIST}}', noPostsHtml);
-    fs.writeFileSync(path.join(BUILD_DIR, 'blog.html'), finalBlogPageHtml);
-
-    const finalIndexPageHtml = indexTemplate.replace('{{LATEST_POSTS}}', noPostsHtml);
-    fs.writeFileSync(path.join(BUILD_DIR, 'index.html'), finalIndexPageHtml);
 }
 
 build().catch(error => {
