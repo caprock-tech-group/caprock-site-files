@@ -90,4 +90,4 @@ Pursuing certifications like HITRUST—while an investment—demonstrates to cus
 
 These best practices protect more than just your data—they build trust with customers and let you focus on growing your Texas business, not fighting fires. If you have questions about your business's cybersecurity, schedule a brief, no-obligation discovery call with Caprock Tech today.
 
-[IMAGE_HERE]
+
