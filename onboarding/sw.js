@@ -1,4 +1,4 @@
-const CACHE_NAME = 'caprock-onboarding-v1';
+const CACHE_NAME = 'caprock-onboarding-v3';
 const ASSETS = [
   './',
   './index.html',
