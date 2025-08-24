@@ -40,6 +40,11 @@ function buildSummary(d){
   if (d.notes) lines.push(`Notes: ${d.notes}`);
   return lines.join('\n');
 }
+
+function buildSummaryInline(d){
+  // Single-line for Netlify card: replace newlines with separators
+  return buildSummary(d).replace(/\n+/g, ' | ').replace(/\s+\|\s+$/,'');
+}
 function flattenForNetlify(d, max=5){
   const out = {
     company_name: d.company_name || '',
@@ -53,7 +58,8 @@ function flattenForNetlify(d, max=5){
     vlans_count: Array.isArray(d.vlans) ? d.vlans.length : 0,
     ssids_count: Array.isArray(d.ssids) ? d.ssids.length : 0,
     lobs_count: Array.isArray(d.lobs) ? d.lobs.length : 0,
-    summary: buildSummary(d)
+    summary: buildSummary(d),
+    summary_inline: buildSummaryInline(d)
   };
   (d.locations||[]).slice(0,max).forEach((loc,i)=>{
     const k = i+1;

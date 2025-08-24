@@ -19,12 +19,50 @@
     </div>
   </header>
 
+  
   <!-- Netlify static form signature for build-time detection -->
   <form name="caprock-onboarding" netlify netlify-honeypot="bot-field" hidden>
+    <!-- Put the most important fields FIRST; Netlify cards often show the first 2-3 -->
+    <input type="text" name="summary_inline" />
     <input type="text" name="company_name" />
     <input type="email" name="primary_email" />
+
+    <!-- Common quick-glance fields -->
+    <input type="text" name="primary_contact" />
+    <input type="text" name="primary_phone" />
+    <input type="text" name="primary_domain" />
+    <input type="text" name="m365_tenant" />
+    <input type="text" name="counts" />
+
+    <!-- Flattened preview columns (first 5 entries) -->
+    <input type="text" name="loc_1_name" /><input type="text" name="loc_1_addr" /><input type="text" name="loc_1_isp" />
+    <input type="text" name="loc_2_name" /><input type="text" name="loc_2_addr" /><input type="text" name="loc_2_isp" />
+    <input type="text" name="loc_3_name" /><input type="text" name="loc_3_addr" /><input type="text" name="loc_3_isp" />
+    <input type="text" name="loc_4_name" /><input type="text" name="loc_4_addr" /><input type="text" name="loc_4_isp" />
+    <input type="text" name="loc_5_name" /><input type="text" name="loc_5_addr" /><input type="text" name="loc_5_isp" />
+
+    <input type="text" name="vlan_1_id" /><input type="text" name="vlan_1_purpose" /><input type="text" name="vlan_1_subnet" />
+    <input type="text" name="vlan_2_id" /><input type="text" name="vlan_2_purpose" /><input type="text" name="vlan_2_subnet" />
+    <input type="text" name="vlan_3_id" /><input type="text" name="vlan_3_purpose" /><input type="text" name="vlan_3_subnet" />
+    <input type="text" name="vlan_4_id" /><input type="text" name="vlan_4_purpose" /><input type="text" name="vlan_4_subnet" />
+    <input type="text" name="vlan_5_id" /><input type="text" name="vlan_5_purpose" /><input type="text" name="vlan_5_subnet" />
+
+    <input type="text" name="ssid_1_name" /><input type="text" name="ssid_1_purpose" />
+    <input type="text" name="ssid_2_name" /><input type="text" name="ssid_2_purpose" />
+    <input type="text" name="ssid_3_name" /><input type="text" name="ssid_3_purpose" />
+    <input type="text" name="ssid_4_name" /><input type="text" name="ssid_4_purpose" />
+    <input type="text" name="ssid_5_name" /><input type="text" name="ssid_5_purpose" />
+
+    <input type="text" name="lob_1_name" /><input type="text" name="lob_1_vendor" />
+    <input type="text" name="lob_2_name" /><input type="text" name="lob_2_vendor" />
+    <input type="text" name="lob_3_name" /><input type="text" name="lob_3_vendor" />
+    <input type="text" name="lob_4_name" /><input type="text" name="lob_4_vendor" />
+    <input type="text" name="lob_5_name" /><input type="text" name="lob_5_vendor" />
+
+    <!-- Keep the full JSON payload for export/debug -->
     <input type="text" name="payload" />
   </form>
+
 
   <main class="container">
     <div class="card">
