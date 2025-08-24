@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Caprock Technology Group — MSP Onboarding</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/icon-192.png">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Caprock Technology Group</h1>
+    <p class="subtitle">MSP Client Onboarding</p>
+    <div class="status-row">
+      <span id="online-status" class="badge">Checking...</span>
+      <span id="sync-status" class="badge">Idle</span>
+    </div>
+  </header>
+
+  <!-- Netlify static form signature for build-time detection -->
+  <form name="caprock-onboarding" netlify netlify-honeypot="bot-field" hidden>
+    <input type="text" name="company_name" />
+    <input type="email" name="primary_email" />
+    <input type="text" name="payload" />
+  </form>
+
+  <main class="container">
+    <div class="card">
+      <h2>Company & Contacts</h2>
+      <div class="grid">
+        <label>Company Name<input name="company_name" required></label>
+        <label>Primary Contact Name<input name="primary_contact" required></label>
+        <label>Primary Email<input name="primary_email" type="email" required></label>
+        <label>Primary Phone<input name="primary_phone" required></label>
+        <label>Business Address<textarea name="business_address" rows="2"></textarea></label>
+        <label>Business Hours<textarea name="business_hours" rows="2"></textarea></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Microsoft 365 / Identity</h2>
+      <div class="grid">
+        <label>Tenant Name<input name="m365_tenant"></label>
+        <label>Primary Domain<input name="primary_domain" placeholder="example.com"></label>
+        <label>Admin Contact / Delegation Notes<textarea name="m365_notes" rows="2"></textarea></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Locations</h2>
+      <div id="locations"></div>
+      <button class="btn" id="add-location" type="button">+ Add Location</button>
+    </div>
+
+    <div class="card">
+      <h2>Network</h2>
+      <div class="grid">
+        <label>WAN IP (Static?)<input name="wan_ip" placeholder="x.x.x.x (note static)"></label>
+        <label>Gateway / Router Model<input name="router_model"></label>
+        <label>Firewall in place?<input name="firewall" placeholder="Yes/No + model"></label>
+        <label>Switching<input name="switching" placeholder="Make/Model/Qty"></label>
+        <label>Wireless<input name="wireless" placeholder="Make/Model/Qty"></label>
+      </div>
+
+      <h3>VLANs</h3>
+      <div id="vlans"></div>
+      <button class="btn" id="add-vlan" type="button">+ Add VLAN</button>
+
+      <h3>Wi‑Fi SSIDs</h3>
+      <div id="ssids"></div>
+      <button class="btn" id="add-ssid" type="button">+ Add SSID</button>
+    </div>
+
+    <div class="card">
+      <h2>Endpoints & Apps</h2>
+      <div class="grid">
+        <label># Desktops<input name="count_desktops" type="number" min="0" value="0"></label>
+        <label># Laptops<input name="count_laptops" type="number" min="0" value="0"></label>
+        <label># Servers<input name="count_servers" type="number" min="0" value="0"></label>
+        <label>OS Mix / AV<textarea name="os_av" rows="2" placeholder="Windows versions, macOS, AV in place"></textarea></label>
+      </div>
+      <h3>Line‑of‑Business Apps</h3>
+      <div id="lobs"></div>
+      <button class="btn" id="add-lob" type="button">+ Add Application</button>
+    </div>
+
+    <div class="card">
+      <h2>Backups, Compliance & Escalation</h2>
+      <div class="grid">
+        <label>Backup Solution<textarea name="backup" rows="2"></textarea></label>
+        <label>Compliance Requirements<textarea name="compliance" rows="2" placeholder="HIPAA, PCI, etc."></textarea></label>
+        <label>Escalation Contacts<textarea name="escalation" rows="2" placeholder="Names, roles, after-hours contacts"></textarea></label>
+        <label>Notes<textarea name="notes" rows="3"></textarea></label>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn primary" id="submit-btn" type="button">Submit</button>
+      <button class="btn" id="save-draft" type="button">Save Draft</button>
+      <button class="btn" id="force-sync" type="button">Force Sync</button>
+      <button class="btn" id="export-json" type="button">Export JSON</button>
+      <button class="btn danger" id="clear-draft" type="button">Clear Draft</button>
+      <span class="spacer"></span>
+      <span id="queue-count" class="badge">Queued: 0</span>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <small>Offline‑first • Auto‑sync when online • Stored with Netlify Forms</small>
+  </footer>
+
+  <script src="./app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js');
+      });
+    }
+  </script>
+</body>
+</html>

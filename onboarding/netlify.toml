@@ -1,0 +1,11 @@
+[build]
+  publish = "."
+
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+  # optional; you can remove the plugin if not needed
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
