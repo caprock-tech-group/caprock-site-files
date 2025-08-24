@@ -18,6 +18,16 @@ const queueCount=qs('#queue-count');
 function setOnlineBadge(){onlineBadge.textContent=navigator.onLine?'Online':'Offline';onlineBadge.style.background=navigator.onLine?'#064e3b':'#7f1d1d';onlineBadge.style.borderColor=navigator.onLine?'#065f46':'#991b1b';}
 function setSyncStatus(t,ok=true){syncBadge.textContent=t;syncBadge.style.background=ok?'#1f2937':'#7f1d1d';syncBadge.style.borderColor=ok?'#334155':'#991b1b';}
 async function refreshQueueCount(){const items=await idbAll('outbox');queueCount.textContent=`Queued: ${items.length}`;}
+function clearInvalids(names){
+  names.forEach(n=>{ const el=qs(`[name="${n}"]`); if(el) el.classList.remove('invalid'); });
+}
+function markInvalid(el){
+  if(!el) return;
+  el.classList.add('invalid');
+  try{ el.scrollIntoView({behavior:'smooth', block:'center'}); }catch{}
+  el.focus();
+}
+
 
 // Dynamic groups
 function createLocationGroup(d={}){const w=document.createElement('div');w.className='group';w.innerHTML=`
@@ -135,8 +145,8 @@ async function init(){
   qs('#force-sync').onclick=trySync;
   qsa('input,textarea').forEach(el=>el.addEventListener('input',autoSaveDraft));
   qs('#submit-btn').onclick=async()=>{
-    const req=['company_name','primary_contact','primary_email','primary_phone'];
-    for(const name of req){const el=qs(`[name="${name}"]`); if(!el.value.trim()){ setSyncStatus('Missing required fields',false); el.focus(); return; }}
+    const req=['company_name','primary_contact','primary_email','primary_phone']; clearInvalids(req);
+    let firstMissing=null; for(const name of req){const el=qs(`[name="${name}"]`); if(!el.value.trim()){ if(!firstMissing) firstMissing=el; el.classList.add('invalid'); }} if(firstMissing){ setSyncStatus('Please fill required fields',false); try{ firstMissing.scrollIntoView({behavior:'smooth', block:'center'}); }catch{} firstMissing.focus(); return; }
     const data=serializeForm();
     await queueSubmission(data);
     await idbSet('draft','current',{});

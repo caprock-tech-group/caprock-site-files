@@ -25,3 +25,10 @@ input:focus,textarea:focus{border-color:#64748b;box-shadow:0 0 0 3px #33415566}
 .helper{font-size:12px;color:#94a3b8}
 .hidden{display:none}
 .small{font-size:12px;color:#9ca3af}
+
+
+/* Highlight invalid required fields */
+input.invalid, textarea.invalid, select.invalid {
+  border-color: #ef4444 !important;           /* red-500 */
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
+}
