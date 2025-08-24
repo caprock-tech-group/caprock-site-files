@@ -18,6 +18,68 @@ const queueCount=qs('#queue-count');
 function setOnlineBadge(){onlineBadge.textContent=navigator.onLine?'Online':'Offline';onlineBadge.style.background=navigator.onLine?'#064e3b':'#7f1d1d';onlineBadge.style.borderColor=navigator.onLine?'#065f46':'#991b1b';}
 function setSyncStatus(t,ok=true){syncBadge.textContent=t;syncBadge.style.background=ok?'#1f2937':'#7f1d1d';syncBadge.style.borderColor=ok?'#334155':'#991b1b';}
 async function refreshQueueCount(){const items=await idbAll('outbox');queueCount.textContent=`Queued: ${items.length}`;}
+function buildSummary(d){
+  const lines = [];
+  lines.push(`Company: ${d.company_name}`);
+  lines.push(`Primary: ${d.primary_contact} | ${d.primary_email} | ${d.primary_phone}`);
+  if (d.m365_tenant || d.primary_domain) lines.push(`Tenant/Domain: ${d.m365_tenant||'-'} / ${d.primary_domain||'-'}`);
+  lines.push(`Network: WAN ${d.wan_ip||'-'} | Router ${d.router_model||'-'} | FW ${d.firewall||'-'} | SW ${d.switching||'-'} | WiFi ${d.wireless||'-'}`);
+  if (Array.isArray(d.vlans) && d.vlans.length){
+    lines.push(`VLANs: ${d.vlans.map(v=>`${v.id||'?'}:${v.purpose||'-'} ${v.subnet||''}`).join(' | ')}`);
+  }
+  if (Array.isArray(d.ssids) && d.ssids.length){
+    lines.push(`SSIDs: ${d.ssids.map(s=>`${s.name||'?'} (${s.purpose||'-'})`).join(' | ')}`);
+  }
+  lines.push(`Endpoints: D:${d.count_desktops||0} L:${d.count_laptops||0} S:${d.count_servers||0}`);
+  if (Array.isArray(d.lobs) && d.lobs.length){
+    lines.push(`LOBs: ${d.lobs.map(l=>`${l.name||'?'} (${l.vendor||'-'})`).join(' | ')}`);
+  }
+  if (d.backup) lines.push(`Backup: ${d.backup}`);
+  if (d.compliance) lines.push(`Compliance: ${d.compliance}`);
+  if (d.escalation) lines.push(`Escalation: ${d.escalation}`);
+  if (d.notes) lines.push(`Notes: ${d.notes}`);
+  return lines.join('\n');
+}
+function flattenForNetlify(d, max=5){
+  const out = {
+    company_name: d.company_name || '',
+    primary_contact: d.primary_contact || '',
+    primary_email: d.primary_email || '',
+    primary_phone: d.primary_phone || '',
+    m365_tenant: d.m365_tenant || '',
+    primary_domain: d.primary_domain || '',
+    counts: `D:${d.count_desktops||0} L:${d.count_laptops||0} S:${d.count_servers||0}`,
+    locations_count: Array.isArray(d.locations) ? d.locations.length : 0,
+    vlans_count: Array.isArray(d.vlans) ? d.vlans.length : 0,
+    ssids_count: Array.isArray(d.ssids) ? d.ssids.length : 0,
+    lobs_count: Array.isArray(d.lobs) ? d.lobs.length : 0,
+    summary: buildSummary(d)
+  };
+  (d.locations||[]).slice(0,max).forEach((loc,i)=>{
+    const k = i+1;
+    out[`loc_${k}_name`] = (loc && loc.name) || '';
+    out[`loc_${k}_addr`] = (loc && loc.address) || '';
+    out[`loc_${k}_isp`]  = (loc && loc.isp) || '';
+  });
+  (d.vlans||[]).slice(0,max).forEach((v,i)=>{
+    const k = i+1;
+    out[`vlan_${k}_id`] = (v && v.id) || '';
+    out[`vlan_${k}_purpose`] = (v && v.purpose) || '';
+    out[`vlan_${k}_subnet`] = (v && v.subnet) || '';
+  });
+  (d.ssids||[]).slice(0,max).forEach((s,i)=>{
+    const k = i+1;
+    out[`ssid_${k}_name`] = (s && s.name) || '';
+    out[`ssid_${k}_purpose`] = (s && s.purpose) || '';
+  });
+  (d.lobs||[]).slice(0,max).forEach((l,i)=>{
+    const k = i+1;
+    out[`lob_${k}_name`] = (l && l.name) || '';
+    out[`lob_${k}_vendor`] = (l && l.vendor) || '';
+  });
+  return out;
+}
+
 function clearErrors(){
   qsa('input.invalid, textarea.invalid, select.invalid').forEach(el=>el.classList.remove('invalid'));
   qsa('label.error').forEach(l=>l.classList.remove('error'));
@@ -139,12 +201,12 @@ async function trySync(){
   const items=await idbAll('outbox');
   if(!navigator.onLine){ setSyncStatus('Offline – queued',false); return; }
   for(const item of items){
+    const flat = flattenForNetlify(item.data);
     const simple={
       'form-name':'caprock-onboarding',
-      company_name:item.primary.company_name||'',
-      primary_email:item.primary.primary_email||'',
-      primary_contact:item.primary.primary_contact||'',
-      payload:JSON.stringify(item.data),
+      subject:`Onboarding: ${item.data.company_name || 'Unknown'} (${item.data.primary_domain || 'no-domain'})`,
+      ...flat,
+      payload: JSON.stringify(item.data),
       'bot-field':''
     };
     try{
