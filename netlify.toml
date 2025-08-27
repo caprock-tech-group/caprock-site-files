@@ -20,3 +20,7 @@
   from = "/api/chat"
   to = "/.netlify/functions/chat"
   status = 200
+from = "https://support.caprocktech.com/*"
+  to = "https://caprocktech.servicedesk.atera.com/:splat"
+  status = 301
+  force = true
