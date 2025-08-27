@@ -21,6 +21,6 @@
   to = "/.netlify/functions/chat"
   status = 200
 from = "https://support.caprocktech.com/*"
-  to = "https://caprocktech.servicedesk.atera.com/:splat"
+  to = "https://caprocktech.servicedesk.atera.com/"
   status = 301
   force = true
