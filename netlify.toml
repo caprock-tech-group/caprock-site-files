@@ -22,8 +22,8 @@
   status = 200
 # Redirect for the support subdomain
 [[redirects]]
-  from = "https://support.caprocktech.com/*"
-  to = "https://caprocktech.servicedesk.atera.com/:splat"
+  from = "https://support.caprocktech.com/"
+  to = "https://caprocktech.servicedesk.atera.com/"
   status = 301
   force = true
 
