@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Portal - Caprock Technology Group</title>
+    <link rel="icon" type="image/png" href="caprock logo transparent BG 1.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-blue': '#4ade80', // Brighter for dark mode
+                        'brand-green': '#65a30d',
+                        'dark-bg': '#0f172a',
+                        'dark-card': '#1e293b',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-gray-300">
+
+    <!-- Header & Navigation -->
+     <header id="header" class="bg-dark-card text-white fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="/" class="flex items-center space-x-4">
+                    <div class="bg-gray-200 p-1 rounded-md">
+                        <img src="caprock logo transparent BG 2.png" alt="Caprock Technology Group Logo" class="h-12">
+                    </div>
+                    <span class="text-xl font-bold text-gray-300">Employee Portal</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <nav class="flex items-center space-x-8">
+                        <a href="portal.html" class="text-brand-blue font-semibold">Dashboard</a>
+                        <a href="#" class="hover:text-brand-blue transition-colors">Knowledge Base</a>
+                        <a href="#" class="hover:text-brand-blue transition-colors">Clients</a>
+                        <a href="/" class="hover:text-brand-blue transition-colors">Main Site</a>
+                    </nav>
+                </div>
+                <div class="md:hidden flex items-center space-x-4">
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-brand-blue">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden glass-card px-6 pb-4">
+            <nav class="flex flex-col space-y-4 text-center">
+                <a href="portal.html" class="mobile-nav-link text-brand-blue font-semibold py-2">Dashboard</a>
+                <a href="#" class="mobile-nav-link hover:text-brand-blue py-2">Knowledge Base</a>
+                <a href="#" class="mobile-nav-link hover:text-brand-blue py-2">Clients</a>
+                 <a href="/" class="mobile-nav-link hover:text-brand-blue py-2">Main Site</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="pt-32 pb-20">
+        <div class="container mx-auto px-6">
+            <!-- Dashboard Header -->
+            <div class="mb-12">
+                <h1 class="text-4xl font-extrabold text-white">Welcome, Nick</h1>
+                <p class="mt-2 text-lg text-gray-400">Here's a look at your day.</p>
+            </div>
+
+            <!-- Grid Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Main Column -->
+                <div class="lg:col-span-2 space-y-8">
+                    
+                    <!-- My Open Tickets Widget -->
+                    <div class="bg-dark-card p-6 rounded-2xl shadow-2xl">
+                        <h2 class="text-2xl font-bold text-white mb-4">My Open Tickets</h2>
+                        <div class="space-y-4">
+                            <!-- Ticket Item -->
+                            <div class="bg-gray-800 p-4 rounded-lg flex justify-between items-center hover:bg-gray-700 transition-colors">
+                                <div>
+                                    <p class="font-semibold text-white">#T1234 - HVAC Co - PC running slow</p>
+                                    <p class="text-sm text-gray-400">Assigned 2 hours ago</p>
+                                </div>
+                                <span class="text-sm font-medium text-yellow-400 bg-yellow-900/50 px-2 py-1 rounded-full">In Progress</span>
+                            </div>
+                             <!-- Ticket Item -->
+                            <div class="bg-gray-800 p-4 rounded-lg flex justify-between items-center hover:bg-gray-700 transition-colors">
+                                <div>
+                                    <p class="font-semibold text-white">#T1233 - New Client - Onboarding tasks</p>
+                                    <p class="text-sm text-gray-400">Assigned yesterday</p>
+                                </div>
+                                <span class="text-sm font-medium text-green-400 bg-green-900/50 px-2 py-1 rounded-full">Open</span>
+                            </div>
+                            <!-- Placeholder for no tickets -->
+                             <div class="text-center py-8 text-gray-500">
+                                <p>No open tickets. Great job!</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Company Announcements Widget -->
+                     <div class="bg-dark-card p-6 rounded-2xl shadow-2xl">
+                        <h2 class="text-2xl font-bold text-white mb-4">Company Announcements</h2>
+                        <div class="space-y-4">
+                            <div class="bg-gray-800 p-4 rounded-lg">
+                               <p class="font-semibold text-brand-blue">New Client Welcome!</p>
+                               <p class="text-sm text-gray-400">Please welcome our newest partner, Amarillo Agriculture Group, onboarded today.</p>
+                            </div>
+                             <div class="bg-gray-800 p-4 rounded-lg">
+                               <p class="font-semibold text-brand-blue">Q4 Planning Meeting</p>
+                               <p class="text-sm text-gray-400">A reminder that our Q4 strategic planning meeting is this Friday at 10 AM.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="space-y-8">
+                    <!-- Quick Links Toolbox -->
+                    <div class="bg-dark-card p-6 rounded-2xl shadow-2xl">
+                        <h2 class="text-2xl font-bold text-white mb-4">Quick Links Toolbox</h2>
+                        <ul class="space-y-3">
+                            <li><a href="#" target="_blank" class="flex items-center space-x-3 text-gray-300 hover:text-brand-blue transition-colors group">
+                                <div class="bg-gray-800 p-2 rounded-md group-hover:bg-brand-blue/20 transition-colors">
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A11.953 11.953 0 0112 16.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 003 12c0 .778.099 1.533.284 2.253m0 0A11.953 11.953 0 0012 10.5c2.998 0 5.74 1.1 7.843 2.918m-15.686 0A8.959 8.959 0 0021 12c0-.778-.099-1.533-.284-2.253M3.284 9.747A11.953 11.953 0 0012 13.5c2.998 0 5.74-1.1 7.843-2.918m-15.686 0A8.959 8.959 0 013 12c0-.778.099-1.533.284-2.253m17.432 0A11.953 11.953 0 0012 7.5c-2.998 0-5.74-1.1-7.843 2.918m15.686 0A8.959 8.959 0 0021 12c0-.778-.099-1.533-.284-2.253" /></svg>
+                                </div>
+                                <span>Atera RMM</span></a>
+                            </li>
+                            <li><a href="#" target="_blank" class="flex items-center space-x-3 text-gray-300 hover:text-brand-blue transition-colors group">
+                                <div class="bg-gray-800 p-2 rounded-md group-hover:bg-brand-blue/20 transition-colors">
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                                </div>
+                                <span>Bitdefender Console</span></a>
+                            </li>
+                            <li><a href="#" target="_blank" class="flex items-center space-x-3 text-gray-300 hover:text-brand-blue transition-colors group">
+                                <div class="bg-gray-800 p-2 rounded-md group-hover:bg-brand-blue/20 transition-colors">
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" /></svg>
+                                </div>
+                                <span>Acronis Backup</span></a>
+                            </li>
+                             <li><a href="#" target="_blank" class="flex items-center space-x-3 text-gray-300 hover:text-brand-blue transition-colors group">
+                                <div class="bg-gray-800 p-2 rounded-md group-hover:bg-brand-blue/20 transition-colors">
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" /></svg>
+                                </div>
+                                <span>Password Manager</span></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- On-Call Schedule Widget -->
+                    <div class="bg-dark-card p-6 rounded-2xl shadow-2xl">
+                        <h2 class="text-2xl font-bold text-white mb-4">On-Call Schedule</h2>
+                        <div>
+                            <p class="text-lg text-white">This Week: <span class="font-semibold text-brand-blue">Nick Stevens</span></p>
+                            <p class="text-sm text-gray-400">Next Week: John Doe</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        const mobileMenuLinks = document.querySelectorAll('.mobile-nav-link');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
+
