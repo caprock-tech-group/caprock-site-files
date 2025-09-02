@@ -1,13 +1,16 @@
 {
-  "name": "caprock-tech-website",
-  "version": "1.2.0",
-  "description": "Static site for Caprock Tech with a Markdown blog.",
+  "name": "caprock-tech-blog-builder",
+  "version": "1.0.0",
+  "description": "Builds the Caprock Tech blog from Markdown files.",
   "main": "build.js",
   "scripts": {
     "build": "node build.js"
   },
+  "author": "Caprock Technology Group",
+  "license": "ISC",
   "dependencies": {
-    "marked": "^12.0.1"
+    "marked": "^4.0.10",
+    "simple-git": "^3.22.0"
   },
   "engines": {
     "node": "16.x"
