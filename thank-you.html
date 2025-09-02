@@ -4,93 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thank You - Caprock Technology Group</title>
-    <meta name="description" content="Thank you for contacting Caprock Technology Group. We'll be in touch shortly.">
     <link rel="icon" type="image/png" href="caprock logo transparent BG 1.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        'brand-blue': '#3b82f6',
-                        'brand-green': '#a3e635',
-                        'navy': '#0f172a',
-                        'light-navy': '#1e293b',
+                        'brand-blue': '#4ade80', // Brighter for dark mode
+                        'brand-green': '#65a30d',
+                        'dark-bg': '#0f172a',
+                        'dark-card': '#1e293b',
                     }
                 }
             }
         }
     </script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
-<body class="bg-navy text-gray-300">
+<body class="bg-dark-bg text-gray-300">
 
     <!-- Header & Navigation -->
-    <header id="header" class="bg-light-navy/90 backdrop-blur-lg sticky top-0 z-50 border-b border-gray-700">
+     <header id="header" class="bg-dark-card text-white fixed top-0 left-0 right-0 z-50 transition-all duration-300">
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
-                <a href="index.html" class="inline-block bg-gray-200 p-2 rounded-md">
-                    <img src="caprock logo transparent BG 2.png" alt="Caprock Tech Logo" class="h-12">
+                <a href="/" class="flex items-center space-x-4">
+                    <div class="bg-gray-200 p-1 rounded-md">
+                        <img src="caprock logo transparent BG 2.png" alt="Caprock Technology Group Logo" class="h-12">
+                    </div>
                 </a>
-                <nav class="hidden md:flex items-center space-x-8">
-                    <a href="index.html#services" class="text-gray-300 hover:text-brand-blue font-medium transition-colors">Services</a>
-                    <a href="about.html" class="text-gray-300 hover:text-brand-blue font-medium transition-colors">About Us</a>
-                    <a href="index.html#pricing" class="text-gray-300 hover:text-brand-blue font-medium transition-colors">Pricing</a>
-                    <a href="blog.html" class="text-gray-300 hover:text-brand-blue font-medium transition-colors">Blog</a>
-                    <a href="/support" target="_blank" class="text-gray-300 hover:text-brand-blue font-medium transition-colors">Client Login</a>
-                </nav>
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="tel:806-316-5070" class="text-brand-blue font-semibold text-lg">(806) 316-5070</a>
-                    <a href="index.html#contact" class="bg-brand-blue text-white font-semibold px-6 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300">
-                        Get a Quote
-                    </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <nav class="flex items-center space-x-8">
+                        <a href="/#services" class="hover:text-brand-blue transition-colors">Services</a>
+                        <a href="about.html" class="hover:text-brand-blue transition-colors">About Us</a>
+                        <a href="/#pricing" class="hover:text-brand-blue transition-colors">Pricing</a>
+                        <a href="blog.html" class="hover:text-brand-blue transition-colors">Blog</a>
+                        <a href="/support" target="_blank" class="hover:text-brand-blue transition-colors">Client Login</a>
+                    </nav>
+                     <div class="border-l border-gray-600 pl-6">
+                         <a href="tel:806-316-5070" class="text-brand-blue font-semibold text-lg hover:brightness-125">(806) 316-5070</a>
+                    </div>
                 </div>
                 <div class="md:hidden flex items-center space-x-4">
-                    <a href="tel:806-316-5070" class="text-brand-blue">
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 6.75z" />
-                        </svg>
+                     <a href="tel:806-316-5070" class="text-brand-blue">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 6.75z" /></svg>
                     </a>
-                    <button id="mobile-menu-button" class="md:hidden text-gray-300 hover:text-brand-blue">
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                        </svg>
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-brand-blue">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
                     </button>
                 </div>
             </div>
         </div>
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 bg-light-navy/90 backdrop-blur-lg">
-            <nav class="flex flex-col space-y-4">
-                <a href="index.html#services" class="text-gray-300 hover:text-brand-blue">Services</a>
-                <a href="about.html" class="text-gray-300 hover:text-brand-blue">About Us</a>
-                <a href="index.html#pricing" class="text-gray-300 hover:text-brand-blue">Pricing</a>
-                <a href="blog.html" class="text-gray-300 hover:text-brand-blue">Blog</a>
-                <a href="/support" target="_blank" class="text-gray-300 hover:text-brand-blue">Client Login</a>
-                <a href="index.html#contact" class="w-full text-center bg-brand-blue text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:bg-blue-700">
-                    Get a Quote
-                </a>
+        <div id="mobile-menu" class="hidden md:hidden glass-card px-6 pb-4">
+            <nav class="flex flex-col space-y-4 text-center">
+                <a href="/#services" class="mobile-nav-link hover:text-brand-blue py-2">Services</a>
+                <a href="about.html" class="mobile-nav-link hover:text-brand-blue py-2">About Us</a>
+                <a href="/#pricing" class="mobile-nav-link hover:text-brand-blue py-2">Pricing</a>
+                <a href="blog.html" class="mobile-nav-link hover:text-brand-blue py-2">Blog</a>
+                <a href="/support" target="_blank" class="mobile-nav-link hover:text-brand-blue py-2">Client Login</a>
             </nav>
         </div>
     </header>
 
-    <main>
-        <!-- Thank You Section -->
-        <section class="flex items-center justify-center h-screen bg-light-navy">
-            <div class="text-center p-8">
-                <h1 class="text-4xl md:text-5xl font-bold text-white">Thank You!</h1>
-                <p class="mt-4 text-lg text-gray-300">Your message has been sent. We'll be in touch shortly.</p>
-                <div class="mt-8">
-                    <a href="index.html" class="bg-brand-blue text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-blue-700 transition-all duration-300">
-                        Return to Homepage
-                    </a>
+    <main class="pt-24">
+        <section class="min-h-screen flex items-center justify-center">
+            <div class="container mx-auto px-6 text-center">
+                <div class="bg-dark-card p-12 rounded-2xl shadow-2xl max-w-2xl mx-auto">
+                    <div class="flex items-center justify-center h-16 w-16 bg-brand-blue text-dark-bg rounded-full mx-auto mb-6">
+                        <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h1 class="text-4xl font-extrabold text-white">Thank You!</h1>
+                    <p class="mt-4 text-lg text-gray-400">Your message has been sent successfully. We'll be in touch with you shortly.</p>
+                    <div class="mt-8">
+                        <a href="/" class="inline-block bg-brand-blue text-dark-bg font-bold px-8 py-3 rounded-lg shadow-lg hover:brightness-110 transition-all duration-300">
+                            Return to Homepage
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -100,11 +102,15 @@
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
-
         mobileMenuButton.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
+        const mobileMenuLinks = document.querySelectorAll('.mobile-nav-link');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
     </script>
-
 </body>
 </html>
