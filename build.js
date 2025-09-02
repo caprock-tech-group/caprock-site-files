@@ -3,79 +3,107 @@
 // Import necessary tools
 const fs = require('fs');
 const path = require('path');
-const { marked } = require('marked');   // For converting Markdown body to HTML
+const { marked } = require('marked');
+const simpleGit = require('simple-git');
 
 // --- Configuration ---
 const POSTS_DIR = path.join(__dirname, 'posts');
 const BUILD_DIR = path.join(__dirname); 
+const git = simpleGit();
 
 // --- Helper Functions ---
 function slugify(text) {
+    if (!text) return '';
     return text.toString().toLowerCase()
-        .replace(/\s+/g, '-')           // Replace spaces with -
-        .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-        .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-        .replace(/^-+/, '')             // Trim - from start of text
-        .replace(/-+$/, '');            // Trim - from end of text
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-+$/, '');
 }
 
 // --- Main Build Function ---
 async function build() {
     console.log('Starting the smart Markdown build process...');
 
-    // 1. Read all Markdown files from the 'posts' directory
     if (!fs.existsSync(POSTS_DIR)) {
         console.log("No 'posts' directory found. Skipping blog generation.");
+        // Still need to handle homepage placeholder if no posts exist
+        const indexTemplate = fs.readFileSync(path.join(BUILD_DIR, 'index.html'), 'utf-8');
+        const finalIndexHtml = indexTemplate.replace('{{LATEST_POSTS}}', '<p class="text-gray-400 col-span-full text-center">No recent posts found.</p>');
+        fs.writeFileSync(path.join(BUILD_DIR, 'index.html'), finalIndexHtml);
         return;
     }
+    
     const postFiles = fs.readdirSync(POSTS_DIR).filter(file => file.endsWith('.md'));
 
     if (postFiles.length === 0) {
         console.log('No blog posts found in the /posts directory.');
+        const indexTemplate = fs.readFileSync(path.join(BUILD_DIR, 'index.html'), 'utf-8');
+        const finalIndexHtml = indexTemplate.replace('{{LATEST_POSTS}}', '<p class="text-gray-400 col-span-full text-center">No recent posts found.</p>');
+        fs.writeFileSync(path.join(BUILD_DIR, 'index.html'), finalIndexHtml);
         return;
     }
 
-    // 2. Parse each post file to automatically extract its content and metadata
-    const posts = postFiles.map(fileName => {
-        const fileContents = fs.readFileSync(path.join(POSTS_DIR, fileName), 'utf8');
+    const posts = await Promise.all(postFiles.map(async (fileName) => {
+        const filePath = path.join(POSTS_DIR, fileName);
+        const fileContents = fs.readFileSync(filePath, 'utf8');
         
-        // Auto-extract Title (first H1, allowing for leading whitespace)
-        const titleMatch = fileContents.match(/^\s*# (.*)/m); // 'm' flag for multiline matching
+        const titleMatch = fileContents.match(/^\s*# (.*)/m);
         const title = titleMatch ? titleMatch[1] : 'Untitled Post';
 
-        // Auto-extract Featured Image (first image in the post)
         const imageMatch = fileContents.match(/!\[(.*?)\]\((.*?)\)/);
-        const featuredImage = imageMatch ? imageMatch[2] : 'https://placehold.co/1200x600/1e3a8a/ffffff?text=Image+Not+Available';
+        const featuredImage = imageMatch ? imageMatch[2] : 'https://placehold.co/1200x600/0f172a/a3e635?text=Caprock+Tech';
         const featuredImageAlt = imageMatch ? imageMatch[1] : 'Blog post image';
 
-        // Remove the title and first image from the body content before rendering
         let bodyContent = fileContents.replace(/^\s*# (.*)/m, '').replace(/!\[(.*?)\]\((.*?)\)/, '').trim();
-        
+
+        // Get the creation date from Git history
+        let publicationDate;
+        try {
+            const log = await git.log({ file: filePath });
+            publicationDate = log.latest ? new Date(log.latest.date) : new Date();
+             // In a log sorted by date, the last entry is the oldest (creation)
+            if (log.all.length > 0) {
+                publicationDate = new Date(log.all[log.all.length - 1].date);
+            }
+        } catch (error) {
+            console.error(`Could not get Git history for ${fileName}. Using current date.`, error);
+            publicationDate = new Date();
+        }
+
         return {
             title: title,
             slug: slugify(title),
             author: "Nick Stevens, Founder/Owner at Caprock Technology Group",
-            publicationDate: new Date().toISOString(), // Use current date for simplicity
+            publicationDate: publicationDate.toISOString(),
             featuredImage: featuredImage,
             featuredImageAlt: featuredImageAlt,
             body: marked(bodyContent),
         };
-    }).sort((a, b) => new Date(b.publicationDate) - new Date(a.publicationDate));
+    }));
 
+    posts.sort((a, b) => new Date(b.publicationDate) - new Date(a.publicationDate));
     console.log(`Found and processed ${posts.length} blog posts.`);
 
-    // 3. Read the HTML templates
+    // Read templates
     const indexTemplate = fs.readFileSync(path.join(BUILD_DIR, 'index.html'), 'utf-8');
     const blogTemplate = fs.readFileSync(path.join(BUILD_DIR, 'blog.html'), 'utf-8');
     const postTemplate = fs.readFileSync(path.join(BUILD_DIR, 'post-template.html'), 'utf-8');
 
-    // 4. Generate individual blog post pages
-    console.log('Generating individual post pages...');
+    // Generate individual post pages
     posts.forEach(post => {
+        const postDate = new Date(post.publicationDate);
+        const formattedDate = postDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'America/Chicago'
+        });
+
         let newPostHtml = postTemplate;
-        const displayDate = new Date(post.publicationDate).toLocaleDateString('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'long', day: 'numeric' });
         newPostHtml = newPostHtml.replace(/{{POST_TITLE}}/g, post.title);
-        newPostHtml = newPostHtml.replace(/{{POST_DATE}}/g, displayDate);
+        newPostHtml = newPostHtml.replace(/{{POST_DATE}}/g, formattedDate);
         newPostHtml = newPostHtml.replace(/{{POST_AUTHOR}}/g, post.author);
         newPostHtml = newPostHtml.replace(/{{POST_IMAGE_URL}}/g, post.featuredImage);
         newPostHtml = newPostHtml.replace(/{{POST_IMAGE_ALT}}/g, post.featuredImageAlt);
@@ -83,56 +111,60 @@ async function build() {
 
         const postFileName = `${post.slug}.html`;
         fs.writeFileSync(path.join(BUILD_DIR, postFileName), newPostHtml);
-        console.log(`- Created ${postFileName}`);
     });
+    console.log('Finished generating individual post pages.');
 
-    // 5. Generate the main blog listing page
-    console.log('Generating main blog listing page...');
+    // Generate blog listing page
     let blogListHtml = '';
     posts.forEach(post => {
-        const displayDate = new Date(post.publicationDate).toLocaleDateString('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'long', day: 'numeric' });
+        const postDate = new Date(post.publicationDate);
+        const formattedDate = postDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'America/Chicago'
+        });
         blogListHtml += `
-            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="glass-card p-6 rounded-xl transform hover:-translate-y-2 transition-transform duration-300">
                 <a href="${post.slug}.html">
-                    <img class="h-56 w-full object-cover" src="${post.featuredImage}" alt="${post.featuredImageAlt}">
-                    <div class="p-6">
-                        <p class="text-sm text-gray-500">${displayDate}</p>
-                        <h3 class="mt-2 text-xl font-bold text-gray-900">${post.title}</h3>
-                    </div>
+                    <img class="rounded-lg mb-4 h-56 w-full object-cover" src="${post.featuredImage}" alt="${post.featuredImageAlt}">
+                    <p class="text-sm text-gray-400">${formattedDate}</p>
+                    <h3 class="mt-2 text-xl font-bold text-white hover:text-brand-blue transition-colors">${post.title}</h3>
                 </a>
             </div>
         `;
     });
     const finalBlogPageHtml = blogTemplate.replace('{{BLOG_POSTS_LIST}}', blogListHtml);
     fs.writeFileSync(path.join(BUILD_DIR, 'blog.html'), finalBlogPageHtml);
-    console.log('- Updated blog.html with all posts.');
+    console.log('Updated blog.html with all posts.');
 
-    // 6. Generate the "Latest Insights" section for the homepage
-    console.log('Generating "Latest Insights" section for homepage...');
-    const latestPosts = posts.slice(0, 3);
+    // Generate "Latest Insights" for homepage
     let latestPostsHtml = '';
+    const latestPosts = posts.slice(0, 3);
     latestPosts.forEach(post => {
-        const displayDate = new Date(post.publicationDate).toLocaleDateString('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'long', day: 'numeric' });
+        const postDate = new Date(post.publicationDate);
+        const formattedDate = postDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'America/Chicago'
+        });
         latestPostsHtml += `
-            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="glass-card p-6 rounded-xl transform hover:-translate-y-2 transition-transform duration-300">
                 <a href="${post.slug}.html">
-                    <img class="h-56 w-full object-cover" src="${post.featuredImage}" alt="${post.featuredImageAlt}">
-                    <div class="p-6">
-                        <p class="text-sm text-gray-500">${displayDate}</p>
-                        <h3 class="mt-2 text-xl font-bold text-gray-900">${post.title}</h3>
-                    </div>
+                    <img class="rounded-lg mb-4 h-56 w-full object-cover" src="${post.featuredImage}" alt="${post.featuredImageAlt}">
+                    <p class="text-sm text-gray-400">${formattedDate}</p>
+                    <h3 class="mt-2 text-xl font-bold text-white hover:text-brand-blue transition-colors">${post.title}</h3>
                 </a>
             </div>
         `;
     });
-    const finalIndexPageHtml = indexTemplate.replace('{{LATEST_POSTS}}', latestPostsHtml);
-    fs.writeFileSync(path.join(BUILD_DIR, 'index.html'), finalIndexPageHtml);
-    console.log('- Updated index.html with latest posts.');
-
-    console.log('Build process finished successfully! 🎉');
+    const finalIndexHtml = indexTemplate.replace('{{LATEST_POSTS}}', latestPostsHtml);
+    fs.writeFileSync(path.join(BUILD_DIR, 'index.html'), finalIndexHtml);
+    console.log('Updated index.html with latest posts.');
 }
 
 build().catch(error => {
-    console.error('Build script failed:', error);
+    console.error('Build process failed:', error);
     process.exit(1);
 });
