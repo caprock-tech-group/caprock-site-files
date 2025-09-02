@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Onboarding - Caprock Technology Group</title>
+    <meta name="robots" content="noindex, nofollow"> <!-- Prevents this page from being indexed by Google -->
+    <link rel="icon" type="image/png" href="caprock logo transparent BG 1.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-blue': '#4ade80', // Brighter for dark mode
+                        'brand-green': '#65a30d',
+                        'dark-bg': '#0f172a',
+                        'dark-card': '#1e293b',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-gray-300">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-transparent text-white fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                 <a href="/" class="flex items-center space-x-4">
+                    <div class="bg-gray-200 p-1 rounded-md">
+                        <img src="caprock logo transparent BG 2.png" alt="Caprock Technology Group Logo" class="h-12">
+                    </div>
+                </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <nav class="flex items-center space-x-8">
+                        <a href="/#services" class="hover:text-brand-blue transition-colors">Services</a>
+                        <a href="about.html" class="hover:text-brand-blue transition-colors">About Us</a>
+                        <a href="/#pricing" class="hover:text-brand-blue transition-colors">Pricing</a>
+                        <a href="blog.html" class="hover:text-brand-blue transition-colors">Blog</a>
+                        <a href="/support" target="_blank" class="hover:text-brand-blue transition-colors">Client Login</a>
+                    </nav>
+                    <div class="border-l border-gray-600 pl-6">
+                         <a href="tel:806-316-5070" class="text-brand-blue font-semibold text-lg hover:brightness-125">(806) 316-5070</a>
+                    </div>
+                </div>
+                <div class="md:hidden flex items-center space-x-4">
+                     <a href="tel:806-316-5070" class="text-brand-blue">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 6.75z" /></svg>
+                    </a>
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-brand-blue">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden glass-card px-6 pb-4">
+             <nav class="flex flex-col space-y-4 text-center">
+                <a href="/#services" class="mobile-nav-link hover:text-brand-blue py-2">Services</a>
+                <a href="about.html" class="mobile-nav-link hover:text-brand-blue py-2">About Us</a>
+                <a href="/#pricing" class="mobile-nav-link hover:text-brand-blue py-2">Pricing</a>
+                <a href="blog.html" class="mobile-nav-link hover:text-brand-blue py-2">Blog</a>
+                <a href="/support" target="_blank" class="mobile-nav-link hover:text-brand-blue py-2">Client Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="pt-24">
+        <section class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-4xl mx-auto">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white">Secure Client Onboarding Portal</h1>
+                    <p class="mt-4 text-lg text-gray-400">Welcome to Caprock Technology Group. Please complete the form below to help us begin the onboarding process. This information will allow us to document your environment and deploy our tools efficiently.</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto mt-16">
+                    <form name="caprock-onboarding" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thank-you.html" class="space-y-12">
+                        <input type="hidden" name="form-name" value="caprock-onboarding" />
+                        
+                        <!-- Company Information -->
+                        <fieldset class="glass-card p-8 rounded-xl">
+                            <legend class="text-2xl font-bold text-white mb-6">Company Information</legend>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="company_name" class="block text-sm font-medium text-gray-300">Company Name</label>
+                                    <input type="text" name="company_name" id="company_name" required class="mt-1 block w-full bg-dark-card border-gray-600 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue text-white">
+                                </div>
+                                <div>
+                                    <label for="primary_domain" class="block text-sm font-medium text-gray-300">Primary Domain (e.g., yourcompany.com)</label>
+                                    <input type="text" name="primary_domain" id="primary_domain" class="mt-1 block w-full bg-dark-card border-gray-600 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue text-white">
+                                </div>
+                                 <div>
+                                    <label for="primary_contact" class="block text-sm font-medium text-gray-300">Primary Contact Name</label>
+                                    <input type="text" name="primary_contact" id="primary_contact" required class="mt-1 block w-full bg-dark-card border-gray-600 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue text-white">
+                                </div>
+                                <div>
+                                    <label for="primary_email" class="block text-sm font-medium text-gray-300">Primary Contact Email</label>
+                                    <input type="email" name="primary_email" id="primary_email" required class="mt-1 block w-full bg-dark-card border-gray-600 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue text-white">
+                                </div>
+                                <div>
+                                    <label for="primary_phone" class="block text-sm font-medium text-gray-300">Primary Contact Phone</label>
+                                    <input type="tel" name="primary_phone" id="primary_phone" required class="mt-1 block w-full bg-dark-card border-gray-600 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue text-white">
+                                </div>
+                                 <div>
+                                    <label for="counts" class="block text-sm font-medium text-gray-300">Number of Users / Computers</label>
+                                    <input type="number" name="counts" id="counts" required class="mt-1 block w-full bg-dark-card border-gray-600 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue text-white">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="m365_tenant" class="block text-sm font-medium text-gray-300">Microsoft 365 Tenant ID (if known)</label>
+                                    <input type="text" name="m365_tenant" id="m365_tenant" class="mt-1 block w-full bg-dark-card border-gray-600 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue text-white">
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- Location Information -->
+                        <fieldset class="glass-card p-8 rounded-xl">
+                            <legend class="text-2xl font-bold text-white mb-6">Location Information</legend>
+                            <p class="text-gray-400 mb-6">Please list your primary office and any branch locations.</p>
+                            <div id="locations-container" class="space-y-6">
+                                <!-- Location 1 (Initial) -->
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <input type="text" name="loc_1_name" placeholder="Location Name (e.g., Main Office)" class="bg-dark-card border-gray-600 rounded-md text-white">
+                                    <input type="text" name="loc_1_addr" placeholder="Full Street Address" class="bg-dark-card border-gray-600 rounded-md text-white">
+                                    <input type="text" name="loc_1_isp" placeholder="Internet Service Provider" class="bg-dark-card border-gray-600 rounded-md text-white">
+                                </div>
+                            </div>
+                            <div class="mt-6">
+                                <button type="button" id="add-location-btn" class="text-brand-blue font-semibold hover:text-green-300 transition-colors">+ Add Another Location</button>
+                            </div>
+                        </fieldset>
+                        
+                         <!-- Line of Business Applications -->
+                        <fieldset class="glass-card p-8 rounded-xl">
+                            <legend class="text-2xl font-bold text-white mb-6">Key Business Applications</legend>
+                            <p class="text-gray-400 mb-6">Please list any critical software you use (e.g., QuickBooks, specific industry software).</p>
+                            <div id="applications-container" class="space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <input type="text" name="lob_1_name" placeholder="Application Name" class="bg-dark-card border-gray-600 rounded-md text-white">
+                                    <input type="text" name="lob_1_vendor" placeholder="Software Vendor / Support Contact" class="bg-dark-card border-gray-600 rounded-md text-white">
+                                </div>
+                            </div>
+                             <div class="mt-6">
+                                <button type="button" id="add-app-btn" class="text-brand-blue font-semibold hover:text-green-300 transition-colors">+ Add Another Application</button>
+                            </div>
+                        </fieldset>
+
+                        <p class="hidden">
+                            <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
+                        </p>
+                        <div class="text-center">
+                            <button type="submit" class="bg-brand-blue text-white font-bold py-4 px-10 rounded-lg shadow-lg hover:brightness-125 transition-all duration-300">Submit Onboarding Information</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-card text-gray-400">
+        <div class="container mx-auto px-6 py-12">
+            <div class="md:grid md:grid-cols-3 md:gap-8">
+                <div class="space-y-4">
+                    <a href="/" class="inline-block bg-gray-200 p-1 rounded-md">
+                        <img src="caprock logo transparent BG 2.png" alt="Caprock Technology Group Logo" class="h-12">
+                    </a>
+                    <p>Your strategic IT partner in the Texas Panhandle.</p>
+                     <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/caprocktech/" target="_blank" rel="noopener noreferrer" class="hover:text-white"><span class="sr-only">Facebook</span><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg></a>
+                        <a href="https://www.linkedin.com/company/caprocktech" target="_blank" rel="noopener noreferrer" class="hover:text-white"><span class="sr-only">LinkedIn</span><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd" /></svg></a>
+                    </div>
+                </div>
+                <div class="mt-10 md:mt-0 md:col-span-2">
+                     <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                        <div>
+                            <h3 class="text-sm font-semibold tracking-wider uppercase text-gray-200">Services</h3>
+                            <ul class="mt-4 space-y-2">
+                                <li><a href="/#pricing" class="hover:text-white">Managed Plans</a></li>
+                                <li><a href="/#haas-offerings" class="hover:text-white">HaaS Offerings</a></li>
+                                <li><a href="/onboarding.html" class="hover:text-white">Client Onboarding</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-semibold tracking-wider uppercase text-gray-200">Company</h3>
+                            <ul class="mt-4 space-y-2">
+                                <li><a href="about.html" class="hover:text-white">About Us</a></li>
+                                <li><a href="blog.html" class="hover:text-white">Blog</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-semibold tracking-wider uppercase text-gray-200">Contact</h3>
+                            <ul class="mt-4 space-y-2">
+                                <li>Amarillo, Texas</li>
+                                <li>(806) 316-5070</li>
+                                <li>info@caprocktech.com</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-gray-700 pt-8 text-center">
+                <p class="text-base">&copy; 2025 Caprock Technology Group. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Header scroll effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                header.classList.remove('bg-transparent');
+                header.classList.add('glass-card');
+            } else {
+                header.classList.add('bg-transparent');
+                header.classList.remove('glass-card');
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        const mobileMenuLinks = document.querySelectorAll('.mobile-nav-link');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Dynamic form fields
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add Location
+            const addLocationBtn = document.getElementById('add-location-btn');
+            const locationsContainer = document.getElementById('locations-container');
+            let locationCount = 2;
+            addLocationBtn.addEventListener('click', () => {
+                const newLocation = document.createElement('div');
+                newLocation.className = 'grid grid-cols-1 md:grid-cols-3 gap-6';
+                newLocation.innerHTML = `
+                    <input type="text" name="loc_${locationCount}_name" placeholder="Location Name" class="bg-dark-card border-gray-600 rounded-md text-white">
+                    <input type="text" name="loc_${locationCount}_addr" placeholder="Full Street Address" class="bg-dark-card border-gray-600 rounded-md text-white">
+                    <input type="text" name="loc_${locationCount}_isp" placeholder="Internet Service Provider" class="bg-dark-card border-gray-600 rounded-md text-white">
+                `;
+                locationsContainer.appendChild(newLocation);
+                locationCount++;
+            });
+
+            // Add Application
+            const addAppBtn = document.getElementById('add-app-btn');
+            const applicationsContainer = document.getElementById('applications-container');
+            let appCount = 2;
+            addAppBtn.addEventListener('click', () => {
+                const newApp = document.createElement('div');
+                newApp.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+                newApp.innerHTML = `
+                    <input type="text" name="lob_${appCount}_name" placeholder="Application Name" class="bg-dark-card border-gray-600 rounded-md text-white">
+                    <input type="text" name="lob_${appCount}_vendor" placeholder="Software Vendor / Support Contact" class="bg-dark-card border-gray-600 rounded-md text-white">
+                `;
+                applicationsContainer.appendChild(newApp);
+                appCount++;
+            });
+        });
+    </script>
+</body>
+</html>
+
