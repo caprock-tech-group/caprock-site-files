@@ -9,6 +9,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Netlify Identity Widget -->
+    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -52,6 +56,8 @@
                         <a href="#" class="hover:text-brand-blue transition-colors">Clients</a>
                         <a href="/" class="hover:text-brand-blue transition-colors">Main Site</a>
                     </nav>
+                     <!-- Login/Logout Button -->
+                    <div data-netlify-identity-button></div>
                 </div>
                 <div class="md:hidden flex items-center space-x-4">
                     <button id="mobile-menu-button" class="text-gray-300 hover:text-brand-blue">
@@ -65,16 +71,27 @@
                 <a href="portal.html" class="mobile-nav-link text-brand-blue font-semibold py-2">Dashboard</a>
                 <a href="#" class="mobile-nav-link hover:text-brand-blue py-2">Knowledge Base</a>
                 <a href="#" class="mobile-nav-link hover:text-brand-blue py-2">Clients</a>
-                 <a href="/" class="mobile-nav-link hover:text-brand-blue py-2">Main Site</a>
+                <a href="/" class="mobile-nav-link hover:text-brand-blue py-2">Main Site</a>
+                 <div data-netlify-identity-button class="mt-4"></div>
             </nav>
         </div>
     </header>
 
-    <main class="pt-32 pb-20">
+    <!-- This section is shown to logged-out users -->
+    <div id="login-prompt" class="min-h-screen flex items-center justify-center text-center">
+        <div>
+            <h1 class="text-4xl font-extrabold text-white">Employee Portal</h1>
+            <p class="mt-4 text-lg text-gray-400">Please log in to access the dashboard.</p>
+            <div data-netlify-identity-button class="mt-8 inline-block"></div>
+        </div>
+    </div>
+
+    <!-- This is the main portal content, hidden by default -->
+    <main id="portal-content" class="hidden pt-32 pb-20">
         <div class="container mx-auto px-6">
             <!-- Dashboard Header -->
             <div class="mb-12">
-                <h1 class="text-4xl font-extrabold text-white">Welcome, Nick</h1>
+                <h1 id="welcome-message" class="text-4xl font-extrabold text-white">Welcome</h1>
                 <p class="mt-2 text-lg text-gray-400">Here's a look at your day.</p>
             </div>
 
@@ -187,6 +204,40 @@
             link.addEventListener('click', () => {
                 mobileMenu.classList.add('hidden');
             });
+        });
+
+        // Netlify Identity Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const portalContent = document.getElementById('portal-content');
+            const loginPrompt = document.getElementById('login-prompt');
+            const welcomeMessage = document.getElementById('welcome-message');
+
+            const updateUserUI = (user) => {
+                if (user) {
+                    // User is logged in
+                    loginPrompt.style.display = 'none';
+                    portalContent.classList.remove('hidden');
+                    if (welcomeMessage && user.user_metadata && user.user_metadata.full_name) {
+                         welcomeMessage.textContent = `Welcome, ${user.user_metadata.full_name}`;
+                    } else if (welcomeMessage && user.email) {
+                        welcomeMessage.textContent = `Welcome, ${user.email.split('@')[0]}`;
+                    }
+                } else {
+                    // User is logged out
+                    loginPrompt.style.display = 'flex';
+                    portalContent.classList.add('hidden');
+                }
+            };
+            
+            // Initial check when the widget loads
+             if (window.netlifyIdentity) {
+                const currentUser = netlifyIdentity.currentUser();
+                updateUserUI(currentUser);
+
+                // Listen for login/logout events
+                netlifyIdentity.on('login', user => updateUserUI(user));
+                netlifyIdentity.on('logout', () => updateUserUI(null));
+            }
         });
     </script>
 </body>
