@@ -7,6 +7,7 @@ const { google } = require('googleapis');
 // --- CONFIGURATION ---
 const POSTS_DIR = path.join(__dirname, 'posts');
 const PUBLIC_DIR = path.join(__dirname, 'public');
+const SRC_DIR = __dirname; // Source directory is the root
 
 // --- YOUTUBE API CONFIG ---
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
@@ -87,12 +88,12 @@ async function buildVideos() {
         const response = await youtube.search.list({
             channelId: YOUTUBE_CHANNEL_ID,
             part: 'snippet',
-            maxResults: 25, // You can adjust this number
+            maxResults: 25,
             order: 'date',
             type: 'video',
         });
 
-        if (!response.data.items) {
+        if (!response.data.items || response.data.items.length === 0) {
             console.log('No videos found on YouTube channel.');
             return [];
         }
@@ -122,25 +123,31 @@ async function main() {
     
     // 1. Clean and prepare public directory
     fs.emptyDirSync(PUBLIC_DIR);
-    fs.copySync(__dirname, PUBLIC_DIR, {
-        dereference: true,
-        filter: (src) => {
-            const base = path.basename(src);
-            return base !== 'public' && base !== 'node_modules' && base !== 'posts';
-        }
+
+    // 2. Copy all static files and templates to the public directory
+    const staticFiles = fs.readdirSync(SRC_DIR).filter(file => {
+        const ext = path.extname(file);
+        // Copy HTML, images, but not scripts or config files that aren't needed on the final site
+        return ['.html', '.png', '.jpg', '.jpeg'].includes(ext);
     });
 
-    // 2. Build Blog and Video content in parallel
+    for (const file of staticFiles) {
+        fs.copySync(path.join(SRC_DIR, file), path.join(PUBLIC_DIR, file));
+    }
+    console.log(`Copied ${staticFiles.length} static files to /public.`);
+
+
+    // 3. Build Blog and Video content in parallel
     const [posts, videos] = await Promise.all([buildBlog(), buildVideos()]);
 
-    // 3. Read HTML Templates from the new public directory
+    // 4. Read HTML Templates from the new public directory
     const indexTemplate = fs.readFileSync(path.join(PUBLIC_DIR, 'index.html'), 'utf-8');
     const blogTemplate = fs.readFileSync(path.join(PUBLIC_DIR, 'blog.html'), 'utf-8');
     const postTemplate = fs.readFileSync(path.join(PUBLIC_DIR, 'post-template.html'), 'utf-8');
     const videosTemplate = fs.readFileSync(path.join(PUBLIC_DIR, 'videos.html'), 'utf-8');
     const videoTemplate = fs.readFileSync(path.join(PUBLIC_DIR, 'video-template.html'), 'utf-8');
 
-    // 4. Populate Blog Pages
+    // 5. Populate Blog Pages
     let blogListHtml = '';
     posts.forEach(post => {
         let newPostHtml = postTemplate.replace(/{{POST_TITLE}}/g, post.title)
@@ -162,7 +169,7 @@ async function main() {
     const finalBlogPage = blogTemplate.replace('{{BLOG_POSTS_LIST}}', blogListHtml || '<p class="text-center col-span-full">No blog posts found.</p>');
     fs.writeFileSync(path.join(PUBLIC_DIR, 'blog.html'), finalBlogPage);
 
-    // 5. Populate Homepage Latest Insights
+    // 6. Populate Homepage Latest Insights
     const latestPostsHtml = posts.slice(0, 3).map(post => `
         <a href="${post.slug}.html" class="glass-card rounded-2xl overflow-hidden group transform hover:-translate-y-2 transition-transform duration-300">
             <img class="w-full h-48 object-cover" src="${post.featuredImage}" alt="${post.featuredImageAlt}">
@@ -171,10 +178,10 @@ async function main() {
                 <p class="text-sm text-gray-400">Published on ${post.publicationDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Chicago' })}</p>
             </div>
         </a>`).join('');
-    const finalIndexPage = indexTemplate.replace('{{LATEST_POSTS}}', latestPostsHtml || '');
+    let finalIndexPage = indexTemplate.replace('{{LATEST_POSTS}}', latestPostsHtml || '');
     fs.writeFileSync(path.join(PUBLIC_DIR, 'index.html'), finalIndexPage);
 
-    // 6. Populate Video Pages
+    // 7. Populate Video Pages
     let videoListHtml = '';
     videos.forEach(video => {
         const videoSlug = slugify(video.title);
@@ -182,7 +189,7 @@ async function main() {
                                     .replace(/{{VIDEO_DATE}}/g, video.publicationDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Chicago' }))
                                     .replace(/{{VIDEO_AUTHOR}}/g, video.author)
                                     .replace('{{VIDEO_DESCRIPTION}}', video.description)
-                                    .replace('{{VIDEO_EMBED}}', `<iframe src="https://www.youtube.com/embed/${video.id}" title="${video.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`);
+                                    .replace('{{VIDEO_EMBED}}', `<iframe class="w-full aspect-video" src="https://www.youtube.com/embed/${video.id}" title="${video.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`);
         fs.writeFileSync(path.join(PUBLIC_DIR, `${videoSlug}.html`), newVideoHtml);
         videoListHtml += `
             <a href="${videoSlug}.html" class="glass-card rounded-2xl overflow-hidden group transform hover:-translate-y-2 transition-transform duration-300">
