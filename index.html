@@ -667,7 +667,10 @@
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
                     const payload = {
-                        contents: [{ parts: [{ text: userQuery }] }],
+                        contents: [{
+                            role: "user",
+                            parts: [{ text: userQuery }]
+                        }],
                         tools: [{ "google_search": {} }],
                     };
 
@@ -679,7 +682,14 @@
                         });
 
                         if (!response.ok) {
-                            throw new Error(`API Error: ${response.statusText}`);
+                             let errorData = { message: `API Error: ${response.status} ${response.statusText}` };
+                            try {
+                                errorData = await response.json();
+                            } catch (e) {
+                                // Ignore if body isn't JSON
+                            }
+                            console.error('API Error Details:', errorData);
+                            throw new Error(errorData.error ? errorData.error.message : errorData.message);
                         }
 
                         const result = await response.json();
@@ -710,8 +720,8 @@
                            resultText.textContent = 'Could not generate a response. The model may have returned an empty or invalid result. Please try again.';
                         }
                     } catch (error) {
-                        console.error('Error calling Gemini API:', error);
-                        resultText.textContent = 'An error occurred while analyzing threats. Please check the console for details and try again later.';
+                        console.error('Full error object:', error);
+                        resultText.textContent = `An error occurred: ${error.message}`;
                     } finally {
                         // Hide loading state
                         btnText.textContent = 'Analyze Threats';
@@ -726,4 +736,5 @@
 
 </body>
 </html>
+
 
