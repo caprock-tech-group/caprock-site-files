@@ -283,8 +283,8 @@
         <section id="pricing" class="py-24">
             <div class="container mx-auto px-6">
                 <div class="text-center max-w-3xl mx-auto mb-16 animated-section">
-                    <h2 class="text-4xl md:text-5xl font-extrabold text-white">Transparent Pricing for Every Need</h2>
-                    <p class="mt-4 text-lg text-gray-400">Cost-effective per-user plans that cover multiple devices. Simple, predictable, powerful.</p>
+                    <h2 class="text-4xl md:text-5xl font-extrabold text-white">Our Service Plans</h2>
+                    <p class="mt-4 text-lg text-gray-400">A straightforward starting point for your business's IT.</p>
                 </div>
 
                 <!-- Managed Service Tiers -->
@@ -307,6 +307,9 @@
                                 <li class="flex items-start"><span class="text-brand-blue mr-2 mt-1">&#10003;</span>Unlimited Remote Support</li>
                                 <li class="flex items-start"><span class="text-brand-blue mr-2 mt-1">&#10003;</span>Discounted On-site Support (Billed Hourly)</li>
                             </ul>
+                            <div class="mt-8">
+                                <a href="#contact" class="w-full text-center inline-block bg-gray-600/50 text-white font-bold px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-300">Schedule a Consultation</a>
+                            </div>
                         </div>
                         <!-- Tier 2 -->
                         <div class="glass-card p-8 rounded-xl flex flex-col animated-section border-2 border-brand-blue relative transform scale-105" style="animation-delay: 0.2s;">
@@ -326,6 +329,9 @@
                                 <li class="flex items-start"><span class="text-brand-blue mr-2 mt-1">&#10003;</span><strong>Included On-site Support</strong></li>
                                 <li class="flex items-start"><span class="text-brand-blue mr-2 mt-1">&#10003;</span>Quarterly IT Strategy & Budget Reviews</li>
                             </ul>
+                            <div class="mt-8">
+                                <a href="#contact" class="w-full text-center inline-block bg-brand-blue text-white font-bold px-6 py-3 rounded-lg hover:brightness-125 transition-all duration-300">Schedule a Consultation</a>
+                            </div>
                         </div>
                         <!-- Tier 3 -->
                         <div class="glass-card p-8 rounded-xl flex flex-col animated-section" style="animation-delay: 0.4s;">
@@ -342,9 +348,12 @@
                                 <li class="flex items-start"><span class="text-brand-blue mr-2 mt-1">&#10003;</span>Annual Tech Roadmapping & Budgeting</li>
                                 <li class="flex items-start"><span class="text-brand-blue mr-2 mt-1">&#10003;</span>Emergency & After-Hours Support</li>
                             </ul>
+                             <div class="mt-8">
+                                <a href="#contact" class="w-full text-center inline-block bg-gray-600/50 text-white font-bold px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-300">Schedule a Consultation</a>
+                            </div>
                         </div>
                     </div>
-                     <p class="text-center text-sm text-gray-500 mt-8 animated-section">*A one-time onboarding fee, equivalent to one month of service, applies to all new clients.</p>
+                     <p class="text-center text-sm text-gray-500 mt-8 animated-section">Please Note: Pricing shown is our baseline for typical professional office environments. We provide a firm, all-inclusive quote after a brief consultation to understand the unique needs of your business.</p>
                 </div>
 
                  <!-- HaaS Tiers Section -->
@@ -457,7 +466,7 @@
                             <p class="hidden"><label>Don’t fill this out if you’re human: <input name="bot-field" /></label></p>
                             <div>
                                 <button type="submit" class="w-full justify-center py-3 px-6 border border-transparent shadow-md text-base font-medium rounded-md text-white bg-brand-blue hover:brightness-125 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue transition-transform transform hover:scale-105">
-                                    Request a Consultation
+                                    Schedule a Consultation
                                 </button>
                             </div>
                         </div>
@@ -600,102 +609,6 @@
                     localStorage.setItem('cookieConsent', 'true');
                     banner.style.display = 'none';
                     if (typeof initializeAnalytics === 'function') { initializeAnalytics(); }
-                });
-            }
-        });
-
-        // AI Cyber Risk Assessor
-        document.addEventListener('DOMContentLoaded', () => {
-            const analyzeBtn = document.getElementById('analyze-threats-btn');
-            if (analyzeBtn) {
-                const industryInput = document.getElementById('industry-input');
-                const resultContainer = document.getElementById('ai-result-container');
-                const resultText = document.getElementById('ai-result-text');
-                const sourcesContainer = document.getElementById('ai-sources');
-                const spinner = document.getElementById('analyze-spinner');
-                const btnText = document.getElementById('analyze-btn-text');
-
-                analyzeBtn.addEventListener('click', async () => {
-                    const industry = industryInput.value.trim();
-                    if (!industry) {
-                        resultText.textContent = 'Please enter an industry to analyze.';
-                        resultContainer.classList.remove('hidden');
-                        return;
-                    }
-
-                    // Show loading state
-                    btnText.textContent = 'Analyzing...';
-                    spinner.classList.remove('hidden');
-                    analyzeBtn.disabled = true;
-                    resultContainer.classList.add('hidden');
-                    
-                    const userQuery = `Based on the latest information from Google Search, provide a concise, single-paragraph summary of the top 3 cybersecurity threats facing a ${industry} business with 10-50 employees in Texas. Frame it as helpful advice for a non-technical business owner.`;
-                    const apiKey = ""; // API key is handled by the environment
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
-                    const payload = {
-                        contents: [{
-                            role: "user",
-                            parts: [{ text: userQuery }]
-                        }],
-                        tools: [{ "google_search": {} }],
-                    };
-
-                    try {
-                        const response = await fetch(apiUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-
-                        if (!response.ok) {
-                             let errorData = { message: `API Error: ${response.status} ${response.statusText}` };
-                            try {
-                                errorData = await response.json();
-                            } catch (e) {
-                                // Ignore if body isn't JSON
-                            }
-                            console.error('API Error Details:', errorData);
-                            throw new Error(errorData.error ? errorData.error.message : errorData.message);
-                        }
-
-                        const result = await response.json();
-                        const candidate = result.candidates?.[0];
-
-                        if (candidate && candidate.content?.parts?.[0]?.text) {
-                            resultText.textContent = candidate.content.parts[0].text;
-                            
-                            let sources = [];
-                            const groundingMetadata = candidate.groundingMetadata;
-                            if (groundingMetadata && groundingMetadata.groundingAttributions) {
-                                sources = groundingMetadata.groundingAttributions
-                                    .map(attr => ({ uri: attr.web?.uri, title: attr.web?.title }))
-                                    .filter(source => source.uri && source.title);
-                            }
-
-                            sourcesContainer.innerHTML = ''; // Clear previous sources
-                            if (sources.length > 0) {
-                                let sourcesHtml = '<p class="font-bold mt-4">Sources:</p><ul class="list-disc list-inside">';
-                                sources.forEach(source => {
-                                    sourcesHtml += `<li><a href="${source.uri}" target="_blank" rel="noopener noreferrer" class="text-brand-blue hover:underline">${source.title}</a></li>`;
-                                });
-                                sourcesHtml += '</ul>';
-                                sourcesContainer.innerHTML = sourcesHtml;
-                            }
-                            
-                        } else {
-                           resultText.textContent = 'Could not generate a response. The model may have returned an empty or invalid result. Please try again.';
-                        }
-                    } catch (error) {
-                        console.error('Full error object:', error);
-                        resultText.textContent = `An error occurred: ${error.message}`;
-                    } finally {
-                        // Hide loading state
-                        btnText.textContent = 'Analyze Threats';
-                        spinner.classList.add('hidden');
-                        analyzeBtn.disabled = false;
-                        resultContainer.classList.remove('hidden');
-                    }
                 });
             }
         });
