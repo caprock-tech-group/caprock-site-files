@@ -30,6 +30,6 @@
 # Redirect for the /support path
 [[redirects]]
   from = "/support"
-  to = "https://caprocktech.servicedesk.atera.com/"
+  to = "https://caprocktech.rmmservices.net/"
   status = 301
   force = true
