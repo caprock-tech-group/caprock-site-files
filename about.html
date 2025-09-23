@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Caprock Technology Group</title>
-    <meta name="description" content="Learn about Nick Stevens, the founder of Caprock Technology Group, and our mission to provide proactive, strategic IT support for businesses in the Texas Panhandle.">
+    <title>About Caprock Technology Group</title>
+    <meta name="description" content="Learn about Nick Stevens, the founder of Caprock Technology Group, and our mission to provide proactive, strategic IT partnerships to businesses in the Texas Panhandle.">
     <link rel="icon" type="image/png" href="caprock logo transparent BG 1.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -20,6 +21,15 @@
                         'brand-green': '#65a30d',
                         'dark-bg': '#0f172a',
                         'dark-card': '#1e293b',
+                    },
+                     animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
                     }
                 }
             }
@@ -32,11 +42,18 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        .prose-invert {
+            --tw-prose-body: #d1d5db;
+            --tw-prose-headings: #fff;
+            --tw-prose-lead: #a1a1aa;
+            --tw-prose-links: #4ade80;
+            --tw-prose-bold: #fff;
+        }
     </style>
 </head>
 <body class="bg-dark-bg text-gray-300">
 
-    <!-- Header & Navigation -->
+    <!-- Header -->
      <header id="header" class="bg-dark-card text-white fixed top-0 left-0 right-0 z-50 transition-all duration-300">
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
@@ -48,13 +65,14 @@
                 <div class="hidden md:flex items-center space-x-8">
                     <nav class="flex items-center space-x-8">
                         <a href="/#services" class="hover:text-brand-blue transition-colors">Services</a>
+                        <a href="security-cameras.html" class="hover:text-brand-blue transition-colors">Surveillance</a>
                         <a href="about.html" class="text-brand-blue font-semibold">About Us</a>
                         <a href="/#pricing" class="hover:text-brand-blue transition-colors">Pricing</a>
                         <a href="blog.html" class="hover:text-brand-blue transition-colors">Blog</a>
                         <a href="/support" target="_blank" class="hover:text-brand-blue transition-colors">Client Login</a>
                     </nav>
                      <div class="border-l border-gray-600 pl-6">
-                         <a href="tel:806-316-5070" class="text-brand-blue font-semibold text-lg hover:brightness-125">(806) 316-5070</a>
+                        <a href="tel:806-316-5070" class="text-brand-blue font-semibold text-lg hover:brightness-125">(806) 316-5070</a>
                     </div>
                 </div>
                 <div class="md:hidden flex items-center space-x-4">
@@ -69,7 +87,8 @@
         </div>
         <div id="mobile-menu" class="hidden md:hidden glass-card px-6 pb-4">
             <nav class="flex flex-col space-y-4 text-center">
-                <a href="/#services" class="mobile-nav-link hover:text-brand-blue py-2">Services</a>
+                 <a href="/#services" class="mobile-nav-link hover:text-brand-blue py-2">Services</a>
+                 <a href="security-cameras.html" class="mobile-nav-link hover:text-brand-blue py-2">Surveillance</a>
                 <a href="about.html" class="mobile-nav-link text-brand-blue font-semibold py-2">About Us</a>
                 <a href="/#pricing" class="mobile-nav-link hover:text-brand-blue py-2">Pricing</a>
                 <a href="blog.html" class="mobile-nav-link hover:text-brand-blue py-2">Blog</a>
@@ -79,39 +98,54 @@
     </header>
 
     <main class="pt-24">
-        <section class="py-20">
-            <div class="container mx-auto px-6">
-                <div class="max-w-4xl mx-auto">
-                    <div class="text-center">
-                        <h1 class="text-4xl md:text-5xl font-extrabold text-white">About Caprock Technology Group</h1>
-                        <p class="mt-4 text-lg text-gray-400">Your trusted, local partner in technology.</p>
-                    </div>
+        <!-- Hero Section -->
+        <section class="relative py-32 flex items-center justify-center text-center overflow-hidden bg-dark-card">
+             <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop');"></div>
+            <div class="relative z-10 p-6">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight tracking-tight">
+                    About Caprock Technology Group
+                </h1>
+                <p class="mt-6 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+                    A local partner dedicated to turning your technology into a competitive advantage.
+                </p>
+            </div>
+        </section>
 
-                    <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
-                        <div class="md:col-span-1">
-                            <img src="LinkedIn Headshot Edit.jpg" alt="Nick Stevens, Founder of Caprock Technology Group" class="rounded-xl shadow-2xl w-full">
-                        </div>
-                        <div class="md:col-span-2 text-lg text-gray-300 space-y-6">
-                             <h2 class="text-3xl font-bold text-white">A Message from Our Founder, Nick Stevens</h2>
-                            <p>
-                                After a decade in the technology field, and most recently as an IT Specialist for a local credit union, I saw a recurring gap in how IT services were being delivered to businesses here in the Texas Panhandle. Technology was often treated as a reactive expense—something to fix only when it broke.
-                            </p>
-                            <p>
-                                I knew there was a better way. The tools and strategies exist to make business technology proactive, reliable, and secure, preventing most downtime incidents before they can impact a company's bottom line.
-                            </p>
-                             <blockquote class="border-l-4 border-brand-blue pl-6 py-2 italic text-gray-200">
-                                "Caprock Technology Group was built on the philosophy that your technology should be a competitive advantage, not a liability."
-                            </blockquote>
-                            <p>
-                                That core belief drives everything we do. We don't just fix problems; we build strategic partnerships to ensure your technology is a powerful asset that supports your growth. Outside of the office, I enjoy spending time at church and experimenting with new tech projects.
-                            </p>
+        <!-- Bio Section -->
+        <section class="py-24">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
+                    <div class="md:col-span-1">
+                        <img src="LinkedIn Headshot Edit.jpg" alt="Nick Stevens, Founder of Caprock Technology Group" class="rounded-xl shadow-2xl w-full">
+                    </div>
+                    <div class="md:col-span-2">
+                        <h2 class="text-3xl font-bold text-white mb-4">A Message from Our Founder</h2>
+                        <div class="prose prose-invert prose-lg text-gray-300 max-w-none space-y-6">
+                            <p>My name is Nick Stevens, and I founded Caprock Technology Group to bring a new level of proactive, strategic IT partnership to the businesses that form the backbone of our community here in the Texas Panhandle.</p>
+                            <p>I've spent over a decade in the technology field, with my most recent role helping to manage and secure the critical systems of a local credit union. That experience in a high-stakes, security-focused environment showed me firsthand that the tools and strategies exist to prevent most IT problems before they can disrupt a business. Yet, too many local companies were still stuck in a reactive "break-fix" cycle, waiting for things to fail before getting help.</p>
+                            <p>Caprock Technology Group was built on the philosophy that your technology should be a competitive advantage, not a liability. My mission is to provide the proactive management and strategic guidance you need to not just fix problems, but to make your technology a powerful engine for growth and efficiency.</p>
+                            <p>When I'm not focused on technology, I enjoy spending time with my family, serving at my church, and experimenting with new tech projects. I believe in building long-term relationships based on trust and tangible results, and I look forward to the opportunity to learn about your business.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-    </main>
+        
+        <!-- CTA Section -->
+        <section class="py-24 bg-dark-card">
+             <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-white">Ready to Build a Partnership?</h2>
+                <p class="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">Let's discuss how a strategic approach to IT can help you achieve your business goals.</p>
+                <div class="mt-10">
+                    <a href="/#contact" class="bg-brand-blue text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:brightness-125 transform hover:scale-105 transition-all duration-300">
+                        Schedule a Consultation
+                    </a>
+                </div>
+            </div>
+        </section>
 
+    </main>
+    
     <!-- Footer -->
     <footer class="bg-dark-card text-gray-400">
         <div class="container mx-auto px-6 py-12">
@@ -131,7 +165,8 @@
                         <div>
                             <h3 class="text-sm font-semibold tracking-wider uppercase text-gray-200">Services</h3>
                             <ul class="mt-4 space-y-2">
-                                <li><a href="/#pricing" class="hover:text-white">Managed Plans</a></li>
+                                <li><a href="/#pricing" class="hover:text-white">Managed IT</a></li>
+                                <li><a href="security-cameras.html" class="hover:text-white">Surveillance</a></li>
                                 <li><a href="/#haas-offerings" class="hover:text-white">HaaS Offerings</a></li>
                                 <li><a href="onboarding.html" class="hover:text-white">Client Onboarding</a></li>
                             </ul>
@@ -167,12 +202,7 @@
         mobileMenuButton.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
-        const mobileMenuLinks = document.querySelectorAll('.mobile-nav-link');
-        mobileMenuLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
     </script>
 </body>
 </html>
+
