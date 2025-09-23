@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog - Caprock Technology Group</title>
-    <meta name="description" content="IT strategy, cybersecurity news, and technology tips for businesses in the Texas Panhandle from the experts at Caprock Technology Group.">
+    <meta name="description" content="Explore articles on IT strategy, cybersecurity news, and technology tips for businesses in the Texas Panhandle from Caprock Technology Group.">
     <link rel="icon" type="image/png" href="caprock logo transparent BG 1.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -20,7 +21,7 @@
                         'brand-green': '#65a30d',
                         'dark-bg': '#0f172a',
                         'dark-card': '#1e293b',
-                    }
+                    },
                 }
             }
         }
@@ -36,7 +37,7 @@
 </head>
 <body class="bg-dark-bg text-gray-300">
 
-    <!-- Header & Navigation -->
+    <!-- Header -->
      <header id="header" class="bg-dark-card text-white fixed top-0 left-0 right-0 z-50 transition-all duration-300">
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
@@ -48,13 +49,14 @@
                 <div class="hidden md:flex items-center space-x-8">
                     <nav class="flex items-center space-x-8">
                         <a href="/#services" class="hover:text-brand-blue transition-colors">Services</a>
+                        <a href="security-cameras.html" class="hover:text-brand-blue transition-colors">Surveillance</a>
                         <a href="about.html" class="hover:text-brand-blue transition-colors">About Us</a>
                         <a href="/#pricing" class="hover:text-brand-blue transition-colors">Pricing</a>
                         <a href="blog.html" class="text-brand-blue font-semibold">Blog</a>
                         <a href="/support" target="_blank" class="hover:text-brand-blue transition-colors">Client Login</a>
                     </nav>
                      <div class="border-l border-gray-600 pl-6">
-                         <a href="tel:806-316-5070" class="text-brand-blue font-semibold text-lg hover:brightness-125">(806) 316-5070</a>
+                        <a href="tel:806-316-5070" class="text-brand-blue font-semibold text-lg hover:brightness-125">(806) 316-5070</a>
                     </div>
                 </div>
                 <div class="md:hidden flex items-center space-x-4">
@@ -70,6 +72,7 @@
         <div id="mobile-menu" class="hidden md:hidden glass-card px-6 pb-4">
             <nav class="flex flex-col space-y-4 text-center">
                 <a href="/#services" class="mobile-nav-link hover:text-brand-blue py-2">Services</a>
+                <a href="security-cameras.html" class="mobile-nav-link hover:text-brand-blue py-2">Surveillance</a>
                 <a href="about.html" class="mobile-nav-link hover:text-brand-blue py-2">About Us</a>
                 <a href="/#pricing" class="mobile-nav-link hover:text-brand-blue py-2">Pricing</a>
                 <a href="blog.html" class="mobile-nav-link text-brand-blue font-semibold py-2">Blog</a>
@@ -79,20 +82,30 @@
     </header>
 
     <main class="pt-24">
-        <section class="py-20">
-            <div class="container mx-auto px-6">
-                <div class="text-center max-w-3xl mx-auto">
-                    <h1 class="text-4xl md:text-5xl font-extrabold text-white">Caprock Tech Insights</h1>
-                    <p class="mt-4 text-lg text-gray-400">IT strategy, cybersecurity news, and technology tips for your business.</p>
-                </div>
+        <!-- Hero Section -->
+        <section class="relative py-32 flex items-center justify-center text-center overflow-hidden bg-dark-card">
+             <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image: url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=2070&auto=format&fit=crop');"></div>
+            <div class="relative z-10 p-6">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight tracking-tight">
+                    Caprock Tech Insights
+                </h1>
+                <p class="mt-6 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+                    IT strategy, cybersecurity news, and technology tips for your business.
+                </p>
+            </div>
+        </section>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mt-16">
+        <!-- Blog Grid -->
+        <section class="py-24">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                     {{BLOG_POSTS_LIST}}
                 </div>
             </div>
         </section>
-    </main>
 
+    </main>
+    
     <!-- Footer -->
     <footer class="bg-dark-card text-gray-400">
         <div class="container mx-auto px-6 py-12">
@@ -112,7 +125,8 @@
                         <div>
                             <h3 class="text-sm font-semibold tracking-wider uppercase text-gray-200">Services</h3>
                             <ul class="mt-4 space-y-2">
-                                <li><a href="/#pricing" class="hover:text-white">Managed Plans</a></li>
+                                <li><a href="/#pricing" class="hover:text-white">Managed IT</a></li>
+                                <li><a href="security-cameras.html" class="hover:text-white">Surveillance</a></li>
                                 <li><a href="/#haas-offerings" class="hover:text-white">HaaS Offerings</a></li>
                                 <li><a href="onboarding.html" class="hover:text-white">Client Onboarding</a></li>
                             </ul>
@@ -148,12 +162,7 @@
         mobileMenuButton.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
-        const mobileMenuLinks = document.querySelectorAll('.mobile-nav-link');
-        mobileMenuLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
     </script>
 </body>
 </html>
+
