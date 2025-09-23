@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{POST_TITLE}} - Caprock Technology Group</title>
     <link rel="icon" type="image/png" href="caprock logo transparent BG 1.png">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -20,41 +22,8 @@
                         'dark-bg': '#0f172a',
                         'dark-card': '#1e293b',
                     },
-                    typography: (theme) => ({
-                        dark: {
-                            css: {
-                                color: theme('colors.gray.300'),
-                                '[class~="lead"]': { color: theme('colors.gray.400') },
-                                a: { color: theme('colors.brand-blue') },
-                                strong: { color: theme('colors.white') },
-                                'ol > li::before': { color: theme('colors.gray.400') },
-                                'ul > li::before': { backgroundColor: theme('colors.gray.600') },
-                                hr: { borderColor: theme('colors.gray.700') },
-                                blockquote: {
-                                    color: theme('colors.gray.400'),
-                                    borderLeftColor: theme('colors.gray.700'),
-                                },
-                                h1: { color: theme('colors.white') },
-                                h2: { color: theme('colors.white'), borderBottom: `1px solid ${theme('colors.gray.700')}`, paddingBottom: '0.5rem' },
-                                h3: { color: theme('colors.white') },
-                                h4: { color: theme('colors.white') },
-                                'figure figcaption': { color: theme('colors.gray.400') },
-                                code: { color: theme('colors.white') },
-                                'a code': { color: theme('colors.brand-blue') },
-                                pre: {
-                                    color: theme('colors.gray.200'),
-                                    backgroundColor: theme('colors.gray.800'),
-                                },
-                                thead: {
-                                    color: theme('colors.white'),
-                                    borderBottomColor: theme('colors.gray.600'),
-                                },
-                                'tbody tr': { borderBottomColor: theme('colors.gray.700') },
-                            },
-                        },
-                    }),
                 }
-            },
+            }
         }
     </script>
     <style>
@@ -64,16 +33,29 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .prose-dark img {
-            border-radius: 0.75rem; /* 12px */
-            margin-top: 2em;
-            margin-bottom: 2em;
+        .prose-dark {
+            --tw-prose-body: #9ca3af;
+            --tw-prose-headings: #ffffff;
+            --tw-prose-lead: #6b7280;
+            --tw-prose-links: #4ade80;
+            --tw-prose-bold: #ffffff;
+            --tw-prose-counters: #6b7280;
+            --tw-prose-bullets: #4ade80;
+            --tw-prose-hr: #374151;
+            --tw-prose-quotes: #f3f4f6;
+            --tw-prose-quote-borders: #4ade80;
+            --tw-prose-captions: #6b7280;
+            --tw-prose-code: #ffffff;
+            --tw-prose-pre-code: #d1d5db;
+            --tw-prose-pre-bg: rgba(0,0,0,0.2);
+            --tw-prose-th-borders: #4b5563;
+            --tw-prose-td-borders: #374151;
         }
     </style>
 </head>
 <body class="bg-dark-bg text-gray-300">
 
-    <!-- Header & Navigation -->
+    <!-- Header -->
      <header id="header" class="bg-dark-card text-white fixed top-0 left-0 right-0 z-50 transition-all duration-300">
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
@@ -85,13 +67,14 @@
                 <div class="hidden md:flex items-center space-x-8">
                     <nav class="flex items-center space-x-8">
                         <a href="/#services" class="hover:text-brand-blue transition-colors">Services</a>
+                        <a href="security-cameras.html" class="hover:text-brand-blue transition-colors">Surveillance</a>
                         <a href="about.html" class="hover:text-brand-blue transition-colors">About Us</a>
                         <a href="/#pricing" class="hover:text-brand-blue transition-colors">Pricing</a>
                         <a href="blog.html" class="text-brand-blue font-semibold">Blog</a>
                         <a href="/support" target="_blank" class="hover:text-brand-blue transition-colors">Client Login</a>
                     </nav>
                      <div class="border-l border-gray-600 pl-6">
-                         <a href="tel:806-316-5070" class="text-brand-blue font-semibold text-lg hover:brightness-125">(806) 316-5070</a>
+                        <a href="tel:806-316-5070" class="text-brand-blue font-semibold text-lg hover:brightness-125">(806) 316-5070</a>
                     </div>
                 </div>
                 <div class="md:hidden flex items-center space-x-4">
@@ -105,8 +88,9 @@
             </div>
         </div>
         <div id="mobile-menu" class="hidden md:hidden glass-card px-6 pb-4">
-             <nav class="flex flex-col space-y-4 text-center">
+            <nav class="flex flex-col space-y-4 text-center">
                 <a href="/#services" class="mobile-nav-link hover:text-brand-blue py-2">Services</a>
+                <a href="security-cameras.html" class="mobile-nav-link hover:text-brand-blue py-2">Surveillance</a>
                 <a href="about.html" class="mobile-nav-link hover:text-brand-blue py-2">About Us</a>
                 <a href="/#pricing" class="mobile-nav-link hover:text-brand-blue py-2">Pricing</a>
                 <a href="blog.html" class="mobile-nav-link text-brand-blue font-semibold py-2">Blog</a>
@@ -115,23 +99,26 @@
         </div>
     </header>
 
-    <main class="pt-24">
-        <article class="py-20">
-            <div class="container mx-auto px-6">
-                <div class="max-w-4xl mx-auto">
-                    <header class="text-center mb-16">
-                        <h1 class="text-4xl md:text-5xl font-extrabold text-white">{{POST_TITLE}}</h1>
-                        <p class="mt-4 text-lg text-gray-400">Published on {{POST_DATE}} by {{POST_AUTHOR}}</p>
-                    </header>
-                    <img class="w-full rounded-xl shadow-2xl mb-12" src="{{POST_IMAGE_URL}}" alt="{{POST_IMAGE_ALT}}">
-                    <div class="prose prose-xl prose-dark max-w-none">
-                        {{POST_BODY}}
-                    </div>
+    <main class="pt-32 pb-20">
+        <div class="container mx-auto px-6">
+            <article class="max-w-4xl mx-auto">
+                <img class="w-full rounded-xl shadow-2xl mb-8" src="{{POST_IMAGE_URL}}" alt="{{POST_IMAGE_ALT}}">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-white">{{POST_TITLE}}</h1>
+                    <p class="mt-4 text-gray-400">Published on {{POST_DATE}} by {{POST_AUTHOR}}</p>
                 </div>
-            </div>
-        </article>
-    </main>
 
+                <div class="prose prose-dark prose-lg max-w-none">
+                    {{POST_BODY}}
+                </div>
+                
+                <div class="text-center mt-16">
+                    <a href="blog.html" class="text-brand-blue font-semibold hover:brightness-125 transition-all duration-300">&larr; Back to All Posts</a>
+                </div>
+            </article>
+        </div>
+    </main>
+    
     <!-- Footer -->
     <footer class="bg-dark-card text-gray-400">
         <div class="container mx-auto px-6 py-12">
@@ -151,7 +138,8 @@
                         <div>
                             <h3 class="text-sm font-semibold tracking-wider uppercase text-gray-200">Services</h3>
                             <ul class="mt-4 space-y-2">
-                                <li><a href="/#pricing" class="hover:text-white">Managed Plans</a></li>
+                                <li><a href="/#pricing" class="hover:text-white">Managed IT</a></li>
+                                <li><a href="security-cameras.html" class="hover:text-white">Surveillance</a></li>
                                 <li><a href="/#haas-offerings" class="hover:text-white">HaaS Offerings</a></li>
                                 <li><a href="onboarding.html" class="hover:text-white">Client Onboarding</a></li>
                             </ul>
@@ -186,12 +174,6 @@
         const mobileMenu = document.getElementById('mobile-menu');
         mobileMenuButton.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
-        });
-        const mobileMenuLinks = document.querySelectorAll('.mobile-nav-link');
-        mobileMenuLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
         });
     </script>
 </body>
