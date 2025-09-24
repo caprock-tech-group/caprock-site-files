@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog - Caprock Technology Group</title>
-    <meta name="description" content="Explore articles on IT strategy, cybersecurity news, and technology tips for businesses in the Texas Panhandle from Caprock Technology Group.">
+    <meta name="description" content="IT strategy, cybersecurity news, and technology tips for businesses in the Texas Panhandle from the experts at Caprock Technology Group.">
     <link rel="icon" type="image/png" href="caprock logo transparent BG 1.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +17,7 @@
             theme: {
                 extend: {
                     colors: {
-                        'brand-blue': '#4ade80', // Brighter for dark mode
+                        'brand-blue': '#4ade80',
                         'brand-green': '#65a30d',
                         'dark-bg': '#0f172a',
                         'dark-card': '#1e293b',
@@ -51,6 +51,7 @@
                         <a href="/#services" class="hover:text-brand-blue transition-colors">Services</a>
                         <a href="security-cameras.html" class="hover:text-brand-blue transition-colors">Surveillance</a>
                         <a href="about.html" class="hover:text-brand-blue transition-colors">About Us</a>
+                        <a href="partners.html" class="hover:text-brand-blue transition-colors">Partners</a>
                         <a href="/#pricing" class="hover:text-brand-blue transition-colors">Pricing</a>
                         <a href="blog.html" class="text-brand-blue font-semibold">Blog</a>
                         <a href="/support" target="_blank" class="hover:text-brand-blue transition-colors">Client Login</a>
@@ -74,6 +75,7 @@
                 <a href="/#services" class="mobile-nav-link hover:text-brand-blue py-2">Services</a>
                 <a href="security-cameras.html" class="mobile-nav-link hover:text-brand-blue py-2">Surveillance</a>
                 <a href="about.html" class="mobile-nav-link hover:text-brand-blue py-2">About Us</a>
+                <a href="partners.html" class="mobile-nav-link hover:text-brand-blue py-2">Partners</a>
                 <a href="/#pricing" class="mobile-nav-link hover:text-brand-blue py-2">Pricing</a>
                 <a href="blog.html" class="mobile-nav-link text-brand-blue font-semibold py-2">Blog</a>
                 <a href="/support" target="_blank" class="mobile-nav-link hover:text-brand-blue py-2">Client Login</a>
@@ -84,7 +86,7 @@
     <main class="pt-24">
         <!-- Hero Section -->
         <section class="relative py-32 flex items-center justify-center text-center overflow-hidden bg-dark-card">
-             <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image: url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=2070&auto=format&fit=crop');"></div>
+            <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image: url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=2070&auto=format&fit=crop');"></div>
             <div class="relative z-10 p-6">
                 <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight tracking-tight">
                     Caprock Tech Insights
@@ -95,7 +97,7 @@
             </div>
         </section>
 
-        <!-- Blog Grid -->
+        <!-- Blog Posts Grid -->
         <section class="py-24">
             <div class="container mx-auto px-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
@@ -107,7 +109,7 @@
     </main>
     
     <!-- Footer -->
-    <footer class="bg-dark-card text-gray-400">
+    <footer class="bg-dark-bg text-gray-400">
         <div class="container mx-auto px-6 py-12">
             <div class="md:grid md:grid-cols-3 md:gap-8">
                  <div class="space-y-4">
@@ -135,6 +137,7 @@
                             <h3 class="text-sm font-semibold tracking-wider uppercase text-gray-200">Company</h3>
                             <ul class="mt-4 space-y-2">
                                 <li><a href="about.html" class="hover:text-white">About Us</a></li>
+                                <li><a href="partners.html" class="hover:text-white">Partners</a></li>
                                 <li><a href="blog.html" class="hover:text-white">Blog</a></li>
                             </ul>
                         </div>
@@ -159,9 +162,7 @@
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
+        mobileMenuButton.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
     </script>
 </body>
 </html>
