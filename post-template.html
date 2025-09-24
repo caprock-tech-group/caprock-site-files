@@ -6,7 +6,7 @@
     <title>{{POST_TITLE}} - Caprock Technology Group</title>
     <link rel="icon" type="image/png" href="caprock logo transparent BG 1.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.1?plugins=typography"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
             theme: {
                 extend: {
                     colors: {
-                        'brand-blue': '#4ade80', // Brighter for dark mode
+                        'brand-blue': '#4ade80',
                         'brand-green': '#65a30d',
                         'dark-bg': '#0f172a',
                         'dark-card': '#1e293b',
@@ -33,23 +33,35 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .prose-dark {
-            --tw-prose-body: #9ca3af;
-            --tw-prose-headings: #ffffff;
-            --tw-prose-lead: #6b7280;
-            --tw-prose-links: #4ade80;
-            --tw-prose-bold: #ffffff;
-            --tw-prose-counters: #6b7280;
-            --tw-prose-bullets: #4ade80;
-            --tw-prose-hr: #374151;
-            --tw-prose-quotes: #f3f4f6;
-            --tw-prose-quote-borders: #4ade80;
-            --tw-prose-captions: #6b7280;
-            --tw-prose-code: #ffffff;
-            --tw-prose-pre-code: #d1d5db;
-            --tw-prose-pre-bg: rgba(0,0,0,0.2);
-            --tw-prose-th-borders: #4b5563;
-            --tw-prose-td-borders: #374151;
+        /* Custom styles for Tailwind Typography plugin in dark mode */
+        .prose {
+            color: #d1d5db; /* gray-300 */
+        }
+        .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+            color: #f9fafb; /* gray-50 */
+            border-bottom: 1px solid #4b5563; /* gray-600 */
+            padding-bottom: 0.5em;
+            margin-top: 2em;
+            margin-bottom: 1em;
+        }
+        .prose p {
+            line-height: 1.75;
+        }
+        .prose a {
+            color: #4ade80; /* brand-blue */
+        }
+        .prose strong {
+            color: #f9fafb; /* gray-50 */
+        }
+        .prose blockquote {
+            color: #9ca3af; /* gray-400 */
+            border-left-color: #4b5563; /* gray-600 */
+        }
+        .prose img {
+            border-radius: 0.75rem; /* rounded-xl */
+        }
+         .prose ul > li::before {
+            background-color: #4ade80; /* brand-blue */
         }
     </style>
 </head>
@@ -69,6 +81,7 @@
                         <a href="/#services" class="hover:text-brand-blue transition-colors">Services</a>
                         <a href="security-cameras.html" class="hover:text-brand-blue transition-colors">Surveillance</a>
                         <a href="about.html" class="hover:text-brand-blue transition-colors">About Us</a>
+                        <a href="partners.html" class="hover:text-brand-blue transition-colors">Partners</a>
                         <a href="/#pricing" class="hover:text-brand-blue transition-colors">Pricing</a>
                         <a href="blog.html" class="text-brand-blue font-semibold">Blog</a>
                         <a href="/support" target="_blank" class="hover:text-brand-blue transition-colors">Client Login</a>
@@ -92,6 +105,7 @@
                 <a href="/#services" class="mobile-nav-link hover:text-brand-blue py-2">Services</a>
                 <a href="security-cameras.html" class="mobile-nav-link hover:text-brand-blue py-2">Surveillance</a>
                 <a href="about.html" class="mobile-nav-link hover:text-brand-blue py-2">About Us</a>
+                <a href="partners.html" class="mobile-nav-link hover:text-brand-blue py-2">Partners</a>
                 <a href="/#pricing" class="mobile-nav-link hover:text-brand-blue py-2">Pricing</a>
                 <a href="blog.html" class="mobile-nav-link text-brand-blue font-semibold py-2">Blog</a>
                 <a href="/support" target="_blank" class="mobile-nav-link hover:text-brand-blue py-2">Client Login</a>
@@ -101,24 +115,23 @@
 
     <main class="pt-32 pb-20">
         <div class="container mx-auto px-6">
-            <article class="max-w-4xl mx-auto">
-                <img class="w-full rounded-xl shadow-2xl mb-8" src="{{POST_IMAGE_URL}}" alt="{{POST_IMAGE_ALT}}">
+            <article class="prose prose-lg max-w-4xl mx-auto">
                 <div class="text-center mb-12">
-                    <h1 class="text-4xl md:text-5xl font-extrabold text-white">{{POST_TITLE}}</h1>
-                    <p class="mt-4 text-gray-400">Published on {{POST_DATE}} by {{POST_AUTHOR}}</p>
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-white leading-tight">{{POST_TITLE}}</h1>
+                    <p class="mt-4 text-lg text-gray-400">Published on {{POST_DATE}} by {{POST_AUTHOR}}</p>
                 </div>
-
-                <div class="prose prose-dark prose-lg max-w-none">
+                <img class="rounded-xl shadow-2xl w-full" src="{{POST_IMAGE_URL}}" alt="{{POST_IMAGE_ALT}}">
+                
+                <div class="mt-12">
                     {{POST_BODY}}
                 </div>
-                
-                <div class="text-center mt-16">
-                    <a href="blog.html" class="text-brand-blue font-semibold hover:brightness-125 transition-all duration-300">&larr; Back to All Posts</a>
-                </div>
             </article>
+            <div class="text-center mt-16">
+                 <a href="blog.html" class="text-brand-blue font-semibold hover:brightness-125 transition-all duration-300">&larr; Back to All Posts</a>
+            </div>
         </div>
     </main>
-    
+
     <!-- Footer -->
     <footer class="bg-dark-card text-gray-400">
         <div class="container mx-auto px-6 py-12">
@@ -148,6 +161,7 @@
                             <h3 class="text-sm font-semibold tracking-wider uppercase text-gray-200">Company</h3>
                             <ul class="mt-4 space-y-2">
                                 <li><a href="about.html" class="hover:text-white">About Us</a></li>
+                                <li><a href="partners.html" class="hover:text-white">Partners</a></li>
                                 <li><a href="blog.html" class="hover:text-white">Blog</a></li>
                             </ul>
                         </div>
@@ -172,9 +186,7 @@
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
+        mobileMenuButton.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
     </script>
 </body>
 </html>
