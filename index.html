@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caprock Technology Group - Your Strategic IT Partner</title>
+    <meta name="description" content="Caprock Tech offers strategic IT support and managed services for businesses in Amarillo, TX, and the Texas Panhandle. We provide proactive cybersecurity, cloud solutions, and HaaS to drive your business forward.">
+    <meta name="keywords" content="managed IT services, IT support Amarillo, cybersecurity Texas Panhandle, business IT solutions, Caprock Tech">
+    <link rel="icon" type="image/png" href="caprock logo transparent BG 1.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5CE6ER2YGR"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      function initializeAnalytics() {
+        gtag('config', 'G-5CE6ER2YGR');
+      }
+    </script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-blue': '#4ade80', // Industrial Green-Blue
+                        'brand-green': '#65a30d',
+                        'dark-bg': '#0f172a',
+                        'dark-card': '#1e293b',
+                        'industrial-border': '#334155',
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .animated-section {
+            opacity: 0;
+        }
+        .is-visible {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-gray-300">
+
+    <!-- Header -->
+     <header id="header" class="bg-transparent text-white fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="/" class="flex items-center space-x-4">
+                    <div class="bg-gray-200 p-1 rounded-md">
+                        <img src="caprock logo transparent BG 2.png" alt="Caprock Technology Group Logo" class="h-12">
+                    </div>
+                </a>
+                <div class="hidden lg:flex items-center space-x-8">
+                    <nav class="flex items-center space-x-6 text-sm font-medium tracking-wide">
+                        <a href="#services" class="hover:text-brand-blue transition-colors uppercase">Services</a>
+                        <a href="security-cameras.html" class="hover:text-brand-blue transition-colors uppercase">Surveillance</a>
+                        <a href="about.html" class="hover:text-brand-blue transition-colors uppercase">About Us</a>
+                        <a href="partners.html" class="hover:text-brand-blue transition-colors uppercase">Partners</a>
+                        <a href="#pricing" class="hover:text-brand-blue transition-colors font-semibold uppercase">Memberships</a>
+                        <a href="blog.html" class="hover:text-brand-blue transition-colors uppercase">Blog</a>
+                        <a href="/support" target="_blank" class="hover:text-brand-blue transition-colors uppercase">Client Login</a>
+                    </nav>
+                     <div class="border-l border-gray-600 pl-6">
+                        <a href="tel:806-316-5070" class="text-brand-blue font-bold text-lg hover:brightness-125">(806) 316-5070</a>
+                    </div>
+                </div>
+                <div class="lg:hidden flex items-center space-x-4">
+                     <a href="tel:806-316-5070" class="text-brand-blue">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 6.75z" /></svg>
+                    </a>
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-brand-blue">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden lg:hidden glass-card px-6 pb-4">
+            <nav class="flex flex-col space-y-4 text-center py-4">
+                <a href="#services" class="mobile-nav-link hover:text-brand-blue uppercase">Services</a>
+                <a href="security-cameras.html" class="mobile-nav-link hover:text-brand-blue uppercase">Surveillance</a>
+                <a href="about.html" class="mobile-nav-link hover:text-brand-blue uppercase">About Us</a>
+                <a href="partners.html" class="mobile-nav-link hover:text-brand-blue uppercase">Partners</a>
+                <a href="#pricing" class="mobile-nav-link hover:text-brand-blue uppercase font-semibold">Memberships</a>
+                <a href="blog.html" class="mobile-nav-link hover:text-brand-blue uppercase">Blog</a>
+                <a href="/support" target="_blank" class="mobile-nav-link hover:text-brand-blue uppercase">Client Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="relative h-screen flex items-center justify-center text-center overflow-hidden">
+             <div class="absolute inset-0 bg-dark-bg opacity-80 z-10"></div>
+             <video autoplay loop muted playsinline class="absolute z-0 w-auto min-w-full min-h-full max-w-none grayscale opacity-30">
+                <source src="https://cdn.pixabay.com/video/2023/07/11/170648-843257014_large.mp4" type="video/mp4">
+            </video>
+            <div class="relative z-20 p-6 max-w-5xl">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight tracking-tighter uppercase animate-fade-in-up">
+                    IT That Drives Your Business <span class="text-brand-blue italic">Forward.</span>
+                </h1>
+                <p class="mt-6 text-lg md:text-xl text-gray-400 max-w-3xl mx-auto font-medium">
+                    We build strategic technology partnerships with Panhandle businesses, using an AI-driven platform to enhance productivity, fuel growth, and provide a genuine competitive edge.
+                </p>
+                <div class="mt-10 flex justify-center items-center space-x-4 animate-fade-in-up">
+                    <a href="#pricing" class="bg-brand-blue text-dark-bg font-black px-10 py-4 rounded-sm shadow-xl hover:brightness-110 transition-all uppercase tracking-widest text-sm">
+                        View Memberships
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Trusted Partners -->
+        <section class="py-12 border-t border-industrial-border bg-dark-card/50 overflow-hidden">
+            <div class="container mx-auto px-6">
+                <p class="text-center text-[10px] font-black text-gray-500 uppercase tracking-[0.4em] mb-8">Propelling Your Business with Industry Leaders</p>
+                <div class="flex flex-wrap justify-center items-center gap-x-12 gap-y-8 grayscale opacity-40 hover:opacity-100 transition-opacity duration-700">
+                    <img src="microsoft.png" alt="Microsoft" class="h-6 md:h-8">
+                    <img src="dell.png" alt="Dell" class="h-6 md:h-8">
+                    <img src="sentinelone.png" alt="SentinelOne" class="h-6 md:h-8">
+                    <img src="ninjaone.png" alt="NinjaOne" class="h-6 md:h-8">
+                    <img src="bitdefender.png" alt="Bitdefender" class="h-6 md:h-8">
+                    <img src="acronis.png" alt="Acronis" class="h-6 md:h-8">
+                    <img src="montavue.png" alt="Montavue" class="h-6 md:h-8">
+                    <img src="reolink.png" alt="Reolink" class="h-6 md:h-8">
+                    <img src="lorex.png" alt="Lorex" class="h-6 md:h-8">
+                </div>
+            </div>
+        </section>
+
+        <!-- Services -->
+        <section id="services" class="py-24 border-t border-industrial-border">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto mb-16 animated-section">
+                    <h2 class="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">Industrial IT Standards</h2>
+                    <p class="mt-4 text-lg text-gray-400">Enterprise-grade tools delivered with West Texas integrity.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                     <div class="glass-card p-8 rounded-xl animated-section transform hover:-translate-y-2 transition-transform duration-300">
+                        <h3 class="text-xl font-bold text-white mb-2 uppercase tracking-tighter">Autonomous EDR</h3>
+                        <p class="text-gray-400 text-sm">Powered by <strong>SentinelOne AI</strong>, we kill ransomware in milliseconds based on behavior, not just updates.</p>
+                    </div>
+                     <div class="glass-card p-8 rounded-xl animated-section transform hover:-translate-y-2 transition-transform duration-300" style="animation-delay: 0.2s;">
+                        <h3 class="text-xl font-bold text-white mb-2 uppercase tracking-tighter">Self-Healing</h3>
+                        <p class="text-gray-400 text-sm">Our <strong>NinjaOne</strong> engine automatically patches and maintains systems before your team loses work.</p>
+                    </div>
+                     <div class="glass-card p-8 rounded-xl animated-section transform hover:-translate-y-2 transition-transform duration-300" style="animation-delay: 0.4s;">
+                        <h3 class="text-xl font-bold text-white mb-2 uppercase tracking-tighter">Immutable Backup</h3>
+                        <p class="text-gray-400 text-sm">Off-site encrypted backups through <strong>Acronis</strong> ensure your data is recoverable, no matter the disaster.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-xl animated-section transform hover:-translate-y-2 transition-transform duration-300" style="animation-delay: 0.6s;">
+                        <h3 class="text-xl font-bold text-white mb-2 uppercase tracking-tighter">Local Presence</h3>
+                        <p class="text-gray-400 text-sm">Technicians based in Amarillo. We provide the physical presence and strategic insight your business demands.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Who We Serve -->
+        <section id="who-we-serve" class="py-24 bg-dark-card/30 border-t border-industrial-border">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto mb-16 animated-section">
+                    <h2 class="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">Who We Serve</h2>
+                    <p class="mt-4 text-lg text-gray-400">Strategic IT partnerships for businesses that depend on technology to stay productive.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <div class="glass-card p-8 rounded-xl text-center animated-section transform hover:-translate-y-2 transition-transform duration-300">
+                        <div class="bg-brand-blue/10 p-4 rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center text-brand-blue">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white uppercase tracking-tighter">Agriculture & Trades</h3>
+                        <p class="mt-4 text-gray-400 text-sm leading-relaxed">Specialized support for the field—from rugged hardware to remote connectivity for the Panhandle's backbone.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-xl text-center animated-section transform hover:-translate-y-2 transition-transform duration-300" style="animation-delay: 0.2s;">
+                        <div class="bg-brand-blue/10 p-4 rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center text-brand-blue">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-10V4m0 10V4m0 10h1m-1 4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white uppercase tracking-tighter">Professional Services</h3>
+                        <p class="mt-4 text-gray-400 text-sm leading-relaxed">Security and reliability for Law offices, CPAs, and firms where client data confidentiality is non-negotiable.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-xl text-center animated-section transform hover:-translate-y-2 transition-transform duration-300" style="animation-delay: 0.4s;">
+                        <div class="bg-brand-blue/10 p-4 rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center text-brand-blue">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white uppercase tracking-tighter">SMB Growth</h3>
+                        <p class="mt-4 text-gray-400 text-sm leading-relaxed">Enterprise-grade IT scaled for small to medium businesses. Predictable costs to fuel your expansion.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MANAGED IT MEMBERSHIPS -->
+        <section id="pricing" class="py-24 bg-dark-bg border-t border-industrial-border">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16 animated-section">
+                    <h2 class="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter">Managed IT Memberships</h2>
+                    <p class="mt-4 text-xl text-gray-400 font-medium tracking-tight">Transparent. Scalable. Industrial-Strength.</p>
+                </div>
+
+                <!-- Membership Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-0 max-w-7xl mx-auto items-stretch">
+                    
+                    <!-- Tier 1: The Watchtower -->
+                    <div class="bg-dark-card border border-industrial-border p-8 flex flex-col animated-section">
+                        <div class="mb-8">
+                            <h3 class="text-xs font-black text-brand-blue uppercase tracking-[0.3em] mb-2">Silent Protection</h3>
+                            <h4 class="text-4xl font-black text-white uppercase tracking-tighter">The Watchtower</h4>
+                        </div>
+                        <div class="mb-8">
+                            <p class="text-gray-400 text-sm mb-6">Optimized for cost-conscious businesses and retail POS environments.</p>
+                            <div class="flex items-baseline">
+                                <span class="text-5xl font-black text-white">$75</span>
+                                <span class="text-gray-500 ml-2 text-sm uppercase font-bold tracking-widest">/ USER / MO</span>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <ul class="space-y-4 text-sm font-medium">
+                                <li class="flex items-center text-white"><span class="text-brand-blue mr-3 font-bold">01</span> Ransomware Kill-Switch (S1 AI EDR)</li>
+                                <li class="flex items-center text-white"><span class="text-brand-blue mr-3 font-bold">02</span> Self-Healing Engine (Auto-Patching)</li>
+                                <li class="flex items-center text-white"><span class="text-brand-blue mr-3 font-bold">03</span> 24/7 Professional Threat Monitoring</li>
+                                <li class="flex items-center text-gray-500 italic"><span class="text-gray-700 mr-3">--</span> Does NOT include free Helpdesk</li>
+                                <li class="pt-4 border-t border-industrial-border text-xs text-gray-400">
+                                    <span class="text-white font-bold uppercase tracking-wider">Member Labor Rate:</span> <br>Discounted to $125/hr.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-10">
+                            <a href="#contact" class="block w-full text-center py-4 bg-transparent border-2 border-industrial-border text-white font-black uppercase tracking-widest text-xs hover:bg-industrial-border transition-all">Start Protection</a>
+                        </div>
+                    </div>
+
+                    <!-- Tier 2: The Partner (MOST POPULAR) -->
+                    <div class="bg-dark-card border-2 border-brand-blue p-10 flex flex-col animated-section relative z-10 lg:-my-4 shadow-2xl">
+                        <div class="absolute top-0 right-0 bg-brand-blue text-dark-bg px-4 py-1 text-[10px] font-black uppercase tracking-widest">Most Popular</div>
+                        <div class="mb-8">
+                            <h3 class="text-xs font-black text-brand-blue uppercase tracking-[0.3em] mb-2">Unlimited Remote Support</h3>
+                            <h4 class="text-5xl font-black text-white uppercase tracking-tighter">The Partner</h4>
+                        </div>
+                        <div class="mb-8">
+                            <p class="text-gray-300 text-sm mb-6">Standard for professional offices (Law, CPA, HVAC) requiring maximum uptime.</p>
+                            <div class="flex items-baseline">
+                                <span class="text-6xl font-black text-white">$125</span>
+                                <span class="text-gray-400 ml-2 text-sm uppercase font-bold tracking-widest">/ USER / MO</span>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <ul class="space-y-4 text-sm font-semibold">
+                                <li class="flex items-center text-white"><span class="text-brand-blue mr-3 font-bold">01</span> EVERYTHING in Watchtower</li>
+                                <li class="flex items-center text-white"><span class="text-brand-blue mr-3 font-bold">+</span> UNLIMITED Remote Helpdesk (M-F)</li>
+                                <li class="flex items-center text-white"><span class="text-brand-blue mr-3 font-bold">+</span> Instant Remote Access Troubleshooting</li>
+                                <li class="flex items-center text-white"><span class="text-brand-blue mr-3 font-bold">+</span> Priority Ticket Routing</li>
+                                <li class="pt-4 border-t border-industrial-border text-xs text-gray-300">
+                                    <span class="text-brand-blue font-bold uppercase">Remote Labor:</span> 100% FREE.<br>
+                                    <span class="text-brand-blue font-bold uppercase">On-Site Labor:</span> Discounted $95/hr.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-10">
+                            <a href="#contact" class="block w-full text-center py-5 bg-brand-blue text-dark-bg font-black uppercase tracking-widest text-sm hover:brightness-110 shadow-lg transform hover:scale-[1.02] transition-all">Start Protection</a>
+                        </div>
+                    </div>
+
+                    <!-- Tier 3: The VIP -->
+                    <div class="bg-dark-card border border-industrial-border p-8 flex flex-col animated-section">
+                        <div class="mb-8">
+                            <h3 class="text-xs font-black text-brand-blue uppercase tracking-[0.3em] mb-2">The Virtual CIO</h3>
+                            <h4 class="text-4xl font-black text-white uppercase tracking-tighter">The VIP</h4>
+                        </div>
+                        <div class="mb-8">
+                            <p class="text-gray-400 text-sm mb-6">For high-maintenance or regulated firms requiring complete IT management.</p>
+                            <div class="flex items-baseline">
+                                <span class="text-5xl font-black text-white">$175</span>
+                                <span class="text-gray-500 ml-2 text-sm uppercase font-bold tracking-widest">/ USER / MO</span>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <ul class="space-y-4 text-sm font-medium">
+                                <li class="flex items-center text-white"><span class="text-brand-blue mr-3 font-bold">01</span> EVERYTHING in Partner</li>
+                                <li class="flex items-center text-white"><span class="text-brand-blue mr-3 font-bold">+</span> UNLIMITED On-Site Repairs (Break/Fix)</li>
+                                <li class="flex items-center text-white"><span class="text-brand-blue mr-3 font-bold">+</span> Full Vendor & ISP Management</li>
+                                <li class="flex items-center text-white"><span class="text-brand-blue mr-3 font-bold">+</span> Quarterly Strategic Business Review</li>
+                                <li class="pt-4 border-t border-industrial-border text-xs text-gray-400">
+                                    <span class="text-brand-blue font-bold uppercase">All Support:</span> 100% Covered (FREE).
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-10">
+                            <a href="#contact" class="block w-full text-center py-4 bg-transparent border-2 border-industrial-border text-white font-black uppercase tracking-widest text-xs hover:bg-industrial-border transition-all">Start Protection</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LABOR & TRAVEL RATES -->
+                <div class="mt-32 max-w-5xl mx-auto animated-section">
+                    <div class="border-l-4 border-brand-blue pl-8">
+                        <h3 class="text-3xl font-black text-white uppercase tracking-tighter mb-4">Standard Rates & Travel</h3>
+                        <p class="text-gray-400 text-sm uppercase tracking-widest font-bold">Transparent billing rules for the Texas Panhandle.</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12">
+                        <!-- Labor Rates List -->
+                        <div class="glass-card p-8 rounded">
+                            <h4 class="text-brand-blue text-xs uppercase mb-6 tracking-widest border-b border-industrial-border pb-2">Hourly Labor Rates</h4>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-white font-bold">Non-Member / Emergency</span>
+                                    <span class="text-white font-medium">$150 / hr</span>
+                                </div>
+                                <div class="flex justify-between items-center text-gray-400">
+                                    <span>Tier 1 Member Rate</span>
+                                    <span class="text-white">$125 / hr</span>
+                                </div>
+                                <div class="flex justify-between items-center text-gray-400">
+                                    <span>Tiers 2 & 3 Preferred Rate</span>
+                                    <span class="text-brand-blue font-bold">$95 / hr</span>
+                                </div>
+                                <div class="flex justify-between items-center border-t border-industrial-border pt-4">
+                                    <span class="text-white font-bold italic">After Hours / Weekend Emergency</span>
+                                    <span class="text-white">$225 / hr</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Travel Policy: The Panhandle Rule -->
+                        <div class="glass-card p-8 rounded">
+                            <h4 class="text-brand-blue text-xs uppercase mb-6 tracking-widest border-b border-industrial-border pb-2">The Panhandle Rule (Travel)</h4>
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-white font-black uppercase text-xs tracking-widest">Zone A</span>
+                                        <span class="text-brand-blue font-bold">NO TRIP CHARGE</span>
+                                    </div>
+                                    <p class="text-gray-400 text-xs uppercase tracking-widest font-bold">Amarillo & Canyon City Limits</p>
+                                </div>
+                                <div class="border-t border-industrial-border pt-4">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-white font-black uppercase text-xs tracking-widest">Zone B</span>
+                                        <span class="text-white">$1.50 / mile</span>
+                                    </div>
+                                    <p class="text-gray-400 text-xs uppercase tracking-widest font-bold">Outside Amarillo/Canyon (Round Trip)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hardware-as-a-Service (HaaS) -->
+        <section id="haas-offerings" class="py-24 border-t border-industrial-border bg-dark-card/20">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto mb-16 animated-section">
+                    <h2 class="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">Hardware-as-a-Service</h2>
+                    <p class="mt-4 text-lg text-gray-400">Standardize your environment. Eliminate capital expenditure.</p>
+                </div>
+                <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- HaaS Tier 1 -->
+                    <div class="glass-card p-8 rounded-xl animated-section border border-industrial-border flex flex-col">
+                        <h4 class="text-xl font-black text-white uppercase tracking-tighter mb-4">Business Essentials</h4>
+                        <p class="text-gray-400 text-sm mb-6 h-12">Ideal for small businesses and retail. Powered by <strong>TP-Link Omada</strong>.</p>
+                        <ul class="space-y-3 text-xs mb-8 flex-grow font-bold tracking-widest">
+                            <li class="flex justify-between border-b border-industrial-border pb-2"><span>FIREWALL:</span> <span class="text-brand-blue">$30/MO</span></li>
+                            <li class="flex justify-between border-b border-industrial-border pb-2"><span>POE+ SWITCH:</span> <span class="text-brand-blue">$45/MO</span></li>
+                            <li class="flex justify-between"><span>WI-FI 6 AP:</span> <span class="text-brand-blue">$20/MO</span></li>
+                        </ul>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Management & Replacement Included</p>
+                    </div>
+                    <!-- HaaS Tier 2 -->
+                    <div class="glass-card p-8 rounded-xl animated-section border-2 border-brand-blue relative flex flex-col">
+                        <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-brand-blue text-dark-bg px-4 py-1 text-[10px] font-black uppercase tracking-widest">Performance</div>
+                        <h4 class="text-xl font-black text-white uppercase tracking-tighter mb-4">Business Pro</h4>
+                        <p class="text-gray-400 text-sm mb-6 h-12">For businesses requiring high availability. Powered by <strong>Zyxel Nebula</strong>.</p>
+                        <ul class="space-y-3 text-xs mb-8 flex-grow font-bold tracking-widest">
+                            <li class="flex justify-between border-b border-industrial-border pb-2"><span>FIREWALL:</span> <span class="text-brand-blue">$50/MO</span></li>
+                            <li class="flex justify-between border-b border-industrial-border pb-2"><span>POE+ SWITCH:</span> <span class="text-brand-blue">$80/MO</span></li>
+                            <li class="flex justify-between"><span>WI-FI 6 AP:</span> <span class="text-brand-blue">$30/MO</span></li>
+                        </ul>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Priority Management Included</p>
+                    </div>
+                    <!-- HaaS Tier 3 -->
+                    <div class="glass-card p-8 rounded-xl animated-section border border-industrial-border flex flex-col">
+                        <h4 class="text-xl font-black text-white uppercase tracking-tighter mb-4">Enterprise</h4>
+                        <p class="text-gray-400 text-sm mb-6 h-12">For firms where downtime is unacceptable. Powered by <strong>Cisco Meraki</strong>.</p>
+                        <ul class="space-y-3 text-xs mb-8 flex-grow font-bold tracking-widest">
+                            <li class="flex justify-between border-b border-industrial-border pb-2"><span>FIREWALL:</span> <span class="text-brand-blue">$75/MO</span></li>
+                            <li class="flex justify-between border-b border-industrial-border pb-2"><span>POE+ SWITCH:</span> <span class="text-brand-blue">$120/MO</span></li>
+                            <li class="flex justify-between"><span>WI-FI 6 AP:</span> <span class="text-brand-blue">$40/MO</span></li>
+                        </ul>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Cloud-Managed Security Ecosystem</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Cost of Downtime Calculator -->
+        <section id="downtime-calculator" class="py-24 bg-dark-card border-t border-industrial-border">
+            <div class="container mx-auto px-6 animated-section">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 class="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">The True Cost of Downtime</h2>
+                    <p class="mt-4 text-lg text-gray-400">An IT outage is a direct hit to your bottom line. Use our calculator to see the impact of just one incident.</p>
+                </div>
+                <div class="max-w-3xl mx-auto glass-card p-8 rounded-xl">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div>
+                            <label for="employees" class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Employees</label>
+                            <input type="number" id="employees" value="10" class="block w-full bg-dark-bg border-industrial-border rounded p-2 text-white">
+                        </div>
+                        <div>
+                            <label for="avgWage" class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Wage ($/hr)</label>
+                            <input type="number" id="avgWage" value="25" class="block w-full bg-dark-bg border-industrial-border rounded p-2 text-white">
+                        </div>
+                        <div>
+                            <label for="avgRevenue" class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Rev ($/hr)</label>
+                            <input type="number" id="avgRevenue" value="500" class="block w-full bg-dark-bg border-industrial-border rounded p-2 text-white">
+                        </div>
+                        <div>
+                            <label for="downtimeHours" class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Hours</label>
+                            <input type="number" id="downtimeHours" value="4" class="block w-full bg-dark-bg border-industrial-border rounded p-2 text-white">
+                        </div>
+                    </div>
+                    <div class="mt-6 text-center">
+                        <button id="calculate-btn" class="bg-industrial-border text-white font-black py-3 px-8 rounded shadow hover:bg-gray-700 transition-all uppercase tracking-widest text-xs">Calculate Impact</button>
+                    </div>
+                    <div id="downtime-result" class="mt-8 text-center hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Lost Productivity</p>
+                                <p id="lost-productivity" class="text-2xl font-black text-white mt-1"></p>
+                            </div>
+                            <div class="border-t md:border-t-0 md:border-l md:border-r border-industrial-border py-4 md:py-0">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Lost Revenue</p>
+                                <p id="lost-revenue" class="text-2xl font-black text-white mt-1"></p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-brand-blue uppercase tracking-widest font-black">Total Estimated Impact</p>
+                                <p id="total-impact" class="text-4xl font-black text-brand-blue mt-1"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Insights -->
+        <section id="latest-insights" class="py-24 border-t border-industrial-border">
+            <div class="container mx-auto px-6">
+                 <div class="text-center max-w-3xl mx-auto mb-16 animated-section">
+                    <h2 class="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">Latest Insights</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto animated-section">
+                    {{LATEST_POSTS}}
+                </div>
+                 <div class="mt-16 text-center animated-section">
+                    <a href="blog.html" class="bg-transparent border border-industrial-border text-white font-black px-8 py-4 rounded-sm hover:bg-industrial-border transition-all uppercase tracking-widest text-xs">
+                        View All Insights
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 bg-dark-card border-t border-industrial-border">
+             <div class="container mx-auto px-6">
+                 <div class="text-center max-w-3xl mx-auto mb-12 animated-section">
+                    <h2 class="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">Ready to Deploy?</h2>
+                    <p class="mt-4 text-lg text-gray-400 uppercase tracking-widest text-sm font-semibold">Secure your operations with a regional leader.</p>
+                </div>
+                <div class="max-w-2xl mx-auto glass-card p-8 md:p-12 rounded-sm animated-section border border-industrial-border">
+                     <form name="contact-v8" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thank-you.html">
+                        <input type="hidden" name="form-name" value="contact-v8" />
+                        <div class="grid grid-cols-1 gap-y-6">
+                            <div>
+                                <input type="text" name="full-name" placeholder="CONTACT PERSON" class="block w-full bg-dark-bg border-industrial-border rounded-sm py-4 px-4 text-white placeholder-gray-600 focus:ring-brand-blue focus:border-brand-blue text-sm font-semibold" required>
+                            </div>
+                            <div>
+                                <input name="email" type="email" placeholder="BUSINESS EMAIL" class="block w-full bg-dark-bg border-industrial-border rounded-sm py-4 px-4 text-white placeholder-gray-600 focus:ring-brand-blue focus:border-brand-blue text-sm font-semibold" required>
+                            </div>
+                            <div>
+                                <textarea name="message" rows="4" placeholder="BRIEF DESCRIPTION OF IT NEEDS..." class="block w-full bg-dark-bg border-industrial-border rounded-sm py-4 px-4 text-white placeholder-gray-600 focus:ring-brand-blue focus:border-brand-blue text-sm font-semibold" required></textarea>
+                            </div>
+                            <p class="hidden"><label><input name="bot-field" /></label></p>
+                            <div>
+                                <button type="submit" class="w-full py-4 bg-brand-blue text-dark-bg font-black uppercase tracking-[0.3em] text-sm hover:brightness-110 transition-all shadow-lg">
+                                    Start Protection
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-bg border-t border-industrial-border text-gray-500 py-12">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex flex-col md:flex-row justify-center items-center gap-8 mb-8">
+                <a href="/" class="grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all bg-gray-200 p-1 rounded">
+                    <img src="caprock logo transparent BG 2.png" alt="Caprock Tech" class="h-8">
+                </a>
+                <nav class="flex gap-6 text-[10px] font-black uppercase tracking-widest">
+                    <a href="about.html" class="hover:text-white">About</a>
+                    <a href="security-cameras.html" class="hover:text-white">Surveillance</a>
+                    <a href="partners.html" class="hover:text-white">Partners</a>
+                    <a href="onboarding.html" class="hover:text-white">Onboarding</a>
+                </nav>
+            </div>
+            <p class="text-[10px] uppercase tracking-[0.4em] font-bold">&copy; 2025 Caprock Technology Group, LLC. Amarillo, Texas.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                header.classList.remove('bg-transparent');
+                header.classList.add('glass-card');
+            } else {
+                header.classList.add('bg-transparent');
+                header.classList.remove('glass-card');
+            }
+        });
+
+        // Mobile menu
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.animated-section').forEach(section => { observer.observe(section); });
+        
+        // Calculator
+        document.getElementById('calculate-btn')?.addEventListener('click', () => {
+            const employees = parseFloat(document.getElementById('employees').value) || 0;
+            const avgWage = parseFloat(document.getElementById('avgWage').value) || 0;
+            const avgRevenue = parseFloat(document.getElementById('avgRevenue').value) || 0;
+            const downtimeHours = parseFloat(document.getElementById('downtimeHours').value) || 0;
+            const productivityCost = employees * avgWage * downtimeHours;
+            const revenueCost = avgRevenue * downtimeHours;
+            const totalCost = productivityCost + revenueCost;
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+            document.getElementById('lost-productivity').textContent = formatter.format(productivityCost);
+            document.getElementById('lost-revenue').textContent = formatter.format(revenueCost);
+            document.getElementById('total-impact').textContent = formatter.format(totalCost);
+            document.getElementById('downtime-result').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
