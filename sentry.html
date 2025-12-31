@@ -18,7 +18,8 @@
                             sentry: '#3b82f6', // Blue (Health)
                             detective: '#ef4444', // Red (Evidence)
                             shield: '#d4af37', // Gold (Warranty)
-                            accent: '#84cc16'  // Lime (Success/Active)
+                            accent: '#84cc16',  // Lime (Success/Active)
+                            danger: '#ef4444'   // Red (Liability)
                         }
                     },
                     fontFamily: {
@@ -40,12 +41,12 @@
         }
         
         .slide-enter {
-            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         ::-webkit-scrollbar { display: none; }
@@ -76,17 +77,9 @@
             border-right: 2px solid rgba(255,255,255,0.3);
         }
 
-        /* Scanline effect */
-        .scanlines {
-            background: linear-gradient(
-                to bottom,
-                rgba(255,255,255,0),
-                rgba(255,255,255,0) 50%,
-                rgba(0,0,0,0.1) 50%,
-                rgba(0,0,0,0.1)
-            );
-            background-size: 100% 4px;
-            pointer-events: none;
+        /* Dotted Line for Invoice */
+        .dotted-line {
+            border-bottom: 2px dotted #57534e;
         }
     </style>
 </head>
@@ -94,22 +87,16 @@
 
     <!-- HUD Header -->
     <nav class="sticky top-0 z-50 bg-ops-dark/95 backdrop-blur border-b border-stone-700 p-4 flex justify-between items-center shadow-2xl">
-        <div class="font-bold text-lg tracking-widest uppercase text-stone-400 flex items-center">
+        <div class="font-bold text-lg tracking-widest uppercase text-stone-400 flex items-center cursor-pointer" onclick="showView('slide1')">
             <i class="fas fa-radar text-ops-accent mr-3 animate-pulse"></i>
             Active Sentry
         </div>
         <div class="flex space-x-1">
-             <button onclick="showView('warranty')" class="p-2 px-3 rounded bg-stone-800 border border-ops-shield/50 hover:bg-stone-700 transition text-xs font-mono uppercase tracking-wider text-ops-shield">
+             <button onclick="showView('home')" class="p-2 px-3 rounded bg-stone-800 border border-stone-600 hover:bg-stone-700 transition text-xs font-mono uppercase tracking-wider text-ops-sentry">
+                <i class="fas fa-th-large mr-1"></i> Dashboard
+            </button>
+            <button onclick="showView('warranty')" class="p-2 px-3 rounded bg-stone-800 border border-ops-shield/50 hover:bg-stone-700 transition text-xs font-mono uppercase tracking-wider text-ops-shield">
                 <i class="fas fa-shield-alt mr-1"></i> Shield
-            </button>
-            <button onclick="showView('specs')" class="p-2 px-3 rounded bg-stone-800 border border-stone-600 hover:bg-stone-700 transition text-xs font-mono uppercase tracking-wider text-stone-300">
-                <i class="fas fa-microchip mr-1"></i> Intel
-            </button>
-            <button onclick="showView('compare')" class="p-2 px-3 rounded bg-stone-800 border border-stone-600 hover:bg-stone-700 transition text-xs font-mono uppercase tracking-wider text-stone-300">
-                <i class="fas fa-list mr-1"></i> Data
-            </button>
-            <button onclick="showView('home')" class="p-2 rounded bg-stone-800 border border-stone-600 hover:bg-stone-700 transition text-stone-300">
-                <i class="fas fa-times"></i>
             </button>
         </div>
     </nav>
@@ -119,27 +106,15 @@
         <!-- Content injected via JS -->
     </main>
 
-    <!-- Tactical Footer -->
-    <footer class="bg-stone-900 border-t border-stone-700 p-2 pb-6 md:pb-2">
-        <div class="grid grid-cols-3 gap-2 max-w-4xl mx-auto">
-            <button onclick="showView('tier1')" class="group flex flex-col items-center justify-center p-2 rounded hover:bg-stone-800 transition border border-transparent hover:border-stone-700">
-                <i class="fas fa-network-wired text-ops-pipeline mb-1 group-hover:scale-110 transition"></i>
-                <span class="text-[10px] font-mono uppercase tracking-widest text-stone-400">Pipeline</span>
-            </button>
-            <button onclick="showView('tier2')" class="group flex flex-col items-center justify-center p-2 rounded hover:bg-stone-800 transition border border-transparent hover:border-stone-700">
-                <i class="fas fa-shield-halved text-ops-sentry mb-1 group-hover:scale-110 transition"></i>
-                <span class="text-[10px] font-mono uppercase tracking-widest text-stone-400">Sentry</span>
-            </button>
-            <button onclick="showView('tier3')" class="group flex flex-col items-center justify-center p-2 rounded hover:bg-stone-800 transition border border-transparent hover:border-stone-700">
-                <i class="fas fa-user-secret text-ops-detective mb-1 group-hover:scale-110 transition"></i>
-                <span class="text-[10px] font-mono uppercase tracking-widest text-stone-400">Detective</span>
-            </button>
-        </div>
+    <!-- Navigation Footer -->
+    <footer class="bg-stone-900 border-t border-stone-700 p-3" id="footer-nav">
+        <!-- Dynamic content based on view -->
     </footer>
 
     <script>
         const hardwarePrice = "$44,999.95";
         
+        // --- DATA OBJECTS ---
         const tiers = {
             tier1: {
                 id: 'tier1',
@@ -153,12 +128,7 @@
                 frame: "Transmission Link",
                 client: "Clients with IT/Security Teams",
                 pitch: "You have the team; we provide the pipe. High-speed video transmission and app access.",
-                features: [
-                    "200GB 4G LTE Monthly Data",
-                    "Direct App Access (Montavue/Caprock)",
-                    "24/7 Cloud Connectivity",
-                    "Standard Support ($125/hr billable)"
-                ],
+                features: ["200GB 4G LTE Monthly Data", "Direct App Access", "24/7 Cloud Connectivity", "Standard Support (Billable)"],
                 closing: "Pure connectivity. $350/mo. Ready for your team."
             },
             tier2: {
@@ -173,12 +143,7 @@
                 frame: "Peace of Mind",
                 client: "90% of Clients (Standard Choice)",
                 pitch: "The 'Peace of Mind' standard. We watch the health of the unit so you don't have to.",
-                features: [
-                    "Daily 'Pulse' Checks (Health/Recording)",
-                    "Auto-Security Patching & Firmware",
-                    "'No-Blame' Free Remote Support",
-                    "Unlocks 3-Year Extended Warranty"
-                ],
+                features: ["Daily 'Pulse' Checks", "Auto-Security Patching", "'No-Blame' Free Support", "Unlocks 3-Year Extended Warranty"],
                 closing: "Guaranteed uptime. $550/mo protects your investment."
             },
             tier3: {
@@ -193,22 +158,300 @@
                 frame: "Total Concierge",
                 client: "High-Liability Sites & Executives",
                 pitch: "We handle the chaos. From pulling evidence clips to handing them off to police, you never lift a finger.",
-                features: [
-                    "Full Evidence Retrieval Service",
-                    "Police Data Handoff Handling",
-                    "Priority Dispatch (4hr On-Site Response)",
-                    "Includes All Sentry Health Checks"
-                ],
+                features: ["Full Evidence Retrieval", "Police Data Handoff", "Priority Dispatch (4hr)", "Includes All Sentry Checks"],
                 closing: "Total immunity. $850/mo and we handle the police work."
             }
         };
 
         const container = document.getElementById('main-container');
+        const footer = document.getElementById('footer-nav');
+
+        // --- RENDER FUNCTIONS (SLIDES) ---
+
+        function renderSlide1() {
+            // THE PROBLEM
+            return `
+                <div class="slide-enter h-full flex flex-col justify-center">
+                    <h1 class="text-3xl md:text-4xl font-black text-center mb-8 uppercase tracking-widest text-white leading-tight">
+                        Stop <span class="text-ops-danger">Renting</span> Your Security.<br>
+                        Start <span class="text-ops-accent">Owning</span> It.
+                    </h1>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
+                        <!-- Left: The Problem -->
+                        <div class="bg-stone-800/50 border border-ops-danger/30 rounded-xl p-6 flex flex-col items-center text-center relative overflow-hidden group">
+                            <div class="absolute inset-0 bg-ops-danger/5 group-hover:bg-ops-danger/10 transition"></div>
+                            <div class="z-10">
+                                <i class="fas fa-user-clock text-6xl text-stone-600 mb-4"></i>
+                                <h2 class="text-2xl font-bold text-stone-300 mb-2">The Guard</h2>
+                                <div class="bg-ops-danger text-white font-bold px-3 py-1 rounded mb-4 transform -rotate-2">$100k/yr Liability</div>
+                                <ul class="text-sm text-stone-400 space-y-2 text-left w-full px-4">
+                                    <li class="flex"><i class="fas fa-times text-ops-danger mr-2 mt-1"></i> High Cost ($18k/mo)</li>
+                                    <li class="flex"><i class="fas fa-times text-ops-danger mr-2 mt-1"></i> High Liability (Injury/Sleep)</li>
+                                    <li class="flex"><i class="fas fa-times text-ops-danger mr-2 mt-1"></i> Zero Asset Value</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Right: The Solution -->
+                        <div class="bg-stone-800 border border-ops-accent/30 rounded-xl p-6 flex flex-col items-center text-center relative overflow-hidden tac-border">
+                            <div class="absolute inset-0 bg-ops-accent/5"></div>
+                            <div class="z-10">
+                                <i class="fas fa-robot text-6xl text-ops-sentry mb-4"></i>
+                                <h2 class="text-2xl font-bold text-white mb-2">Caprock Sentry</h2>
+                                <div class="bg-ops-accent text-stone-900 font-bold px-3 py-1 rounded mb-4 transform rotate-2">$45k Asset</div>
+                                <ul class="text-sm text-stone-300 space-y-2 text-left w-full px-4">
+                                    <li class="flex"><i class="fas fa-check text-ops-accent mr-2 mt-1"></i> One-Time Investment</li>
+                                    <li class="flex"><i class="fas fa-check text-ops-accent mr-2 mt-1"></i> 24/7 AI Vigilance</li>
+                                    <li class="flex"><i class="fas fa-check text-ops-accent mr-2 mt-1"></i> Moves with the Job</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 bg-stone-900 p-4 rounded text-center border border-stone-700">
+                        <h3 class="text-stone-400 font-mono text-xs uppercase tracking-widest mb-1">The Rental Trap</h3>
+                        <p class="text-stone-300 text-sm">Rentals cost $2,500/mo forever. After 2 years, you've burned <strong>$60,000</strong> and own nothing.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSlide2() {
+            // THE SOLUTION
+            return `
+                <div class="slide-enter">
+                    <h1 class="text-2xl md:text-3xl font-black text-center mb-6 uppercase tracking-widest text-white">
+                        The Caprock <span class="text-ops-sentry">Autonomous</span> Sentry
+                    </h1>
+
+                    <div class="relative bg-stone-900 rounded-xl overflow-hidden border border-stone-700 mb-6 aspect-video flex items-center justify-center">
+                        <i class="fas fa-image text-4xl text-stone-700 absolute"></i>
+                        <!-- Embed Video or Image Placeholder -->
+                        <iframe class="w-full h-full relative z-10" 
+                                src="https://www.youtube.com/embed/cH3FCub1YOk" 
+                                title="Montavue Solar Trailer" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                        </iframe>
+
+                        <!-- Feature Overlay Tags (Visual indicators) -->
+                        <div class="absolute top-4 left-4 z-20 bg-black/70 text-white text-[10px] px-2 py-1 rounded border border-ops-accent font-mono">20ft Mast</div>
+                        <div class="absolute bottom-4 right-4 z-20 bg-black/70 text-white text-[10px] px-2 py-1 rounded border border-ops-pipeline font-mono">Solar Array</div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-3 bg-stone-800 rounded border-l-2 border-ops-sentry">
+                            <h3 class="text-ops-sentry font-bold text-sm uppercase mb-1">Autonomous Defense</h3>
+                            <p class="text-xs text-stone-400">4K AI Cameras detect humans vs. animals instantly.</p>
+                        </div>
+                        <div class="p-3 bg-stone-800 rounded border-l-2 border-ops-danger">
+                            <h3 class="text-ops-danger font-bold text-sm uppercase mb-1">Active Deterrence</h3>
+                            <p class="text-xs text-stone-400">110dB Sirens & Police Strobes trigger BEFORE theft occurs.</p>
+                        </div>
+                        <div class="p-3 bg-stone-800 rounded border-l-2 border-ops-pipeline">
+                            <h3 class="text-ops-pipeline font-bold text-sm uppercase mb-1">Solar Independence</h3>
+                            <p class="text-xs text-stone-400">Runs indefinitely on the sun. No shore power needed.</p>
+                        </div>
+                        <div class="p-3 bg-stone-800 rounded border-l-2 border-ops-accent">
+                            <h3 class="text-ops-accent font-bold text-sm uppercase mb-1">Total Visibility</h3>
+                            <p class="text-xs text-stone-400">View your job site live from your phone, anywhere in the world.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSlide3() {
+            // FINANCIAL LOGIC
+            return `
+                <div class="slide-enter">
+                    <h1 class="text-2xl md:text-3xl font-black text-center mb-2 uppercase tracking-widest text-white">
+                        Turn Liability Into A
+                    </h1>
+                    <h2 class="text-xl md:text-2xl font-black text-center mb-8 uppercase tracking-widest text-ops-accent">
+                        Tax Deduction
+                    </h2>
+
+                    <div class="bg-stone-800 p-6 rounded-xl border border-stone-700 mb-6">
+                        <h3 class="text-center text-sm font-mono text-stone-400 mb-6">IRS SECTION 179 ANALYSIS</h3>
+                        
+                        <!-- Simple Bar Chart Visualization -->
+                        <div class="space-y-4 mb-8">
+                            <!-- Bar 1 -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-white font-bold">Purchase Price</span>
+                                    <span class="text-white">$44,999</span>
+                                </div>
+                                <div class="w-full bg-stone-700 h-6 rounded-full overflow-hidden">
+                                    <div class="bg-stone-500 h-full w-full"></div>
+                                </div>
+                            </div>
+
+                             <!-- Bar 2 (Savings) -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-ops-accent font-bold">Est. Tax Savings (30% Bracket)</span>
+                                    <span class="text-ops-accent">-$13,500</span>
+                                </div>
+                                <div class="w-full bg-stone-700 h-6 rounded-full overflow-hidden relative">
+                                    <div class="bg-ops-accent h-full w-[30%]"></div>
+                                </div>
+                            </div>
+
+                             <!-- Bar 3 (Real Cost) -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-white font-bold text-lg">Your "Real" Cost</span>
+                                    <span class="text-white font-bold text-lg">~$31,500</span>
+                                </div>
+                                <div class="w-full bg-stone-700 h-8 rounded-full overflow-hidden">
+                                    <div class="bg-ops-sentry h-full w-[70%]"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-stone-900 p-4 rounded text-center border border-stone-600">
+                            <p class="text-lg text-white font-bold">ROI: Pays for itself in 4 months</p>
+                            <p class="text-xs text-stone-500">Compared to hiring a night guard at $18k/mo.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSlide4() {
+            // THE COMMAND SERVICE PLAN
+            return `
+                <div class="slide-enter text-center">
+                    <h1 class="text-2xl font-black mb-2 uppercase tracking-widest text-white">
+                        We Protect The Asset.
+                    </h1>
+                    <h2 class="text-xl font-black mb-8 uppercase tracking-widest text-stone-400">
+                        You Collect The Data.
+                    </h2>
+
+                    <div class="bg-stone-800 rounded-xl p-6 border-2 border-ops-sentry relative overflow-hidden mb-6">
+                        <div class="absolute top-0 right-0 bg-ops-sentry text-white text-xs font-bold px-3 py-1 rounded-bl">RECOMMENDED</div>
+                        
+                        <div class="flex justify-center mb-4">
+                            <div class="flex -space-x-4">
+                                <div class="w-16 h-16 bg-stone-900 rounded-full flex items-center justify-center border-2 border-ops-shield z-10">
+                                    <i class="fas fa-shield-alt text-ops-shield text-2xl"></i>
+                                </div>
+                                <div class="w-16 h-16 bg-stone-900 rounded-full flex items-center justify-center border-2 border-ops-sentry">
+                                    <i class="fas fa-cloud text-ops-sentry text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-white mb-1">The "Sentry" Command Plan</h3>
+                        <p class="text-3xl font-black text-ops-sentry mb-6">$550<span class="text-sm text-stone-400 font-normal"> / month</span></p>
+
+                        <div class="space-y-3 text-left max-w-sm mx-auto mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-wifi text-ops-pipeline w-6 text-center mr-3"></i>
+                                <div>
+                                    <div class="text-sm font-bold text-white">Connectivity</div>
+                                    <div class="text-xs text-stone-400">200GB High-Speed 4G LTE Data</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-heartbeat text-ops-sentry w-6 text-center mr-3"></i>
+                                <div>
+                                    <div class="text-sm font-bold text-white">Health</div>
+                                    <div class="text-xs text-stone-400">Daily Remote "Pulse Checks"</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-lock text-stone-300 w-6 text-center mr-3"></i>
+                                <div>
+                                    <div class="text-sm font-bold text-white">Security</div>
+                                    <div class="text-xs text-stone-400">Cloud Storage & Firmware Mgmt</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-stone-900 to-stone-800 p-4 rounded border border-ops-shield/30">
+                            <div class="text-ops-shield text-xs font-bold uppercase mb-1"><i class="fas fa-star mr-1"></i> Exclusive Bonus</div>
+                            <p class="text-sm text-white leading-tight">
+                                Sign up for the Sentry Plan and get a <span class="text-ops-shield font-bold">FREE 3-Year Commercial Warranty Upgrade</span> (Parts & Labor).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSlide5() {
+            // INVESTMENT / INVOICE
+            return `
+                <div class="slide-enter">
+                    <h1 class="text-2xl font-black text-center mb-6 uppercase tracking-widest text-white">
+                        Deployment & Pricing
+                    </h1>
+
+                    <div class="bg-stone-100 text-stone-900 p-6 rounded-sm shadow-xl font-mono text-sm relative">
+                        <!-- Paper tear effect visual -->
+                        <div class="absolute top-0 left-0 w-full h-2 bg-ops-accent/50"></div>
+
+                        <div class="flex justify-between items-end border-b-2 border-stone-800 pb-4 mb-4">
+                            <div>
+                                <h2 class="font-bold text-xl">PROPOSAL</h2>
+                                <p class="text-xs text-stone-500">CAPROCK SENTRY SYSTEMS</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs">DATE: <span class="font-bold">TODAY</span></p>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <h3 class="font-bold underline mb-2">ONE-TIME INVESTMENT</h3>
+                            <div class="flex justify-between mb-1">
+                                <span>Montavue Sentry Unit (4K/Solar)</span>
+                                <span>$44,999.00</span>
+                            </div>
+                            <div class="flex justify-between mb-2">
+                                <span>Strategic Deployment & Calibration</span>
+                                <span>$950.00</span>
+                            </div>
+                             <div class="text-[10px] text-stone-500 italic mb-2 ml-4">
+                                (Includes Delivery, Leveling, & AI Zone Setup)
+                            </div>
+                            <div class="flex justify-between font-bold border-t border-stone-400 pt-2">
+                                <span>TOTAL TO START</span>
+                                <span>$45,949.00</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <h3 class="font-bold underline mb-2">MONTHLY OPERATIONS</h3>
+                            <div class="flex justify-between items-center mb-1">
+                                <span>"Sentry" Command Plan</span>
+                                <span class="font-bold">$550.00 / mo</span>
+                            </div>
+                            <div class="text-[10px] text-stone-500 italic ml-4">
+                                Includes Data, App Access, & 3-Year Warranty Protection
+                            </div>
+                        </div>
+
+                        <div class="border-t-2 border-stone-800 pt-4 mt-8">
+                            <h3 class="font-bold mb-2">NEXT STEPS:</h3>
+                            <div class="flex items-center mb-1"><div class="w-4 h-4 border border-stone-800 mr-2"></div> Select Delivery Date</div>
+                            <div class="flex items-center mb-1"><div class="w-4 h-4 border border-stone-800 mr-2"></div> Define "Kill Zones" (AI Setup)</div>
+                            <div class="flex items-center"><div class="w-4 h-4 border border-stone-800 mr-2"></div> Site Foreman Training Included</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
         function renderHome() {
+            // DASHBOARD (Previous Home)
             return `
                 <div class="slide-enter space-y-6">
-                    <!-- Hardware Unit Header -->
                     <div class="bg-stone-800/50 rounded-lg p-6 border border-stone-600 text-center relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-stone-800 via-ops-accent to-stone-800"></div>
                         <h2 class="text-sm font-mono text-stone-400 uppercase tracking-widest mb-1">Hardware Deployment</h2>
@@ -219,199 +462,93 @@
                         </div>
                     </div>
 
-                    <!-- Video Feed Monitor -->
-                    <div class="bg-black p-1 rounded-lg border-2 border-stone-700 shadow-2xl relative">
-                        <div class="absolute top-2 left-3 z-10 flex items-center space-x-2">
-                             <span class="text-[10px] font-mono text-white/50 uppercase tracking-widest">System Capabilities // Feature Demo</span>
-                        </div>
-                        <div class="relative w-full aspect-video rounded overflow-hidden bg-stone-900 mt-6">
-                             <iframe class="w-full h-full" 
-                                src="https://www.youtube.com/embed/cH3FCub1YOk" 
-                                title="Montavue Solar Trailer" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen>
-                            </iframe>
-                            <div class="absolute inset-0 scanlines pointer-events-none"></div>
-                        </div>
-                         <div class="flex justify-between items-center px-2 py-1 bg-stone-900 border-t border-stone-800">
-                            <a href="https://www.youtube.com/watch?v=cH3FCub1YOk" target="_blank" class="text-[9px] font-mono text-stone-500 hover:text-white underline">Video not loading? Open in App</a>
-                            <span class="text-[8px] font-mono text-stone-500">1080p // ACTIVE</span>
-                        </div>
-                    </div>
-
                     <div class="grid gap-4">
-                        <!-- Card 1 -->
                         <div onclick="showView('tier1')" class="tap-card bg-stone-900 p-5 rounded border-l-4 border-amber-600 shadow-lg cursor-pointer flex items-center justify-between tac-border">
-                            <div>
-                                <h3 class="text-xl font-bold text-amber-500 uppercase tracking-wide">The Pipeline</h3>
-                                <p class="text-xs font-mono text-stone-400">Connectivity Only</p>
-                            </div>
-                            <div class="text-right">
-                                <span class="block text-2xl font-bold font-mono">$350<span class="text-sm text-stone-500">/mo</span></span>
-                            </div>
+                            <div><h3 class="text-xl font-bold text-amber-500 uppercase tracking-wide">The Pipeline</h3><p class="text-xs font-mono text-stone-400">Connectivity Only</p></div>
+                            <div class="text-right"><span class="block text-2xl font-bold font-mono">$350<span class="text-sm text-stone-500">/mo</span></span></div>
                         </div>
-
-                        <!-- Card 2 -->
                         <div onclick="showView('tier2')" class="tap-card bg-stone-900 p-5 rounded border-l-4 border-blue-600 shadow-lg cursor-pointer flex items-center justify-between tac-border relative overflow-hidden">
                              <div class="absolute top-0 right-0 bg-blue-600 text-[10px] font-bold px-2 py-0.5 rounded-bl text-white font-mono">POPULAR</div>
-                            <div>
-                                <h3 class="text-xl font-bold text-blue-500 uppercase tracking-wide">The Sentry</h3>
-                                <p class="text-xs font-mono text-stone-400">Health & Uptime</p>
-                            </div>
-                            <div class="text-right">
-                                <span class="block text-2xl font-bold font-mono">$550<span class="text-sm text-stone-500">/mo</span></span>
-                            </div>
+                            <div><h3 class="text-xl font-bold text-blue-500 uppercase tracking-wide">The Sentry</h3><p class="text-xs font-mono text-stone-400">Health & Uptime</p></div>
+                            <div class="text-right"><span class="block text-2xl font-bold font-mono">$550<span class="text-sm text-stone-500">/mo</span></span></div>
                         </div>
-
-                        <!-- Card 3 -->
                         <div onclick="showView('tier3')" class="tap-card bg-stone-900 p-5 rounded border-l-4 border-red-600 shadow-lg cursor-pointer flex items-center justify-between tac-border">
-                            <div>
-                                <h3 class="text-xl font-bold text-red-500 uppercase tracking-wide">The Detective</h3>
-                                <p class="text-xs font-mono text-stone-400">Evidence & Concierge</p>
-                            </div>
-                            <div class="text-right">
-                                <span class="block text-2xl font-bold font-mono">$850<span class="text-sm text-stone-500">/mo</span></span>
-                            </div>
+                            <div><h3 class="text-xl font-bold text-red-500 uppercase tracking-wide">The Detective</h3><p class="text-xs font-mono text-stone-400">Evidence & Concierge</p></div>
+                            <div class="text-right"><span class="block text-2xl font-bold font-mono">$850<span class="text-sm text-stone-500">/mo</span></span></div>
                         </div>
-                    </div>
-                    
-                    <div class="text-center">
-                        <p class="text-[10px] text-stone-500 font-mono uppercase">Unit includes 3x460W Solar Array & 26ft Mast</p>
                     </div>
                 </div>
             `;
         }
 
-        function renderSpecs() {
-            // Data extracted from PDF
-            return `
-                <div class="slide-enter pb-8">
-                     <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-bold uppercase tracking-widest"><i class="fas fa-microchip text-stone-500 mr-2"></i>Unit Intel</h2>
-                        <button onclick="showView('home')" class="text-stone-400 hover:text-white"><i class="fas fa-arrow-left"></i> Back</button>
+        function renderSpecs() { return `
+            <div class="slide-enter pb-8">
+                    <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold uppercase tracking-widest"><i class="fas fa-microchip text-stone-500 mr-2"></i>Unit Intel</h2>
+                    <button onclick="showView('home')" class="text-stone-400 hover:text-white"><i class="fas fa-arrow-left"></i> Back</button>
+                </div>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="bg-stone-800 p-4 rounded border-l-2 border-yellow-500">
+                        <h3 class="text-xs font-mono text-yellow-500 uppercase mb-2">Power Systems</h3>
+                        <ul class="text-sm space-y-2 text-stone-300">
+                            <li class="flex justify-between border-b border-stone-700 pb-1"><span>Solar Array</span> <span class="font-bold text-white">3x 460W (1380W Total)</span></li>
+                            <li class="flex justify-between border-b border-stone-700 pb-1"><span>Panel Tech</span> <span class="font-bold text-white">Monocrystalline PERC</span></li>
+                            <li class="flex justify-between border-b border-stone-700 pb-1"><span>Autonomy</span> <span class="font-bold text-white">7-10 Days (No Sun)</span></li>
+                        </ul>
                     </div>
-
-                    <div class="grid grid-cols-1 gap-4">
-                        <!-- Power Systems -->
-                        <div class="bg-stone-800 p-4 rounded border-l-2 border-yellow-500">
-                            <h3 class="text-xs font-mono text-yellow-500 uppercase mb-2">Power Systems</h3>
-                            <ul class="text-sm space-y-2 text-stone-300">
-                                <li class="flex justify-between border-b border-stone-700 pb-1"><span>Solar Array</span> <span class="font-bold text-white">3x 460W (1380W Total)</span></li>
-                                <li class="flex justify-between border-b border-stone-700 pb-1"><span>Panel Tech</span> <span class="font-bold text-white">Monocrystalline PERC</span></li>
-                                <li class="flex justify-between border-b border-stone-700 pb-1"><span>Autonomy</span> <span class="font-bold text-white">7-10 Days (No Sun)</span></li>
-                            </ul>
-                        </div>
-
-                        <!-- Structural -->
-                        <div class="bg-stone-800 p-4 rounded border-l-2 border-stone-500">
-                            <h3 class="text-xs font-mono text-stone-400 uppercase mb-2">Structure & Build</h3>
-                            <ul class="text-sm space-y-2 text-stone-300">
-                                <li class="flex justify-between border-b border-stone-700 pb-1"><span>Mast Height</span> <span class="font-bold text-white">26 ft (8m) Retractable</span></li>
-                                <li class="flex justify-between border-b border-stone-700 pb-1"><span>Wind Rating</span> <span class="font-bold text-white">73 MPH (Beaufort 12)</span></li>
-                                <li class="flex justify-between border-b border-stone-700 pb-1"><span>Weatherproof</span> <span class="font-bold text-white">IP67 Rated</span></li>
-                                <li class="flex justify-between border-b border-stone-700 pb-1"><span>Compliance</span> <span class="font-bold text-white">NDAA Certified</span></li>
-                            </ul>
-                        </div>
-
-                        <!-- Active Deterrence -->
-                        <div class="bg-stone-800 p-4 rounded border-l-2 border-red-500">
-                            <h3 class="text-xs font-mono text-red-500 uppercase mb-2">Active Deterrence</h3>
-                            <div class="flex gap-2 mt-2">
-                                <span class="bg-red-900/30 text-red-400 text-xs px-2 py-1 rounded border border-red-900">Red/Blue Strobes</span>
-                                <span class="bg-yellow-900/30 text-yellow-400 text-xs px-2 py-1 rounded border border-yellow-900">Floodlights</span>
-                                <span class="bg-stone-700 text-stone-300 text-xs px-2 py-1 rounded border border-stone-600">2-Way Audio</span>
-                            </div>
-                        </div>
+                    <div class="bg-stone-800 p-4 rounded border-l-2 border-stone-500">
+                        <h3 class="text-xs font-mono text-stone-400 uppercase mb-2">Structure & Build</h3>
+                        <ul class="text-sm space-y-2 text-stone-300">
+                            <li class="flex justify-between border-b border-stone-700 pb-1"><span>Mast Height</span> <span class="font-bold text-white">26 ft (8m) Retractable</span></li>
+                            <li class="flex justify-between border-b border-stone-700 pb-1"><span>Wind Rating</span> <span class="font-bold text-white">73 MPH (Beaufort 12)</span></li>
+                            <li class="flex justify-between border-b border-stone-700 pb-1"><span>Weatherproof</span> <span class="font-bold text-white">IP67 Rated</span></li>
+                        </ul>
                     </div>
                 </div>
-            `;
+            </div>`; 
         }
 
         function renderWarranty() {
-            return `
+             return `
                 <div class="slide-enter pb-8">
                      <div class="flex items-center justify-between mb-6">
                         <div class="flex items-center">
                             <i class="fas fa-shield-alt text-ops-shield text-2xl mr-3"></i>
-                            <div>
-                                <h2 class="text-xl font-bold uppercase tracking-widest text-white">The Caprock Shield</h2>
-                                <p class="text-[10px] font-mono text-stone-400">Asset Protection Protocols</p>
-                            </div>
+                            <div><h2 class="text-xl font-bold uppercase tracking-widest text-white">The Caprock Shield</h2><p class="text-[10px] font-mono text-stone-400">Asset Protection Protocols</p></div>
                         </div>
                         <button onclick="showView('home')" class="text-stone-400 hover:text-white"><i class="fas fa-arrow-left"></i> Back</button>
                     </div>
-
                     <div class="space-y-6">
-                        <!-- Option A: Standard -->
                         <div class="bg-stone-800/50 p-6 rounded border border-stone-600 relative opacity-80">
                             <div class="absolute top-0 right-0 bg-stone-700 text-xs px-3 py-1 rounded-bl text-stone-300 font-mono">OPTION A</div>
                             <h3 class="text-lg font-bold text-white mb-1">Standard Factory Coverage</h3>
-                            <p class="text-xs text-stone-400 mb-4">Included with every unit purchase.</p>
-                            
                             <div class="flex justify-between items-end border-b border-stone-700 pb-4 mb-4">
-                                <div>
-                                    <div class="text-2xl font-bold text-white">FREE</div>
-                                    <div class="text-xs text-stone-500 font-mono">COST</div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="text-xl font-bold text-white">1 Year</div>
-                                    <div class="text-xs text-stone-500 font-mono">TERM</div>
-                                </div>
+                                <div><div class="text-2xl font-bold text-white">FREE</div><div class="text-xs text-stone-500 font-mono">COST</div></div>
+                                <div class="text-right"><div class="text-xl font-bold text-white">1 Year</div><div class="text-xs text-stone-500 font-mono">TERM</div></div>
                             </div>
-
-                            <ul class="text-sm space-y-2 text-stone-300">
-                                <li class="flex items-start"><i class="fas fa-check text-stone-500 mt-1 mr-2"></i> <span>Bumper-to-Bumper (NVR, Cameras, Router)</span></li>
-                                <li class="flex items-start"><i class="fas fa-check text-stone-500 mt-1 mr-2"></i> <span>Labor covered for defects</span></li>
-                                <li class="flex items-start"><i class="fas fa-check text-stone-500 mt-1 mr-2"></i> <span>Batteries: 1-Year Pro-Rated</span></li>
-                            </ul>
                         </div>
-
-                        <!-- Option B: The Ironclad (Gold) -->
                         <div class="bg-gradient-to-br from-stone-900 to-stone-800 p-6 rounded border-2 border-ops-shield shadow-[0_0_20px_rgba(212,175,55,0.15)] relative overflow-hidden">
-                             <!-- Shine Effect -->
                             <div class="absolute -top-10 -right-10 w-32 h-32 bg-ops-shield/20 blur-3xl rounded-full"></div>
-                            
                             <div class="absolute top-0 right-0 bg-ops-shield text-stone-900 text-xs font-bold px-3 py-1 rounded-bl font-mono tracking-wider">PREMIUM COVERAGE</div>
-                            
                             <h3 class="text-xl font-bold text-ops-shield mb-1 uppercase tracking-wide">The Ironclad</h3>
                             <p class="text-xs text-ops-shield/80 mb-4 font-mono">EXTENDED WARRANTY UPGRADE</p>
-                            
                             <div class="flex justify-between items-end border-b border-ops-shield/30 pb-4 mb-4">
-                                <div>
-                                    <div class="flex items-baseline">
-                                        <span class="text-3xl font-black text-white mr-2">$0</span>
-                                        <span class="text-xs text-stone-500 line-through decoration-red-500">$4,500</span>
-                                    </div>
-                                    <div class="text-[10px] text-ops-shield font-mono uppercase">Waived Cost</div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="text-2xl font-bold text-white">3 Years</div>
-                                    <div class="text-[10px] text-ops-shield font-mono uppercase">Full Parts & Labor</div>
-                                </div>
+                                <div><div class="flex items-baseline"><span class="text-3xl font-black text-white mr-2">$0</span><span class="text-xs text-stone-500 line-through decoration-red-500">$4,500</span></div><div class="text-[10px] text-ops-shield font-mono uppercase">Waived Cost</div></div>
+                                <div class="text-right"><div class="text-2xl font-bold text-white">3 Years</div><div class="text-[10px] text-ops-shield font-mono uppercase">Full Parts & Labor</div></div>
                             </div>
-
-                            <ul class="text-sm space-y-3 text-stone-200 mb-6">
-                                <li class="flex items-start"><i class="fas fa-star text-ops-shield mt-1 mr-2"></i> <span>Complete Replacement (NVR, Camera, Solar)</span></li>
-                                <li class="flex items-start"><i class="fas fa-star text-ops-shield mt-1 mr-2"></i> <span>Zero Deductible ($0 Repair Visits)</span></li>
-                                <li class="flex items-start"><i class="fas fa-star text-ops-shield mt-1 mr-2"></i> <span>Includes Labor & Travel</span></li>
-                            </ul>
-
                             <div class="bg-stone-900/80 p-3 rounded border border-ops-shield/30 text-center">
                                 <p class="text-[10px] text-stone-400 font-mono uppercase mb-1">ACTIVATION REQUIREMENT</p>
                                 <p class="text-xs font-bold text-white">Must maintain active <span class="text-ops-sentry">Sentry (Tier 2)</span> or <span class="text-ops-detective">Detective (Tier 3)</span> plan.</p>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
         }
-
+        
         function renderTier(tierId) {
-            const data = tiers[tierId];
+             const data = tiers[tierId];
             return `
                 <div class="slide-enter pb-8">
-                    <!-- Header -->
                     <div class="text-center mb-6 relative">
                          <div class="absolute top-0 right-0 text-[10px] font-mono text-stone-500 border border-stone-700 px-2 rounded">${data.rank}</div>
                         <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-stone-800 border-2 ${data.border} mb-4 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
@@ -420,128 +557,101 @@
                         <h2 class="text-3xl font-black uppercase tracking-wider text-white">${data.title}</h2>
                         <p class="text-sm font-mono ${data.color} mt-1">Status: ${data.frame}</p>
                     </div>
-
-                    <!-- Price Card -->
                     <div class="bg-stone-800 rounded p-6 mb-6 text-center border-t border-b border-stone-600 relative overflow-hidden">
                         <div class="absolute -left-4 top-4 bg-stone-700 transform -rotate-45 px-6 py-1 text-[10px] uppercase font-bold text-stone-400">Service</div>
                         <div class="text-5xl font-black text-white font-mono tracking-tighter">${data.price}<span class="text-lg text-stone-400 font-normal font-sans">${data.unit}</span></div>
                         <div class="text-[10px] text-stone-400 uppercase tracking-widest font-bold mt-2">Target Profile</div>
                         <div class="text-stone-200 text-sm mt-1">${data.client}</div>
                     </div>
-
-                    <!-- The Pitch Content -->
                     <div class="space-y-6">
-                        <div class="p-4 rounded border-l-2 ${data.border} bg-stone-800/30">
-                            <p class="text-lg leading-relaxed text-stone-200 font-light">
-                                ${data.pitch}
-                            </p>
-                        </div>
-
+                        <div class="p-4 rounded border-l-2 ${data.border} bg-stone-800/30"><p class="text-lg leading-relaxed text-stone-200 font-light">${data.pitch}</p></div>
                         <div>
                             <h3 class="text-xs font-bold text-stone-500 uppercase tracking-widest mb-3 border-b border-stone-800 pb-1">Operational Capabilities</h3>
-                            <ul class="space-y-3">
-                                ${data.features.map(f => `
-                                    <li class="flex items-start">
-                                        <i class="fas fa-check-square mt-1 mr-3 ${data.color}"></i>
-                                        <span class="text-stone-300 text-sm font-mono">${f}</span>
-                                    </li>
-                                `).join('')}
-                            </ul>
+                            <ul class="space-y-3">${data.features.map(f => `<li class="flex items-start"><i class="fas fa-check-square mt-1 mr-3 ${data.color}"></i><span class="text-stone-300 text-sm font-mono">${f}</span></li>`).join('')}</ul>
                         </div>
-
-                        <!-- Closing -->
-                        <div class="mt-8">
-                            <button class="w-full py-4 px-6 rounded bg-stone-200 text-stone-900 font-black uppercase tracking-wider hover:bg-white transition shadow-lg flex items-center justify-center">
-                                <i class="fas fa-file-contract mr-2"></i> Initiate ${data.title}
-                            </button>
-                            <p class="text-center text-xs text-stone-500 mt-3 font-mono">Hardware List Price: ${hardwarePrice}</p>
-                        </div>
+                        <div class="mt-8"><button class="w-full py-4 px-6 rounded bg-stone-200 text-stone-900 font-black uppercase tracking-wider hover:bg-white transition shadow-lg flex items-center justify-center"><i class="fas fa-file-contract mr-2"></i> Initiate ${data.title}</button></div>
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
-        function renderCompare() {
-            return `
-                <div class="slide-enter">
-                    <h2 class="text-xl font-bold mb-4 text-center uppercase tracking-widest">Service Matrix</h2>
-                    <div class="bg-stone-800 rounded overflow-hidden border border-stone-600 text-xs font-mono">
-                        
-                        <!-- Header -->
-                        <div class="grid grid-cols-4 bg-stone-900 p-3 border-b border-stone-600 text-center font-bold text-stone-400">
-                            <div class="text-left">Op</div>
-                            <div class="text-amber-500">Pipe</div>
-                            <div class="text-blue-500">Sentry</div>
-                            <div class="text-red-500">Detec</div>
-                        </div>
+        // --- RENDER FOOTER NAVIGATION ---
+        function renderNavButtons(currentView) {
+            let next = '';
+            let prev = '';
+            
+            // Map the linear flow
+            const flow = ['slide1', 'slide2', 'slide3', 'slide4', 'slide5'];
+            const idx = flow.indexOf(currentView);
 
-                        <!-- Rows -->
-                         <div class="grid grid-cols-4 p-3 border-b border-stone-700 items-center text-center">
-                            <div class="text-left text-stone-300">Data (200GB)</div>
-                            <div class="text-green-500"><i class="fas fa-check"></i></div>
-                            <div class="text-green-500"><i class="fas fa-check"></i></div>
-                            <div class="text-green-500"><i class="fas fa-check"></i></div>
-                        </div>
-                        
-                         <div class="grid grid-cols-4 p-3 border-b border-stone-700 items-center text-center bg-stone-800/50">
-                            <div class="text-left text-stone-300">Pulse Checks</div>
-                            <div class="text-stone-600"><i class="fas fa-times"></i></div>
-                            <div class="text-blue-500"><i class="fas fa-check"></i></div>
-                            <div class="text-red-500"><i class="fas fa-check"></i></div>
-                        </div>
+            if(idx !== -1) {
+                // We are in Story Mode
+                const prevSlide = idx > 0 ? flow[idx-1] : null;
+                const nextSlide = idx < flow.length - 1 ? flow[idx+1] : 'home'; // Next after slide 5 is Home (Dashboard)
 
-                        <div class="grid grid-cols-4 p-3 border-b border-stone-700 items-center text-center">
-                            <div class="text-left text-stone-300">Remote Supp.</div>
-                            <div class="text-stone-600">$$</div>
-                            <div class="text-blue-400 font-bold">Free</div>
-                            <div class="text-red-400 font-bold">Free</div>
-                        </div>
+                let html = '<div class="flex justify-between w-full max-w-4xl mx-auto">';
+                
+                // Prev Button
+                if(prevSlide) {
+                    html += `<button onclick="showView('${prevSlide}')" class="text-stone-400 hover:text-white px-4 py-2 uppercase font-bold text-sm"><i class="fas fa-chevron-left mr-2"></i> Prev</button>`;
+                } else {
+                    html += `<div></div>`; // Spacer
+                }
+                
+                // Indicators
+                html += `<div class="flex space-x-2 items-center">`;
+                flow.forEach((step, i) => {
+                   const bg = i === idx ? 'bg-ops-accent' : 'bg-stone-700';
+                   html += `<div class="w-2 h-2 rounded-full ${bg}"></div>`;
+                });
+                html += `</div>`;
 
-                        <div class="grid grid-cols-4 p-3 border-b border-stone-700 items-center text-center bg-stone-800/50">
-                            <div class="text-left text-stone-300">Evidence Svc</div>
-                             <div class="text-stone-600"><i class="fas fa-times"></i></div>
-                            <div class="text-stone-600"><i class="fas fa-times"></i></div>
-                            <div class="text-red-400 font-bold"><i class="fas fa-check"></i></div>
-                        </div>
-                        
-                        <div class="grid grid-cols-4 p-3 border-b border-stone-700 items-center text-center">
-                            <div class="text-left text-stone-300">Dispatch</div>
-                            <div class="text-stone-600">$$</div>
-                            <div class="text-stone-600">$$</div>
-                            <div class="text-red-400 font-bold">4 HR</div>
-                        </div>
-                        
-                         <div class="grid grid-cols-4 p-3 items-center text-center font-bold bg-stone-900 border-t border-stone-600">
-                            <div class="text-left text-white">Mo/Cost</div>
-                            <div class="text-amber-500">350</div>
-                            <div class="text-blue-500">550</div>
-                            <div class="text-red-500">850</div>
-                        </div>
-                    </div>
-                     <div class="text-center mt-4 p-2 bg-stone-900/50 border border-stone-700 rounded cursor-pointer hover:bg-stone-800 transition" onclick="showView('warranty')">
-                        <p class="text-[10px] text-ops-shield font-bold"><i class="fas fa-shield-alt mr-1"></i> Tap here to view Warranty Details</p>
-                    </div>
-                </div>
-            `;
-        }
-
-        function showView(viewName) {
-            window.scrollTo(0,0);
-            if(viewName === 'home') {
-                container.innerHTML = renderHome();
-            } else if (viewName === 'compare') {
-                container.innerHTML = renderCompare();
-            } else if (viewName === 'specs') {
-                container.innerHTML = renderSpecs();
-            } else if (viewName === 'warranty') {
-                container.innerHTML = renderWarranty();
+                // Next Button
+                html += `<button onclick="showView('${nextSlide}')" class="bg-stone-800 hover:bg-stone-700 border border-stone-600 px-6 py-2 rounded text-white font-bold text-sm uppercase transition shadow-lg">${nextSlide === 'home' ? 'Finish' : 'Next'} <i class="fas fa-chevron-right ml-2"></i></button>`;
+                html += '</div>';
+                return html;
             } else {
-                container.innerHTML = renderTier(viewName);
+                // We are in Dashboard/Detail mode - Show standard Grid Nav
+                return `
+                    <div class="grid grid-cols-3 gap-2 max-w-4xl mx-auto">
+                        <button onclick="showView('tier1')" class="group flex flex-col items-center justify-center p-2 rounded hover:bg-stone-800 transition border border-transparent hover:border-stone-700">
+                            <i class="fas fa-network-wired text-ops-pipeline mb-1 group-hover:scale-110 transition"></i>
+                            <span class="text-[10px] font-mono uppercase tracking-widest text-stone-400">Pipeline</span>
+                        </button>
+                        <button onclick="showView('tier2')" class="group flex flex-col items-center justify-center p-2 rounded hover:bg-stone-800 transition border border-transparent hover:border-stone-700">
+                            <i class="fas fa-shield-halved text-ops-sentry mb-1 group-hover:scale-110 transition"></i>
+                            <span class="text-[10px] font-mono uppercase tracking-widest text-stone-400">Sentry</span>
+                        </button>
+                        <button onclick="showView('tier3')" class="group flex flex-col items-center justify-center p-2 rounded hover:bg-stone-800 transition border border-transparent hover:border-stone-700">
+                            <i class="fas fa-user-secret text-ops-detective mb-1 group-hover:scale-110 transition"></i>
+                            <span class="text-[10px] font-mono uppercase tracking-widest text-stone-400">Detective</span>
+                        </button>
+                    </div>
+                `;
             }
         }
 
-        // Initialize
-        showView('home');
+        // --- ROUTER ---
+        function showView(viewName) {
+            window.scrollTo(0,0);
+            
+            // Render Main Content
+            if(viewName === 'home') container.innerHTML = renderHome();
+            else if(viewName === 'slide1') container.innerHTML = renderSlide1();
+            else if(viewName === 'slide2') container.innerHTML = renderSlide2();
+            else if(viewName === 'slide3') container.innerHTML = renderSlide3();
+            else if(viewName === 'slide4') container.innerHTML = renderSlide4();
+            else if(viewName === 'slide5') container.innerHTML = renderSlide5();
+            else if(viewName === 'specs') container.innerHTML = renderSpecs();
+            else if(viewName === 'warranty') container.innerHTML = renderWarranty();
+            else container.innerHTML = renderTier(viewName);
+
+            // Render Footer
+            footer.innerHTML = renderNavButtons(viewName);
+        }
+
+        // Initialize on Slide 1 (The Pitch Start)
+        showView('slide1');
+
     </script>
 </body>
 </html>
