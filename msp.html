@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MSP Services Pitch Deck</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            light: '#1e293b',
+                            accent: '#3b82f6',
+                            watchtower: '#10b981', // Emerald
+                            partner: '#3b82f6',    // Blue
+                            vip: '#8b5cf6',        // Violet
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: white;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+        
+        .slide-enter {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hide scrollbar for clean tablet look */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tap-card:active {
+            transform: scale(0.98);
+            transition: transform 0.1s;
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Navigation Header -->
+    <nav class="sticky top-0 z-50 bg-brand-dark/95 backdrop-blur border-b border-slate-800 p-4 flex justify-between items-center shadow-lg">
+        <div class="font-bold text-xl tracking-tight text-brand-accent">
+            <i class="fas fa-server mr-2"></i>MSP Services
+        </div>
+        <div class="flex space-x-2">
+            <button onclick="showView('home')" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition">
+                <i class="fas fa-home"></i>
+            </button>
+            <button onclick="showView('compare')" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition">
+                <i class="fas fa-table"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="main-container" class="flex-grow p-4 md:p-6 max-w-4xl mx-auto w-full flex flex-col justify-center">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer / Quick Nav -->
+    <footer class="bg-brand-light border-t border-slate-700 p-2 pb-6 md:pb-2">
+        <div class="grid grid-cols-3 gap-2 max-w-4xl mx-auto">
+            <button onclick="showView('tier1')" class="flex flex-col items-center justify-center p-2 rounded hover:bg-slate-700 transition">
+                <i class="fas fa-shield-alt text-brand-watchtower mb-1"></i>
+                <span class="text-xs font-semibold">Watchtower</span>
+            </button>
+            <button onclick="showView('tier2')" class="flex flex-col items-center justify-center p-2 rounded hover:bg-slate-700 transition">
+                <i class="fas fa-briefcase text-brand-partner mb-1"></i>
+                <span class="text-xs font-semibold">Partner</span>
+            </button>
+            <button onclick="showView('tier3')" class="flex flex-col items-center justify-center p-2 rounded hover:bg-slate-700 transition">
+                <i class="fas fa-crown text-brand-vip mb-1"></i>
+                <span class="text-xs font-semibold">VIP</span>
+            </button>
+        </div>
+    </footer>
+
+    <script>
+        // Data derived from user prompt
+        const tiers = {
+            tier1: {
+                id: 'tier1',
+                title: "The Watchtower",
+                subtitle: "The 'Cyber-Insurance' Policy",
+                price: "$75",
+                unit: "/user/mo",
+                color: "text-brand-watchtower",
+                bg: "bg-emerald-500/10",
+                border: "border-emerald-500/50",
+                icon: "fa-shield-alt",
+                client: "Retail, Small Shops, Low Tech-Reliance",
+                pitch: "This package is strictly for Protection, not support.",
+                hook: "You know how one click on a bad email can lock up your entire business and cost you $50,000 in ransom? The Watchtower stops that.",
+                features: [
+                    "Military-grade 'Ransomware Kill-Switch'",
+                    "AI Virus Detection & Instant Removal",
+                    "Self-Healing Engine (Auto-Patching)",
+                    "Discounted Helpdesk Rates (Billable)"
+                ],
+                closing: "It’s $75 a month to know you won't get hacked. Do you want to lock the doors today?"
+            },
+            tier2: {
+                id: 'tier2',
+                title: "The Partner",
+                subtitle: "The Productivity Engine",
+                price: "$125",
+                unit: "/user/mo",
+                color: "text-brand-partner",
+                bg: "bg-blue-500/10",
+                border: "border-blue-500/50",
+                icon: "fa-briefcase",
+                client: "Law Firms, CPAs, Insurance, Desk Workers",
+                pitch: "Solves the #1 hidden cost in your business: Slow Employees.",
+                hook: "If Outlook freezes or a password locks, they don't sit around for an hour. They call us. We remote in instantly and fix it.",
+                features: [
+                    "Unlimited Remote Helpdesk",
+                    "Includes ALL Watchtower Security",
+                    "Instant Remote Support",
+                    "Keeps team billing hours, not fighting IT"
+                ],
+                closing: "For $125/user, we keep your team billing hours. Ready to boost productivity?"
+            },
+            tier3: {
+                id: 'tier3',
+                title: "The VIP",
+                subtitle: "The 'God Mode' Button",
+                price: "$175",
+                unit: "/user/mo",
+                color: "text-brand-vip",
+                bg: "bg-violet-500/10",
+                border: "border-violet-500/50",
+                icon: "fa-crown",
+                client: "Medical, High-End Construction, Executives",
+                pitch: "For the business owner who never wants to hear the word 'Computer' again.",
+                hook: "Internet goes down? I call the ISP. Software glitch? I call the vendor. You never sit on hold again.",
+                features: [
+                    "Unlimited Remote Support",
+                    "Unlimited On-Site Repairs",
+                    "Vendor Management (ISP, Software)",
+                    "Total Immunity / CIO Service"
+                ],
+                closing: "Total immunity. You run the business; I handle the chaos."
+            }
+        };
+
+        const container = document.getElementById('main-container');
+
+        // Render Home View
+        function renderHome() {
+            return `
+                <div class="slide-enter space-y-6">
+                    <div class="text-center py-8">
+                        <h1 class="text-3xl font-bold mb-2">Select Your Strategy</h1>
+                        <p class="text-slate-400">Choose the level of service that fits your business model.</p>
+                    </div>
+
+                    <div class="grid gap-4">
+                        <!-- Card 1 -->
+                        <div onclick="showView('tier1')" class="tap-card bg-slate-800 p-6 rounded-xl border-l-4 border-emerald-500 shadow-lg cursor-pointer flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold text-emerald-400">The Watchtower</h3>
+                                <p class="text-sm text-slate-300">Cyber-Insurance & Protection</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-2xl font-bold">$75</span>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div onclick="showView('tier2')" class="tap-card bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500 shadow-lg cursor-pointer flex items-center justify-between relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-blue-600 text-xs px-2 py-1 rounded-bl">Most Popular</div>
+                            <div>
+                                <h3 class="text-xl font-bold text-blue-400">The Partner</h3>
+                                <p class="text-sm text-slate-300">Productivity & Helpdesk</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-2xl font-bold">$125</span>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div onclick="showView('tier3')" class="tap-card bg-slate-800 p-6 rounded-xl border-l-4 border-violet-500 shadow-lg cursor-pointer flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold text-violet-400">The VIP</h3>
+                                <p class="text-sm text-slate-300">God Mode / Total Care</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-2xl font-bold">$175</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Detail View
+        function renderTier(tierId) {
+            const data = tiers[tierId];
+            return `
+                <div class="slide-enter pb-8">
+                    <!-- Header -->
+                    <div class="text-center mb-6">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full ${data.bg} mb-4">
+                            <i class="fas ${data.icon} text-3xl ${data.color}"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold ${data.color}">${data.title}</h2>
+                        <p class="text-lg text-slate-300 italic">"${data.subtitle}"</p>
+                    </div>
+
+                    <!-- Price Card -->
+                    <div class="bg-slate-800 rounded-xl p-6 mb-6 text-center border border-slate-700">
+                        <div class="text-4xl font-bold text-white mb-1">${data.price}<span class="text-lg text-slate-400 font-normal">${data.unit}</span></div>
+                        <div class="text-sm text-slate-400 uppercase tracking-wide font-semibold mt-2">Ideal For</div>
+                        <div class="text-slate-200">${data.client}</div>
+                    </div>
+
+                    <!-- The Pitch Content -->
+                    <div class="space-y-6">
+                        <div class="bg-slate-800/50 p-4 rounded-lg border-l-2 ${data.border}">
+                            <p class="text-lg leading-relaxed text-slate-200">
+                                ${data.hook}
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-400 uppercase mb-3">What You Get</h3>
+                            <ul class="space-y-3">
+                                ${data.features.map(f => `
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check mt-1 mr-3 ${data.color}"></i>
+                                        <span class="text-slate-200">${f}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+
+                        <!-- Closing -->
+                        <div class="bg-gradient-to-r from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700 mt-8 text-center">
+                            <p class="font-medium text-white mb-4">"${data.closing}"</p>
+                            <button class="w-full py-3 px-6 rounded-lg bg-white text-slate-900 font-bold hover:bg-slate-200 transition">
+                                Select ${data.title}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Comparison View
+        function renderCompare() {
+            return `
+                <div class="slide-enter">
+                    <h2 class="text-2xl font-bold mb-6 text-center">Feature Comparison</h2>
+                    <div class="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 text-sm">
+                        
+                        <!-- Header -->
+                        <div class="grid grid-cols-4 bg-slate-900 p-3 border-b border-slate-700 text-center font-bold">
+                            <div class="text-left text-slate-400">Feature</div>
+                            <div class="text-emerald-400">T1</div>
+                            <div class="text-blue-400">T2</div>
+                            <div class="text-violet-400">T3</div>
+                        </div>
+
+                        <!-- Rows -->
+                        <div class="grid grid-cols-4 p-3 border-b border-slate-700 items-center text-center">
+                            <div class="text-left font-semibold">Security / AV</div>
+                            <div class="text-emerald-500"><i class="fas fa-check"></i></div>
+                            <div class="text-blue-500"><i class="fas fa-check"></i></div>
+                            <div class="text-violet-500"><i class="fas fa-check"></i></div>
+                        </div>
+
+                        <div class="grid grid-cols-4 p-3 border-b border-slate-700 items-center text-center bg-slate-800/50">
+                            <div class="text-left font-semibold">Auto-Patching</div>
+                            <div class="text-emerald-500"><i class="fas fa-check"></i></div>
+                            <div class="text-blue-500"><i class="fas fa-check"></i></div>
+                            <div class="text-violet-500"><i class="fas fa-check"></i></div>
+                        </div>
+
+                        <div class="grid grid-cols-4 p-3 border-b border-slate-700 items-center text-center">
+                            <div class="text-left font-semibold">Remote Help</div>
+                            <div class="text-slate-500 text-xs">$$</div>
+                            <div class="text-blue-500 font-bold">Unltd</div>
+                            <div class="text-violet-500 font-bold">Unltd</div>
+                        </div>
+
+                        <div class="grid grid-cols-4 p-3 border-b border-slate-700 items-center text-center bg-slate-800/50">
+                            <div class="text-left font-semibold">On-Site Fixes</div>
+                            <div class="text-slate-500 text-xs">$$</div>
+                            <div class="text-slate-500 text-xs">$$</div>
+                            <div class="text-violet-500 font-bold">Unltd</div>
+                        </div>
+
+                        <div class="grid grid-cols-4 p-3 border-b border-slate-700 items-center text-center">
+                            <div class="text-left font-semibold">Vendor Mgmt</div>
+                            <div class="text-slate-600"><i class="fas fa-times"></i></div>
+                            <div class="text-slate-600"><i class="fas fa-times"></i></div>
+                            <div class="text-violet-500"><i class="fas fa-check"></i></div>
+                        </div>
+
+                         <div class="grid grid-cols-4 p-3 items-center text-center font-bold bg-slate-900">
+                            <div class="text-left text-white">Price</div>
+                            <div class="text-emerald-400">$75</div>
+                            <div class="text-blue-400">$125</div>
+                            <div class="text-violet-400">$175</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Router Logic
+        function showView(viewName) {
+            window.scrollTo(0,0);
+            if(viewName === 'home') {
+                container.innerHTML = renderHome();
+            } else if (viewName === 'compare') {
+                container.innerHTML = renderCompare();
+            } else {
+                container.innerHTML = renderTier(viewName);
+            }
+        }
+
+        // Initialize
+        showView('home');
+
+    </script>
+</body>
+</html>
+
