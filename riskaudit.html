@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Site Risk Auditor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ops: {
+                            dark: '#1c1917',   
+                            panel: '#292524',  
+                            danger: '#ef4444', 
+                            safe: '#22c55e',   
+                            warn: '#f59e0b',   
+                            accent: '#3b82f6'  
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                        mono: ['Courier Prime', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1c1917;
+            color: #e7e5e4;
+            user-select: none; /* Prevent text selection for app-feel */
+        }
+        
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #ef4444;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #ef4444;
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #f59e0b;
+            cursor: pointer;
+            margin-top: -10px;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #44403c;
+            border-radius: 2px;
+        }
+
+        .risk-meter-bg {
+            background: conic-gradient(from 180deg, #22c55e 0deg, #f59e0b 90deg, #ef4444 180deg);
+            border-radius: 50% 50% 0 0;
+        }
+    </style>
+</head>
+<body class="bg-ops-dark min-h-screen flex flex-col">
+
+    <nav class="sticky top-0 z-50 bg-ops-panel border-b border-stone-700 p-4 flex justify-between items-center shadow-lg">
+        <div class="font-bold text-lg tracking-widest uppercase text-stone-400 flex items-center">
+            <i class="fas fa-crosshairs text-ops-danger mr-3 animate-pulse"></i>
+            Site Audit v2.0
+        </div>
+        <button onclick="resetAudit()" class="text-xs font-mono uppercase text-stone-500 hover:text-white">
+            <i class="fas fa-sync-alt mr-1"></i> Reset
+        </button>
+    </nav>
+
+    <main class="flex-grow p-4 max-w-xl mx-auto w-full">
+        
+        <div class="bg-stone-800 rounded-xl p-6 mb-6 border border-stone-700 text-center relative overflow-hidden">
+            <div class="text-xs font-mono text-stone-500 uppercase tracking-widest mb-4">Current Threat Level</div>
+            
+            <div class="relative w-48 h-24 mx-auto mb-4">
+                <div class="absolute inset-0 risk-meter-bg opacity-20"></div>
+                <div class="absolute inset-2 bg-stone-800 rounded-t-full z-10"></div>
+                
+                <div id="gauge-needle" class="absolute bottom-0 left-1/2 w-1 h-20 bg-white origin-bottom transform -translate-x-1/2 transition-transform duration-500 z-20" style="transform: rotate(-90deg);"></div>
+                <div class="absolute bottom-0 left-1/2 w-4 h-4 bg-stone-400 rounded-full transform -translate-x-1/2 translate-y-1/2 z-30"></div>
+            </div>
+
+            <div class="flex items-baseline justify-center">
+                <span id="score-val" class="text-5xl font-black text-ops-safe transition-colors duration-300">0</span>
+                <span class="text-stone-500 font-bold ml-1">%</span>
+            </div>
+            <div id="score-text" class="text-sm font-bold uppercase text-ops-safe mt-2 transition-colors duration-300">SECURE</div>
+        </div>
+
+        <div class="space-y-4 mb-8">
+            <h3 class="text-xs font-mono text-stone-400 uppercase ml-1">Perimeter Vulnerabilities</h3>
+            
+            <div class="bg-stone-800/50 p-4 rounded-lg border border-stone-700 flex justify-between items-center cursor-pointer" onclick="toggleRisk('fence')">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded bg-stone-700 flex items-center justify-center mr-3 text-stone-400">
+                        <i class="fas fa-door-open"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-sm">Open/Damaged Fencing</div>
+                        <div class="text-xs text-stone-500">Accessible perimeter points</div>
+                    </div>
+                </div>
+                <div class="w-6 h-6 rounded-full border-2 border-stone-600 flex items-center justify-center transition-colors" id="btn-fence">
+                    <div class="w-3 h-3 rounded-full bg-transparent transition-colors" id="dot-fence"></div>
+                </div>
+            </div>
+
+            <div class="bg-stone-800/50 p-4 rounded-lg border border-stone-700 flex justify-between items-center cursor-pointer" onclick="toggleRisk('light')">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded bg-stone-700 flex items-center justify-center mr-3 text-stone-400">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-sm">Poor Night Lighting</div>
+                        <div class="text-xs text-stone-500">Dark zones > 20ft</div>
+                    </div>
+                </div>
+                <div class="w-6 h-6 rounded-full border-2 border-stone-600 flex items-center justify-center transition-colors" id="btn-light">
+                    <div class="w-3 h-3 rounded-full bg-transparent transition-colors" id="dot-light"></div>
+                </div>
+            </div>
+
+            <div class="bg-stone-800/50 p-4 rounded-lg border border-stone-700 flex justify-between items-center cursor-pointer" onclick="toggleRisk('blind')">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded bg-stone-700 flex items-center justify-center mr-3 text-stone-400">
+                        <i class="fas fa-eye-slash"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-sm">Blind Spots</div>
+                        <div class="text-xs text-stone-500">Areas hidden from street view</div>
+                    </div>
+                </div>
+                <div class="w-6 h-6 rounded-full border-2 border-stone-600 flex items-center justify-center transition-colors" id="btn-blind">
+                    <div class="w-3 h-3 rounded-full bg-transparent transition-colors" id="dot-blind"></div>
+                </div>
+            </div>
+            
+            <h3 class="text-xs font-mono text-stone-400 uppercase ml-1 mt-6">Asset Exposure</h3>
+
+            <div class="bg-stone-800/50 p-4 rounded-lg border border-stone-700">
+                <div class="flex justify-between mb-2">
+                    <span class="text-sm font-bold text-stone-300">Exposed Material Value</span>
+                    <span class="text-sm font-mono text-ops-warn" id="asset-val">$0k</span>
+                </div>
+                <input type="range" min="0" max="500" value="0" step="10" class="w-full" id="asset-slider" oninput="updateAssets(this.value)">
+                <div class="flex justify-between text-[10px] text-stone-600 font-mono mt-1">
+                    <span>$0</span>
+                    <span>$250k</span>
+                    <span>$500k+</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="solution-card" class="hidden slide-enter">
+            <div class="bg-red-500/10 border border-red-500/50 p-4 rounded-lg text-center">
+                <div class="text-red-500 font-bold uppercase tracking-widest text-xs mb-2"><i class="fas fa-exclamation-triangle mr-1"></i> Deployment Recommended</div>
+                <p class="text-white text-sm mb-4">This site meets the criteria for <br><span class="font-bold">Immediate Active Deterrence</span>.</p>
+                <button class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-4 rounded shadow-lg uppercase tracking-wide text-sm">
+                    Configure Sentry Unit <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // State
+        const risks = {
+            fence: { active: false, weight: 20 },
+            light: { active: false, weight: 25 },
+            blind: { active: false, weight: 15 }
+        };
+        let assetRisk = 0; // 0 to 40
+
+        // Toggle Risk Items
+        function toggleRisk(id) {
+            risks[id].active = !risks[id].active;
+            
+            // Visual Update
+            const btn = document.getElementById(`btn-${id}`);
+            const dot = document.getElementById(`dot-${id}`);
+            
+            if(risks[id].active) {
+                btn.classList.remove('border-stone-600');
+                btn.classList.add('border-red-500');
+                dot.classList.remove('bg-transparent');
+                dot.classList.add('bg-red-500');
+            } else {
+                btn.classList.add('border-stone-600');
+                btn.classList.remove('border-red-500');
+                dot.classList.add('bg-transparent');
+                dot.classList.remove('bg-red-500');
+            }
+            calculateScore();
+        }
+
+        // Update Slider
+        function updateAssets(val) {
+            document.getElementById('asset-val').innerText = `$${val}k`;
+            // Normalize 0-500k to 0-40 points
+            assetRisk = (val / 500) * 40;
+            calculateScore();
+        }
+
+        // Calculate Total Score
+        function calculateScore() {
+            let score = 0;
+            
+            // Add Checkbox Weights
+            for (let key in risks) {
+                if (risks[key].active) score += risks[key].weight;
+            }
+            
+            // Add Asset Weight
+            score += assetRisk;
+
+            // Cap at 100
+            if (score > 100) score = 100;
+            score = Math.round(score);
+
+            updateGauge(score);
+        }
+
+        // Update UI Gauge
+        function updateGauge(score) {
+            const needle = document.getElementById('gauge-needle');
+            const scoreVal = document.getElementById('score-val');
+            const scoreText = document.getElementById('score-text');
+            const solution = document.getElementById('solution-card');
+
+            // Rotate Needle (-90deg is 0, 90deg is 100)
+            const rotation = -90 + (score * 1.8);
+            needle.style.transform = `rotate(${rotation}deg)`;
+            
+            // Update Number
+            scoreVal.innerText = score;
+
+            // Update Colors/Text
+            if(score < 30) {
+                scoreVal.className = "text-5xl font-black text-ops-safe transition-colors duration-300";
+                scoreText.className = "text-sm font-bold uppercase text-ops-safe mt-2 transition-colors duration-300";
+                scoreText.innerText = "SITE SECURE";
+                solution.classList.add('hidden');
+            } else if (score < 70) {
+                scoreVal.className = "text-5xl font-black text-ops-warn transition-colors duration-300";
+                scoreText.className = "text-sm font-bold uppercase text-ops-warn mt-2 transition-colors duration-300";
+                scoreText.innerText = "VULNERABLE";
+                solution.classList.add('hidden');
+            } else {
+                scoreVal.className = "text-5xl font-black text-ops-danger transition-colors duration-300";
+                scoreText.className = "text-sm font-bold uppercase text-ops-danger mt-2 transition-colors duration-300";
+                scoreText.innerText = "CRITICAL RISK";
+                solution.classList.remove('hidden');
+            }
+        }
+
+        function resetAudit() {
+            // Reset logic here for fresh walk
+            location.reload();
+        }
+    </script>
+</body>
+</html>
