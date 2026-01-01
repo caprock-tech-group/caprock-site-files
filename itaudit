@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IT Efficiency & Risk Diagnostic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#0f172a',      // Slate 900
+                            panel: '#1e293b',   // Slate 800
+                            border: '#334155',  // Slate 700
+                            text: '#f8fafc',    // Slate 50
+                            mute: '#94a3b8',    // Slate 400
+                            accent: '#3b82f6',  // Blue 500
+                            safe: '#10b981',    // Emerald 500
+                            warn: '#f59e0b',    // Amber 500
+                            crit: '#e11d48'     // Rose 600
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['Courier Prime', 'monospace'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(15, 23, 42, 0.9) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 23, 42, 0.9) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #f8fafc;
+            border: 2px solid #3b82f6; 
+            cursor: pointer;
+            margin-top: -8px; 
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #334155;
+            border-radius: 2px;
+        }
+
+        /* Custom Checkbox */
+        .cyber-checkbox { display: none; }
+        .cyber-checkbox + label {
+            position: relative;
+            padding-left: 35px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+            color: #94a3b8;
+        }
+        .cyber-checkbox + label:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #334155;
+            background: #0f172a;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .cyber-checkbox:checked + label:before {
+            background: #10b981;
+            border-color: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+        }
+        .cyber-checkbox:checked + label:after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 12px;
+        }
+        .cyber-checkbox:checked + label { color: #f8fafc; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+
+        /* Danger Checkbox (For Windows 10) */
+        .danger-checkbox { display: none; }
+        .danger-checkbox + label {
+            position: relative;
+            padding-left: 35px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+            color: #e11d48; /* Red text */
+            font-weight: bold;
+        }
+        .danger-checkbox + label:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e11d48;
+            background: #0f172a;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .danger-checkbox:checked + label:before {
+            background: #e11d48;
+            border-color: #e11d48;
+            box-shadow: 0 0 10px rgba(225, 29, 72, 0.6);
+        }
+        .danger-checkbox:checked + label:after {
+            content: '\f071'; /* Warning Triangle */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 3.5px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 11px;
+        }
+
+        /* Animations */
+        @keyframes bleed-pulse {
+            0% { text-shadow: 0 0 0px rgba(225, 29, 72, 0); }
+            50% { text-shadow: 0 0 10px rgba(225, 29, 72, 0.5); }
+            100% { text-shadow: 0 0 0px rgba(225, 29, 72, 0); }
+        }
+        .animate-bleed { animation: bleed-pulse 2s infinite; }
+
+        /* PDF Styles - Scoped tightly */
+        #pdf-template {
+            background: white;
+            color: #1e293b;
+            font-family: 'Helvetica', sans-serif;
+            width: 750px; /* Optimized width for Letter size */
+            padding: 40px;
+            display: none; 
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col p-2 md:p-6 max-w-6xl mx-auto">
+
+    <!-- HEADER -->
+    <header class="flex justify-between items-end mb-8 border-b border-cyber-border pb-4">
+        <div>
+            <div class="text-xs text-cyber-accent font-mono tracking-widest uppercase mb-1">
+                <i class="fas fa-network-wired mr-2"></i>Infrastructure Diagnostics
+            </div>
+            <h1 class="text-2xl md:text-4xl font-black text-white tracking-tight">IT EFFICIENCY AUDIT</h1>
+        </div>
+        <div class="text-right hidden md:block">
+            <div class="text-xs text-cyber-mute font-mono">STATUS</div>
+            <div class="text-sm font-bold text-cyber-warn animate-pulse">ANALYSIS ACTIVE</div>
+        </div>
+    </header>
+
+    <!-- MAIN DASHBOARD GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+
+        <!-- LEFT COLUMN: INPUT ZONES (Span 7) -->
+        <div class="lg:col-span-7 space-y-6">
+            
+            <!-- ZONE 1: PAYROLL BLEED (NinjaOne Focus) -->
+            <div class="bg-cyber-panel border border-cyber-border rounded-lg p-6 relative overflow-hidden group hover:border-cyber-accent transition-colors duration-300">
+                <div class="absolute top-0 right-0 bg-cyber-border text-xs px-3 py-1 text-cyber-mute font-mono rounded-bl">ZONE 01: FRICTION</div>
+                
+                <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+                    <span class="bg-cyber-accent/20 text-cyber-accent p-2 rounded mr-3"><i class="fas fa-users-slash"></i></span>
+                    The Silent Killer (Unpatched Friction)
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-cyber-mute uppercase font-bold mb-1">Total Employees</label>
+                        <input type="number" id="emp-count" class="w-full bg-cyber-bg border border-cyber-border rounded p-3 text-white focus:border-cyber-accent outline-none font-mono" placeholder="0" oninput="calculate()">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-cyber-mute uppercase font-bold mb-1">Avg Hourly Wage</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-cyber-mute">$</span>
+                            <input type="number" id="emp-wage" class="w-full bg-cyber-bg border border-cyber-border rounded p-3 pl-6 text-white focus:border-cyber-accent outline-none font-mono" placeholder="0" oninput="calculate()">
+                        </div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs text-cyber-mute uppercase font-bold mb-2">Hours/Month Lost to Manual Updates & "Glitches"</label>
+                        <div class="flex items-center space-x-4">
+                            <input type="range" id="emp-hours" min="0" max="10" step="0.5" value="1" class="flex-grow" oninput="calculate()">
+                            <span id="hours-display" class="font-mono text-xl text-cyber-warn font-bold w-12 text-right">1.0</span>
+                        </div>
+                        <p class="text-[10px] text-cyber-mute mt-2">
+                            <i class="fas fa-info-circle mr-1"></i> Problems <strong>NinjaOne RMM</strong> solves automatically (Patching, Scripting, Background Fixes).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ZONE 2: SENTINEL MATRIX (SentinelOne Focus) -->
+            <div class="bg-cyber-panel border border-cyber-border rounded-lg p-6 relative overflow-hidden group hover:border-cyber-safe transition-colors duration-300">
+                <div class="absolute top-0 right-0 bg-cyber-border text-xs px-3 py-1 text-cyber-mute font-mono rounded-bl">ZONE 02: DEFENSE</div>
+                
+                <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+                    <span class="bg-cyber-safe/20 text-cyber-safe p-2 rounded mr-3"><i class="fas fa-shield-virus"></i></span>
+                    Defense & Lifecycle
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-3">
+                        <div>
+                            <input type="checkbox" id="sec-ai" class="cyber-checkbox" onchange="calculate()">
+                            <label for="sec-ai">AI-Driven Threat Detection (SentinelOne)</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="sec-patch" class="cyber-checkbox" onchange="calculate()">
+                            <label for="sec-patch">Automated Windows Patching</label>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <input type="checkbox" id="sec-vis" class="cyber-checkbox" onchange="calculate()">
+                            <label for="sec-vis">Full Network Asset Visibility</label>
+                        </div>
+                        <!-- Windows 10 Red Flag -->
+                        <div class="bg-cyber-bg/50 p-2 rounded border border-cyber-crit/30">
+                            <input type="checkbox" id="sec-win10" class="danger-checkbox" onchange="calculate()">
+                            <label for="sec-win10">Running Windows 10? (End of Life)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Score Bar -->
+                <div class="mt-6">
+                    <div class="flex justify-between text-xs text-cyber-mute mb-1 font-bold uppercase">
+                        <span>Defensibility Score</span>
+                        <span id="security-text" class="text-cyber-crit">CRITICAL</span>
+                    </div>
+                    <div class="w-full bg-cyber-bg h-3 rounded-full overflow-hidden border border-cyber-border">
+                        <div id="security-bar" class="h-full bg-cyber-crit transition-all duration-500 w-0"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ZONE 3: MANAGEMENT OVERHEAD -->
+            <div class="bg-cyber-panel border border-cyber-border rounded-lg p-6 relative overflow-hidden group hover:border-cyber-warn transition-colors duration-300">
+                <div class="absolute top-0 right-0 bg-cyber-border text-xs px-3 py-1 text-cyber-mute font-mono rounded-bl">ZONE 03: MANAGEMENT</div>
+                
+                <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+                    <span class="bg-cyber-warn/20 text-cyber-warn p-2 rounded mr-3"><i class="fas fa-brain"></i></span>
+                    Operational Drag
+                </h2>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-xs text-cyber-mute uppercase font-bold mb-2">Hours Owner/Manager Spends "Playing IT" (Monthly)</label>
+                        <div class="flex items-center space-x-4">
+                            <input type="range" id="mgmt-hours" min="0" max="40" step="1" value="0" class="flex-grow" oninput="calculate()">
+                            <span id="mgmt-display" class="font-mono text-xl text-white font-bold w-12 text-right">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between bg-cyber-bg p-3 rounded border border-cyber-border">
+                        <span class="text-sm text-cyber-text">Are you in a High-Liability Industry? (HIPAA/Legal)</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="mgmt-vendor" class="sr-only peer" onchange="calculate()">
+                            <div class="w-11 h-6 bg-cyber-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyber-accent"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: FINANCIAL ANCHOR & RESULTS (Span 5) -->
+        <div class="lg:col-span-5 flex flex-col space-y-6">
+            
+            <!-- THE FINANCIAL ANCHOR -->
+            <div class="bg-cyber-bg border-2 border-cyber-crit/50 rounded-lg p-6 text-center shadow-[0_0_30px_rgba(225,29,72,0.1)] relative">
+                <div class="absolute inset-0 bg-cyber-crit/5 animate-pulse"></div>
+                <h3 class="text-cyber-mute text-xs font-mono uppercase tracking-widest mb-2 relative z-10">Estimated Annual Loss</h3>
+                <div class="relative z-10">
+                    <div id="total-loss" class="text-5xl md:text-6xl font-black text-cyber-crit tracking-tighter animate-bleed font-mono">$0</div>
+                </div>
+                <p class="text-[10px] text-cyber-mute mt-4 relative z-10 uppercase tracking-wide">
+                    Payroll Waste + Downtime Risk + Management Overhead
+                </p>
+            </div>
+
+            <!-- RECOMMENDATION ENGINE -->
+            <div class="bg-cyber-panel border border-cyber-border rounded-lg p-6 flex-grow flex flex-col">
+                <h3 class="text-xs text-cyber-accent font-bold uppercase tracking-widest mb-4 border-b border-cyber-border pb-2">
+                    <i class="fas fa-crosshairs mr-2"></i>Remediation Protocol
+                </h3>
+
+                <div id="rec-card" class="bg-cyber-bg rounded border border-cyber-border p-5 mb-4 flex-grow transition-all duration-300">
+                    <!-- Dynamic Content -->
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h4 id="rec-title" class="text-xl font-bold text-white">Analysis Pending...</h4>
+                            <p id="rec-desc" class="text-xs text-cyber-mute mt-1">Input data to generate recommendation.</p>
+                        </div>
+                        <div id="rec-badge" class="hidden px-2 py-1 rounded text-[10px] font-bold uppercase bg-cyber-border text-cyber-mute">Waiting</div>
+                    </div>
+                    <div id="rec-price" class="text-3xl font-mono font-bold text-cyber-accent mt-4 opacity-50">$0<span class="text-sm text-cyber-mute font-sans font-normal"> / user</span></div>
+                </div>
+
+                <button onclick="generatePDF()" class="w-full bg-cyber-accent hover:bg-blue-600 text-white font-bold py-4 rounded shadow-lg transition-all active:scale-95 uppercase tracking-widest text-sm">
+                    <i class="fas fa-file-pdf mr-2"></i> Generate Executive Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HIDDEN PDF TEMPLATE -->
+    <div id="pdf-template">
+        <div style="border-bottom: 2px solid #e11d48; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <h1 style="font-size: 24px; font-weight: 900; margin: 0; color: #0f172a; text-transform: uppercase;">IT Efficiency & Risk Diagnostic</h1>
+                <p style="font-size: 10px; color: #64748b; margin-top: 5px; text-transform: uppercase;">PREPARED BY: CAPROCK TECHNOLOGY GROUP</p>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 10px; font-weight: bold; color: #e11d48;">ESTIMATED ANNUAL LOSS</div>
+                <div style="font-size: 28px; font-weight: 900; color: #e11d48; font-family: monospace;" id="pdf-loss">$0.00</div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+            <div style="background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; border-radius: 4px;">
+                <h3 style="font-size: 12px; font-weight: bold; color: #3b82f6; text-transform: uppercase; margin-bottom: 10px;">Operational Waste</h3>
+                <div style="font-size: 14px; color: #334155; line-height: 1.5;">
+                    Your organization is losing approximately <strong id="pdf-hours">0</strong> productive hours annually due to manual patching and unmanaged friction. This equates to <strong id="pdf-waste">$0</strong> in wasted payroll capital.
+                </div>
+            </div>
+            <div style="background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; border-radius: 4px;">
+                <h3 style="font-size: 12px; font-weight: bold; color: #e11d48; text-transform: uppercase; margin-bottom: 10px;">Security Posture</h3>
+                <div style="font-size: 14px; color: #334155;">
+                    <strong>Defensibility Score:</strong> <span id="pdf-score">0%</span>
+                </div>
+                <ul style="margin-top: 10px; font-size: 12px; color: #64748b; padding-left: 15px;" id="pdf-vulns">
+                    <!-- Vulns -->
+                </ul>
+            </div>
+        </div>
+
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 25px; border-radius: 4px;">
+            <h3 style="font-size: 14px; font-weight: 900; color: #1e40af; text-transform: uppercase; margin-bottom: 5px;">Recommended Stack: <span id="pdf-tier">--</span></h3>
+            <p style="font-size: 12px; color: #3b82f6; margin-bottom: 15px;" id="pdf-reason">Based on your audit profile.</p>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #bfdbfe; pt-4; mt-4;">
+                <div style="font-size: 12px; color: #64748b; width: 70%;">
+                    Includes <strong>NinjaOne RMM</strong> for automated patching and <strong>SentinelOne EDR</strong> for AI-driven threat rollback.
+                </div>
+                <div style="font-size: 24px; font-weight: bold; color: #1e40af;" id="pdf-price">$0</div>
+            </div>
+        </div>
+
+        <!-- CONTACT SECTION -->
+        <div style="margin-top: 30px; padding: 20px; background: #f8fafc; border: 1px solid #e2e8f0; text-align: center; border-radius: 4px;">
+            <h4 style="font-size: 10px; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 0.05em;">For Remediation & Support</h4>
+            <div style="font-size: 18px; font-weight: 900; color: #0f172a; text-transform: uppercase;">Caprock Technology Group</div>
+            <div style="font-size: 20px; font-weight: 900; color: #3b82f6; margin-top: 2px;">806-316-5070</div>
+        </div>
+
+        <div style="margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 10px; font-size: 10px; color: #94a3b8; text-align: center;">
+            Generated by IT Infrastructure Audit Tool &copy; 2024
+        </div>
+    </div>
+
+    <script>
+        // --- LOGIC ENGINE ---
+
+        // State Inputs
+        const els = {
+            empCount: document.getElementById('emp-count'),
+            empWage: document.getElementById('emp-wage'),
+            empHours: document.getElementById('emp-hours'),
+            hoursDisplay: document.getElementById('hours-display'),
+            
+            // Security inputs updated for SentinelOne + Win10
+            secAi: document.getElementById('sec-ai'),
+            secPatch: document.getElementById('sec-patch'),
+            secVis: document.getElementById('sec-vis'),
+            secWin10: document.getElementById('sec-win10'),
+            
+            mgmtHours: document.getElementById('mgmt-hours'),
+            mgmtDisplay: document.getElementById('mgmt-display'),
+            vendor: document.getElementById('mgmt-vendor'),
+            
+            totalLoss: document.getElementById('total-loss'),
+            securityBar: document.getElementById('security-bar'),
+            securityText: document.getElementById('security-text'),
+            
+            recTitle: document.getElementById('rec-title'),
+            recDesc: document.getElementById('rec-desc'),
+            recPrice: document.getElementById('rec-price'),
+            recBadge: document.getElementById('rec-badge'),
+            recCard: document.getElementById('rec-card')
+        };
+
+        function calculate() {
+            // 1. Update Sliders UI
+            els.hoursDisplay.innerText = els.empHours.value;
+            els.mgmtDisplay.innerText = els.mgmtHours.value;
+
+            // 2. Calculate Payroll Bleed
+            const employees = parseFloat(els.empCount.value) || 0;
+            const wage = parseFloat(els.empWage.value) || 0;
+            const hoursLost = parseFloat(els.empHours.value) || 0;
+            // Formula: (Emp * Wage * Hours * 52 weeks) / 12 for Monthly visual, but we want annual annual.
+            const payrollWaste = employees * wage * hoursLost * 52;
+
+            // 3. Calculate Management Overhead (Opp Cost)
+            const mgmtHours = parseFloat(els.mgmtHours.value) || 0;
+            const ownerRate = 150; 
+            const mgmtWaste = mgmtHours * ownerRate * 12;
+
+            // 4. Calculate Security Score (SentinelOne Focus)
+            let secScore = 0;
+            if(els.secAi.checked) secScore += 33;       // AI Detection
+            if(els.secPatch.checked) secScore += 33;    // Patching
+            if(els.secVis.checked) secScore += 34;      // Visibility
+            
+            // WINDOWS 10 PENALTY (Critical Deduction)
+            if(els.secWin10.checked) secScore -= 40; 
+            if(secScore < 0) secScore = 0;
+
+            // 5. Calculate Downtime Risk Exposure
+            const riskMultiplier = (100 - secScore) / 100;
+            const annualPayroll = employees * wage * 40 * 52; 
+            const downtimeRisk = annualPayroll * 0.15 * riskMultiplier;
+
+            // 6. Total Loss
+            const totalLoss = payrollWaste + mgmtWaste + downtimeRisk;
+
+            // 7. Update UI
+            els.totalLoss.innerText = formatCurrency(totalLoss);
+            
+            // Security Bar UI
+            els.securityBar.style.width = secScore + "%";
+            if(secScore < 50) {
+                els.securityBar.className = "h-full bg-cyber-crit transition-all duration-500";
+                els.securityText.innerText = "CRITICAL";
+                els.securityText.className = "text-cyber-crit";
+            } else if (secScore < 90) {
+                els.securityBar.className = "h-full bg-cyber-warn transition-all duration-500";
+                els.securityText.innerText = "MODERATE";
+                els.securityText.className = "text-cyber-warn";
+            } else {
+                els.securityBar.className = "h-full bg-cyber-safe transition-all duration-500";
+                els.securityText.innerText = "SECURE";
+                els.securityText.className = "text-cyber-safe";
+            }
+
+            recommendTier(secScore, payrollWaste, mgmtWaste, employees);
+            saveState();
+        }
+
+        function recommendTier(secScore, payrollWaste, mgmtWaste, employees) {
+            let tier = "";
+            let price = 0;
+            let reason = "";
+            let badgeColor = "";
+
+            // LOGIC ENGINE REFINED
+            // 1. VIP TRIGGER: High Management Headache OR High Liability
+            const isHighHeadache = (mgmtWaste > 9000); // 5+ hours/mo @ $150/hr * 12
+            const isLiability = els.vendor.checked; // "High Liability Industry" check
+
+            if (isHighHeadache || isLiability) {
+                tier = "The VIP";
+                price = 175;
+                reason = "Liability profile and management drag require 'White Glove' support.";
+                badgeColor = "bg-cyber-accent";
+                els.recCard.className = "bg-cyber-bg rounded border border-cyber-accent p-5 mb-4 flex-grow transition-all duration-300 shadow-[0_0_15px_rgba(59,130,246,0.2)]";
+            }
+            // 2. PARTNER TRIGGER: High Payroll Waste OR Employees struggling OR WINDOWS 10 ISSUES
+            else if (payrollWaste > 10000 || employees > 5 || els.secWin10.checked) {
+                tier = "The Partner";
+                price = 125;
+                if(els.secWin10.checked) {
+                     reason = "Critical OS Migration required. Partner tier includes automated patching & upgrades.";
+                } else {
+                     reason = "High payroll friction detected. NinjaOne automation needed to recover lost hours.";
+                }
+                badgeColor = "bg-cyber-warn text-black";
+                els.recCard.className = "bg-cyber-bg rounded border border-cyber-warn p-5 mb-4 flex-grow transition-all duration-300 shadow-[0_0_15px_rgba(245,158,11,0.2)]";
+            }
+            // 3. WATCHTOWER TRIGGER: Default / Just needs tools
+            else {
+                tier = "The Watchtower";
+                price = 75;
+                reason = "Team is efficient, but lacks SentinelOne protection layers.";
+                badgeColor = "bg-cyber-safe text-black";
+                els.recCard.className = "bg-cyber-bg rounded border border-cyber-safe p-5 mb-4 flex-grow transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]";
+            }
+
+            // Update Rec Card
+            els.recTitle.innerText = tier;
+            els.recDesc.innerText = reason;
+            els.recPrice.innerHTML = `$${price}<span class="text-sm text-cyber-mute font-sans font-normal"> / user / mo</span>`;
+            els.recPrice.className = "text-3xl font-mono font-bold text-white mt-4";
+            els.recBadge.innerText = "RECOMMENDED";
+            els.recBadge.className = `px-2 py-1 rounded text-[10px] font-bold uppercase ${badgeColor}`;
+            els.recBadge.classList.remove('hidden');
+
+            // Store for PDF
+            window.currentTier = { tier, price, reason };
+            window.wasteData = { hours: (employees * els.empHours.value * 52), money: payrollWaste };
+        }
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
+        }
+
+        // --- PDF ENGINE ---
+        function generatePDF() {
+            // Populate Template
+            document.getElementById('pdf-loss').innerText = els.totalLoss.innerText;
+            document.getElementById('pdf-hours').innerText = window.wasteData.hours.toLocaleString();
+            document.getElementById('pdf-waste').innerText = formatCurrency(window.wasteData.money);
+            document.getElementById('pdf-score').innerText = els.securityBar.style.width;
+            
+            // Populate Vulns List (SentinelOne context)
+            const vulnList = document.getElementById('pdf-vulns');
+            vulnList.innerHTML = '';
+            if(!els.secAi.checked) vulnList.innerHTML += "<li>Missing AI Threat Detection</li>";
+            if(!els.secPatch.checked) vulnList.innerHTML += "<li>Manual Patching (High Friction)</li>";
+            if(!els.secVis.checked) vulnList.innerHTML += "<li>Limited Asset Visibility</li>";
+            
+            // WINDOWS 10 PDF WARNING
+            if(els.secWin10.checked) {
+                vulnList.innerHTML += "<li style='color: #e11d48; font-weight: bold;'>CRITICAL: Windows 10 End-of-Life Risk Detected</li>";
+            }
+            
+            if(vulnList.innerHTML === '') vulnList.innerHTML = "<li>No critical gaps detected.</li>";
+
+            // Tier
+            document.getElementById('pdf-tier').innerText = window.currentTier.tier;
+            document.getElementById('pdf-reason').innerText = window.currentTier.reason;
+            document.getElementById('pdf-price').innerText = "$" + window.currentTier.price + "/mo";
+
+            // Generate
+            const element = document.getElementById('pdf-template');
+            element.style.display = 'block'; 
+            
+            const opt = {
+                margin: 0.25, // Small margins
+                filename: 'IT_Efficiency_Audit.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.style.display = 'none'; 
+            });
+        }
+
+        // --- PERSISTENCE ---
+        function saveState() {
+            const state = {
+                empCount: els.empCount.value,
+                empWage: els.empWage.value,
+                empHours: els.empHours.value,
+                secAi: els.secAi.checked,
+                secPatch: els.secPatch.checked,
+                secVis: els.secVis.checked,
+                secWin10: els.secWin10.checked,
+                mgmtHours: els.mgmtHours.value,
+                vendor: els.vendor.checked
+            };
+            localStorage.setItem('it_audit_data', JSON.stringify(state));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('it_audit_data');
+            if(saved) {
+                const state = JSON.parse(saved);
+                if(state.empCount) els.empCount.value = state.empCount;
+                if(state.empWage) els.empWage.value = state.empWage;
+                if(state.empHours) els.empHours.value = state.empHours;
+                
+                els.secAi.checked = state.secAi;
+                els.secPatch.checked = state.secPatch;
+                els.secVis.checked = state.secVis;
+                els.secWin10.checked = state.secWin10;
+                
+                if(state.mgmtHours) els.mgmtHours.value = state.mgmtHours;
+                els.vendor.checked = state.vendor;
+                
+                calculate();
+            }
+        }
+
+        window.onload = loadState;
+
+    </script>
+</body>
+</html>
+
+
