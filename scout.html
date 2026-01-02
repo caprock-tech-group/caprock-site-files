@@ -186,7 +186,7 @@
                 <i class="fas fa-list-ul mr-2"></i> VIEW LOG
             </button>
 
-            <button onclick="recenterMap()" class="bg-ops-panel border border-gray-600 text-gray-300 rounded-full p-3 w-12 h-12 shadow-lg active:scale-95 transition">
+            <button id="loc-btn" onclick="recenterMap()" class="bg-ops-panel border border-ops-success text-ops-success rounded-full p-3 w-12 h-12 shadow-lg active:scale-95 transition">
                 <i class="fas fa-location-arrow"></i>
             </button>
         </div>
@@ -239,6 +239,7 @@
         let watchId;
         let currentPos = null;
         let targets = JSON.parse(localStorage.getItem('caprock_recon_targets')) || [];
+        let isFollowing = true; // Default to following
 
         // --- MAP INITIALIZATION ---
         function initMap() {
@@ -249,6 +250,12 @@
                 subdomains: 'abcd',
                 maxZoom: 20
             }).addTo(map);
+
+            // Disable follow on drag
+            map.on('dragstart', () => {
+                isFollowing = false;
+                updateLocButton();
+            });
 
             // User Location Icon (Pulse)
             const userIcon = L.divIcon({
@@ -270,6 +277,9 @@
                             map.setView([lat, lng], 16);
                         } else {
                             userMarker.setLatLng([lat, lng]);
+                            if (isFollowing) {
+                                map.setView([lat, lng], map.getZoom()); // Smart Follow
+                            }
                         }
                     },
                     (err) => console.error("GPS Error:", err),
@@ -343,7 +353,22 @@
 
         // --- UI FUNCTIONS ---
         function recenterMap() {
-            if (currentPos && map) map.setView([currentPos.lat, currentPos.lng], 17);
+            if (currentPos && map) {
+                isFollowing = true;
+                map.setView([currentPos.lat, currentPos.lng], 17);
+                updateLocButton();
+            }
+        }
+
+        function updateLocButton() {
+            const btn = document.getElementById('loc-btn');
+            if (isFollowing) {
+                btn.classList.remove('text-gray-300', 'border-gray-600');
+                btn.classList.add('text-ops-success', 'border-ops-success');
+            } else {
+                btn.classList.add('text-gray-300', 'border-gray-600');
+                btn.classList.remove('text-ops-success', 'border-ops-success');
+            }
         }
 
         function toggleLog() {
