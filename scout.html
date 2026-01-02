@@ -217,9 +217,14 @@
         </div>
 
         <div class="p-4 bg-ops-bg border-t border-gray-700 flex justify-between items-center pb-8 md:pb-4">
-            <button onclick="clearTargets()" class="text-xs text-ops-crit font-bold uppercase tracking-widest px-4 py-3 border border-ops-crit rounded hover:bg-ops-crit hover:text-white transition">
-                Clear All Data
-            </button>
+            <div class="flex gap-2">
+                <button onclick="clearTargets()" class="text-xs text-ops-crit font-bold uppercase tracking-widest px-4 py-3 border border-ops-crit rounded hover:bg-ops-crit hover:text-white transition">
+                    Clear
+                </button>
+                <button onclick="emailLog()" class="text-xs text-ops-msp font-bold uppercase tracking-widest px-4 py-3 border border-ops-msp rounded hover:bg-ops-msp hover:text-white transition">
+                    <i class="fas fa-envelope mr-1"></i> Email Log
+                </button>
+            </div>
             <div class="text-right">
                 <div class="text-xs text-gray-500 font-mono">TOTAL TARGETS</div>
                 <div class="text-xl font-mono font-bold text-white" id="target-count">0</div>
@@ -394,6 +399,27 @@
                 localStorage.removeItem('caprock_recon_targets');
                 location.reload();
             }
+        }
+
+        function emailLog() {
+            if (targets.length === 0) {
+                alert("No targets to export.");
+                return;
+            }
+
+            const subject = `Tactical Recon Log - ${new Date().toLocaleDateString()}`;
+            let body = "CAPROCK RECON LOG\n";
+            body += "--------------------------------\n\n";
+
+            targets.forEach(t => {
+                body += `TYPE: ${t.type} TARGET\n`;
+                body += `TIME: ${t.time}\n`;
+                body += `COORDS: ${t.lat.toFixed(6)}, ${t.lng.toFixed(6)}\n`;
+                body += `GOOGLE MAPS: https://www.google.com/maps/search/?api=1&query=${t.lat},${t.lng}\n`;
+                body += "--------------------------------\n\n";
+            });
+
+            window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         }
 
         window.onload = initMap;
