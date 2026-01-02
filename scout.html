@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tactical Lead Recon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Leaflet CSS & JS (Free Map) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ops: {
+                            bg: '#0f172a',
+                            panel: '#1e293b',
+                            text: '#f8fafc',
+                            msp: '#3b82f6',    // Blue
+                            sentry: '#f59e0b', // Amber
+                            crit: '#ef4444',
+                            success: '#10b981'
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['Courier Prime', 'monospace'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow: hidden; /* Prevent scrolling */
+            touch-action: manipulation;
+        }
+        
+        #map {
+            height: 100vh;
+            width: 100%;
+            z-index: 0;
+        }
+
+        /* HUD Overlay */
+        .hud-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: linear-gradient(to top, #0f172a 90%, transparent);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* Target Buttons */
+        .target-btn {
+            height: 80px;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.1s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border-width: 2px;
+        }
+        
+        .btn-msp {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+        .btn-msp:active { background: #3b82f6; color: white; transform: scale(0.98); }
+
+        .btn-sentry {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: #f59e0b;
+            color: #f59e0b;
+        }
+        .btn-sentry:active { background: #f59e0b; color: black; transform: scale(0.98); }
+
+        /* Custom Markers */
+        .marker-pin {
+            width: 30px;
+            height: 30px;
+            border-radius: 50% 50% 50% 0;
+            background: #fff;
+            position: absolute;
+            transform: rotate(-45deg);
+            left: 50%;
+            top: 50%;
+            margin: -15px 0 0 -15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+        }
+        .marker-pin::after {
+            content: '';
+            width: 14px;
+            height: 14px;
+            margin: 8px 0 0 8px;
+            background: #fff;
+            position: absolute;
+            border-radius: 50%;
+        }
+        .custom-div-icon i {
+            position: absolute;
+            width: 22px;
+            font-size: 22px;
+            left: 0;
+            right: 0;
+            margin: 10px auto;
+            text-align: center;
+        }
+
+        /* Flash Effect */
+        #flash-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.1s ease-out;
+        }
+
+        /* Log Panel Slide-up */
+        #log-panel {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 85vh;
+            background: #1e293b;
+            border-top: 2px solid #f8fafc;
+            z-index: 2000;
+            transition: bottom 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+        }
+        
+        #log-panel.open { bottom: 0; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Flash Effect -->
+    <div id="flash-overlay"></div>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    <!-- HUD Interface -->
+    <div class="hud-overlay p-4 pb-6">
+        
+        <div class="flex gap-4 mb-4">
+            <!-- MSP Button -->
+            <button onclick="acquireTarget('MSP')" class="target-btn btn-msp flex-1">
+                <i class="fas fa-server text-2xl mb-1"></i>
+                MSP Target
+            </button>
+
+            <!-- Sentry Button -->
+            <button onclick="acquireTarget('SENTRY')" class="target-btn btn-sentry flex-1">
+                <i class="fas fa-video text-2xl mb-1"></i>
+                Sentry Target
+            </button>
+        </div>
+
+        <div class="flex justify-between items-center px-2">
+            <button onclick="toggleLog()" class="bg-ops-panel border border-gray-600 text-gray-300 rounded-lg p-3 px-6 shadow-lg active:scale-95 transition flex items-center">
+                <i class="fas fa-list-ul mr-2"></i> VIEW LOG
+            </button>
+
+            <button onclick="recenterMap()" class="bg-ops-panel border border-gray-600 text-gray-300 rounded-full p-3 w-12 h-12 shadow-lg active:scale-95 transition">
+                <i class="fas fa-location-arrow"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="fixed top-4 left-4 z-[500] bg-ops-bg/90 backdrop-blur border border-gray-600 rounded px-3 py-2 flex items-center shadow-lg">
+        <div class="w-3 h-3 rounded-full bg-ops-success animate-pulse mr-2"></div>
+        <div>
+            <div class="text-[10px] text-gray-400 font-mono leading-none">SYSTEM STATUS</div>
+            <div class="text-xs font-mono text-white font-bold tracking-wider leading-none mt-1">TRACKING ACTIVE</div>
+        </div>
+    </div>
+
+    <!-- Log Panel -->
+    <div id="log-panel">
+        <div class="p-5 border-b border-gray-700 flex justify-between items-center bg-ops-bg rounded-t-[18px]">
+            <h2 class="text-xl font-bold text-white font-mono flex items-center">
+                <i class="fas fa-clipboard-list text-gray-400 mr-3"></i>TARGET LOG
+            </h2>
+            <button onclick="toggleLog()" class="text-gray-400 hover:text-white p-2">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </button>
+        </div>
+        
+        <div class="flex-grow overflow-y-auto no-scrollbar p-4 space-y-3" id="target-list-container">
+            <!-- Targets injected here -->
+        </div>
+
+        <div class="p-4 bg-ops-bg border-t border-gray-700 flex justify-between items-center pb-8 md:pb-4">
+            <button onclick="clearTargets()" class="text-xs text-ops-crit font-bold uppercase tracking-widest px-4 py-3 border border-ops-crit rounded hover:bg-ops-crit hover:text-white transition">
+                Clear All Data
+            </button>
+            <div class="text-right">
+                <div class="text-xs text-gray-500 font-mono">TOTAL TARGETS</div>
+                <div class="text-xl font-mono font-bold text-white" id="target-count">0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIG & STATE ---
+        let map;
+        let userMarker;
+        let watchId;
+        let currentPos = null;
+        let targets = JSON.parse(localStorage.getItem('caprock_recon_targets')) || [];
+
+        // --- MAP INITIALIZATION ---
+        function initMap() {
+            map = L.map('map', { zoomControl: false }).setView([35.2220, -101.8313], 13);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap &copy; CARTO',
+                subdomains: 'abcd',
+                maxZoom: 20
+            }).addTo(map);
+
+            // User Location Icon (Pulse)
+            const userIcon = L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div style="background-color:#10b981; width:16px; height:16px; border-radius:50%; border:2px solid white; box-shadow:0 0 0 10px rgba(16, 185, 129, 0.3);"></div>`,
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+
+            if (navigator.geolocation) {
+                watchId = navigator.geolocation.watchPosition(
+                    (pos) => {
+                        const lat = pos.coords.latitude;
+                        const lng = pos.coords.longitude;
+                        currentPos = { lat, lng };
+
+                        if (!userMarker) {
+                            userMarker = L.marker([lat, lng], { icon: userIcon }).addTo(map);
+                            map.setView([lat, lng], 16);
+                        } else {
+                            userMarker.setLatLng([lat, lng]);
+                        }
+                    },
+                    (err) => console.error("GPS Error:", err),
+                    { enableHighAccuracy: true, maximumAge: 1000, timeout: 5000 }
+                );
+            } else {
+                alert("Geolocation required for recon.");
+            }
+
+            loadPinsToMap();
+        }
+
+        // --- MARKER LOGIC ---
+        function createCustomMarker(type) {
+            const color = type === 'MSP' ? '#3b82f6' : '#f59e0b';
+            const icon = type === 'MSP' ? 'fa-server' : 'fa-video';
+            
+            return L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div style="background-color:${color};" class="marker-pin"></div><i class="fas ${icon}" style="color:${color}; top:-38px; position:relative; font-size:16px;"></i>`,
+                iconSize: [30, 42],
+                iconAnchor: [15, 42],
+                popupAnchor: [0, -35]
+            });
+        }
+
+        function loadPinsToMap() {
+            // Clear existing layers first if needed (simplified for this version)
+            targets.forEach(t => {
+                L.marker([t.lat, t.lng], { icon: createCustomMarker(t.type) }).addTo(map)
+                    .bindPopup(`<b style="color:black">${t.type} Target</b><br><span style="color:#555">${t.time}</span>`);
+            });
+            updateTargetCount();
+        }
+
+        // --- ACQUIRE TARGET ---
+        function acquireTarget(type) {
+            if (!currentPos) {
+                alert("Waiting for GPS signal...");
+                return;
+            }
+
+            // Visual Feedback
+            const flash = document.getElementById('flash-overlay');
+            flash.style.opacity = '0.8';
+            setTimeout(() => { flash.style.opacity = '0'; }, 150);
+
+            // Save Data
+            const now = new Date();
+            const timestamp = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            const newTarget = {
+                id: Date.now(), // Unique ID
+                type: type,
+                lat: currentPos.lat,
+                lng: currentPos.lng,
+                time: timestamp
+            };
+
+            targets.unshift(newTarget);
+            localStorage.setItem('caprock_recon_targets', JSON.stringify(targets));
+
+            // Drop Pin
+            L.marker([currentPos.lat, currentPos.lng], { icon: createCustomMarker(type) }).addTo(map)
+                .bindPopup(`<b style="color:black">${type} Target</b><br><span style="color:#555">Just Added</span>`)
+                .openPopup();
+
+            renderLog();
+            updateTargetCount();
+        }
+
+        // --- UI FUNCTIONS ---
+        function recenterMap() {
+            if (currentPos && map) map.setView([currentPos.lat, currentPos.lng], 17);
+        }
+
+        function toggleLog() {
+            const panel = document.getElementById('log-panel');
+            panel.classList.toggle('open');
+            if (panel.classList.contains('open')) renderLog();
+        }
+
+        function updateTargetCount() {
+            document.getElementById('target-count').innerText = targets.length;
+        }
+
+        function renderLog() {
+            const container = document.getElementById('target-list-container');
+            if (targets.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 mt-10">No targets acquired yet.</div>';
+                return;
+            }
+
+            let html = '';
+            targets.forEach((t) => {
+                const isMSP = t.type === 'MSP';
+                const borderColor = isMSP ? 'border-ops-msp' : 'border-ops-sentry';
+                const textColor = isMSP ? 'text-ops-msp' : 'text-ops-sentry';
+                const icon = isMSP ? 'fa-server' : 'fa-video';
+                
+                // Navigation Link
+                const navLink = `https://www.google.com/maps/dir/?api=1&destination=${t.lat},${t.lng}`;
+                
+                html += `
+                    <div class="bg-gray-800 rounded-lg p-4 border-l-4 ${borderColor} flex justify-between items-center shadow-md">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                                <i class="fas ${icon} ${textColor} text-lg"></i>
+                            </div>
+                            <div>
+                                <div class="${textColor} font-bold text-sm tracking-wider">${t.type} TARGET</div>
+                                <div class="text-xs text-gray-400 font-mono">${t.time}</div>
+                            </div>
+                        </div>
+                        <a href="${navLink}" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center transition">
+                            <i class="fas fa-location-arrow mr-2"></i> NAV
+                        </a>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function clearTargets() {
+            if(confirm("Delete all captured targets?")) {
+                targets = [];
+                localStorage.removeItem('caprock_recon_targets');
+                location.reload();
+            }
+        }
+
+        window.onload = initMap;
+
+    </script>
+</body>
+</html>
