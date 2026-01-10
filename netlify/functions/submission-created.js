@@ -18,35 +18,44 @@ exports.handler = async function(event, context) {
         return { statusCode: 400, body: "Invalid Request Body" };
     }
     
-    // Extract form identity - checking both possible Netlify locations
+    // Extract form identity and submitted data
     const data = payload.data || {};
-    const netlifyFormName = payload.form_name || data['form-name'] || "Unknown Form";
+    const netlifyFormName = (payload.form_name || data['form-name'] || "Unknown Form").toLowerCase();
     
-    console.log(`Detected Form Name: ${netlifyFormName}`);
+    console.log(`Processing form: ${netlifyFormName}`);
     
-    // 2. Caprock Discord Webhook URL
-    const DISCORD_URL = "https://discord.com/api/webhooks/1459433932553584703/H1hmPninZQ888hL7lFDrtIzAVo0mnMs0axjYm0i6nfsmTLqi1F7t7YHsXyqySxKyp91k";
+    // 2. Secure Discord Webhook URL via Environment Variable
+    // DO NOT hardcode the URL here. Set it in the Netlify Dashboard.
+    const DISCORD_URL = process.env.DISCORD_WEBHOOK_URL;
 
-    // 3. Define Branding & Terminology
+    if (!DISCORD_URL) {
+        console.error("Missing DISCORD_WEBHOOK_URL environment variable. Deployment check failed.");
+        return { 
+            statusCode: 500, 
+            body: "Internal Server Error: Missing Webhook Configuration" 
+        };
+    }
+
+    // 3. Define Branding & Terminology (Tactical Style)
     let title = "🚨 NEW INTEL: Site Lead";
     let typeLabel = "General Site Form";
     let color = 3447003; // Default Blue
 
     // Differentiation logic
-    if (netlifyFormName === 'solar-inquiry') {
+    if (netlifyFormName.includes('solar')) {
         title = "☀️ HOT LEAD: Solar Form Submission";
         typeLabel = "Solar Form";
-        color = 16761095; // Yellow
+        color = 16761095; 
     } 
-    else if (netlifyFormName === 'contact-v8') {
+    else if (netlifyFormName.includes('contact-v8') || netlifyFormName.includes('protection')) {
         title = "🛡️ MSP INTEL: MSP Information Request";
         typeLabel = "MSP Information Request";
-        color = 4906624; // Green/Blue
+        color = 4906624; 
     }
-    else if (netlifyFormName === 'surveillance-inquiry') {
+    else if (netlifyFormName.includes('surveillance') || netlifyFormName.includes('camera')) {
         title = "👁️ SURVEILLANCE INTEL: Security Camera Inquiry";
         typeLabel = "Security Camera Inquiry";
-        color = 4906624; // Green/Blue
+        color = 4906624; 
     }
 
     // 4. Construct the Payload for Discord
@@ -61,12 +70,12 @@ exports.handler = async function(event, context) {
             },
             {
                 name: "Contact Person",
-                value: String(data.name || data['full-name'] || "Anonymous"),
+                value: String(data.name || data['full-name'] || data['name'] || "Anonymous"),
                 inline: true
             },
             {
                 name: "Mobile / Phone",
-                value: String(data.phone || "No Phone Provided"), 
+                value: String(data.phone || data['telephone'] || "No Phone Provided"), 
                 inline: false 
             },
             {
@@ -76,7 +85,7 @@ exports.handler = async function(event, context) {
             },
             {
                 name: "Lead Details / Project Scope",
-                value: String(data.message || "Request for direct contact."),
+                value: String(data.message || data['details'] || "Request for direct contact."),
                 inline: false
             }
         ],
@@ -88,11 +97,11 @@ exports.handler = async function(event, context) {
 
     const discordPayload = JSON.stringify({
         username: "Caprock Bot",
-        content: "@everyone", 
+        content: "@everyone",
         embeds: [embed]
     });
 
-    // 5. Dispatch to Discord
+    // 5. Dispatch the POST request to Discord
     return new Promise((resolve, reject) => {
         const url = new URL(DISCORD_URL);
         const options = {
@@ -102,7 +111,7 @@ exports.handler = async function(event, context) {
             headers: {
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(discordPayload),
-                'User-Agent': 'Caprock-Lead-Bot/2.0'
+                'User-Agent': 'Caprock-Lead-Bot/3.0'
             },
         };
 
@@ -111,10 +120,10 @@ exports.handler = async function(event, context) {
             res.on('data', (chunk) => { responseBody += chunk; });
             res.on('end', () => {
                 if (res.statusCode >= 200 && res.statusCode < 300) {
-                    console.log(`Success: Dispatched ${typeLabel} alert.`);
-                    resolve({ statusCode: 200, body: 'Alert Dispatched' });
+                    console.log(`Success: Dispatched ${typeLabel} alert to Discord.`);
+                    resolve({ statusCode: 200, body: 'Alert Sent' });
                 } else {
-                    console.error(`Discord API Error: ${res.statusCode}.`);
+                    console.error(`Discord API Error: ${res.statusCode}. Response: ${responseBody}`);
                     resolve({ statusCode: res.statusCode, body: 'Discord API Error' });
                 }
             });
