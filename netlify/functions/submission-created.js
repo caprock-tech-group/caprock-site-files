@@ -18,22 +18,18 @@ exports.handler = async function(event, context) {
         return { statusCode: 400, body: "Invalid Request Body" };
     }
     
-    // Extract form identity and submitted data
+    // Extract form identity - checking multiple locations for maximum reliability
     const data = payload.data || {};
     const netlifyFormName = (payload.form_name || data['form-name'] || "Unknown Form").toLowerCase();
     
     console.log(`Processing form: ${netlifyFormName}`);
     
     // 2. Secure Discord Webhook URL via Environment Variable
-    // DO NOT hardcode the URL here. Set it in the Netlify Dashboard.
     const DISCORD_URL = process.env.DISCORD_WEBHOOK_URL;
 
     if (!DISCORD_URL) {
-        console.error("Missing DISCORD_WEBHOOK_URL environment variable. Deployment check failed.");
-        return { 
-            statusCode: 500, 
-            body: "Internal Server Error: Missing Webhook Configuration" 
-        };
+        console.error("Missing DISCORD_WEBHOOK_URL environment variable.");
+        return { statusCode: 500, body: "Configuration Error" };
     }
 
     // 3. Define Branding & Terminology (Tactical Style)
@@ -41,18 +37,19 @@ exports.handler = async function(event, context) {
     let typeLabel = "General Site Form";
     let color = 3447003; // Default Blue
 
-    // Differentiation logic
+    // Differentiation logic - Expanded for spelling resilience
     if (netlifyFormName.includes('solar')) {
         title = "☀️ HOT LEAD: Solar Form Submission";
         typeLabel = "Solar Form";
         color = 16761095; 
     } 
-    else if (netlifyFormName.includes('contact-v8') || netlifyFormName.includes('protection')) {
+    else if (netlifyFormName.includes('contact-v8') || netlifyFormName.includes('protection') || netlifyFormName.includes('msp')) {
         title = "🛡️ MSP INTEL: MSP Information Request";
         typeLabel = "MSP Information Request";
         color = 4906624; 
     }
-    else if (netlifyFormName.includes('surveillance') || netlifyFormName.includes('camera')) {
+    // Added 'surve' and 'quote' to catch single-L spellings or alternate names
+    else if (netlifyFormName.includes('surve') || netlifyFormName.includes('camera') || netlifyFormName.includes('quote')) {
         title = "👁️ SURVEILLANCE INTEL: Security Camera Inquiry";
         typeLabel = "Security Camera Inquiry";
         color = 4906624; 
@@ -123,7 +120,7 @@ exports.handler = async function(event, context) {
                     console.log(`Success: Dispatched ${typeLabel} alert to Discord.`);
                     resolve({ statusCode: 200, body: 'Alert Sent' });
                 } else {
-                    console.error(`Discord API Error: ${res.statusCode}. Response: ${responseBody}`);
+                    console.error(`Discord API Error: ${res.statusCode}.`);
                     resolve({ statusCode: res.statusCode, body: 'Discord API Error' });
                 }
             });
