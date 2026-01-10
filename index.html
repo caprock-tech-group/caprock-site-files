@@ -37,11 +37,16 @@
                     },
                     animation: {
                         'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'marquee': 'marquee 25s linear infinite',
                     },
                     keyframes: {
                         fadeInUp: {
                             '0%': { opacity: '0', transform: 'translateY(20px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' },
                         }
                     }
                 }
@@ -133,18 +138,30 @@
             </div>
         </section>
 
-        <!-- Our Trusted Partners -->
-        <section class="py-12 border-t border-industrial-border bg-dark-card/50 overflow-hidden">
+        <!-- Our Trusted Partners (Updated Scrolling) -->
+        <section class="py-12 border-t border-industrial-border bg-white overflow-hidden">
             <div class="container mx-auto px-6">
                 <p class="text-center text-[10px] font-black text-gray-500 uppercase tracking-[0.4em] mb-8">Propelling Your Business with Industry Leaders</p>
-                <div class="flex flex-wrap justify-center items-center gap-x-12 gap-y-8 opacity-100 hover:opacity-100 transition-opacity duration-700">
-                    <img src="microsoft.png" alt="Microsoft" class="h-6 md:h-12">
-                    <img src="dell.png" alt="Dell" class="h-6 md:h-8">
-                    <img src="sentinelone.png" alt="SentinelOne" class="h-6 md:h-12">
-                    <img src="ninjaone.png" alt="NinjaOne" class="h-6 md:h-12">
-                    <img src="montavue.png" alt="Montavue" class="h-6 md:h-12">
-                    <img src="reolink.png" alt="Reolink" class="h-6 md:h-12">
-                    <img src="lorex.png" alt="Lorex" class="h-6 md:h-12">
+                <div class="flex w-full overflow-hidden">
+                    <div class="flex w-max animate-marquee gap-16 items-center">
+                        <!-- Original Set -->
+                        <img src="microsoft.png" alt="Microsoft" class="h-8 md:h-12 object-contain">
+                        <img src="dell.png" alt="Dell" class="h-6 md:h-10 object-contain">
+                        <img src="sentinelone.png" alt="SentinelOne" class="h-8 md:h-12 object-contain">
+                        <img src="ninjaone.png" alt="NinjaOne" class="h-8 md:h-12 object-contain">
+                        <img src="montavue.png" alt="Montavue" class="h-8 md:h-12 object-contain">
+                        <img src="reolink.png" alt="Reolink" class="h-8 md:h-12 object-contain">
+                        <img src="lorex.png" alt="Lorex" class="h-8 md:h-12 object-contain">
+                        
+                        <!-- Duplicate Set for Seamless Loop -->
+                        <img src="microsoft.png" alt="Microsoft" class="h-8 md:h-12 object-contain">
+                        <img src="dell.png" alt="Dell" class="h-6 md:h-10 object-contain">
+                        <img src="sentinelone.png" alt="SentinelOne" class="h-8 md:h-12 object-contain">
+                        <img src="ninjaone.png" alt="NinjaOne" class="h-8 md:h-12 object-contain">
+                        <img src="montavue.png" alt="Montavue" class="h-8 md:h-12 object-contain">
+                        <img src="reolink.png" alt="Reolink" class="h-8 md:h-12 object-contain">
+                        <img src="lorex.png" alt="Lorex" class="h-8 md:h-12 object-contain">
+                    </div>
                 </div>
             </div>
         </section>
