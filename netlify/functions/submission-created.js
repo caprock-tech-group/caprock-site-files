@@ -16,7 +16,7 @@ exports.handler = async function(event, context) {
     
     const data = payload.data || {};
     
-    // 2. Your Hardcoded Discord Webhook URL
+    // 2. Your Hardcoded Discord Webhook URL for Caprock Command Center
     const DISCORD_URL = "https://discord.com/api/webhooks/1459433932553584703/H1hmPninZQ888hL7lFDrtIzAVo0mnMs0axjYm0i6nfsmTLqi1F7t7YHsXyqySxKyp91k";
 
     // 3. Determine framing based on the form used
@@ -66,8 +66,10 @@ exports.handler = async function(event, context) {
         timestamp: new Date().toISOString()
     };
 
+    // content: "@everyone" ensures the notification pings all members in the channel
     const discordPayload = JSON.stringify({
         username: "Caprock Bot",
+        content: "@everyone",
         embeds: [embed]
     });
 
@@ -90,7 +92,7 @@ exports.handler = async function(event, context) {
             res.on('data', (chunk) => { responseBody += chunk; });
             res.on('end', () => {
                 if (res.statusCode >= 200 && res.statusCode < 300) {
-                    console.log("Success: Alert dispatched to Discord.");
+                    console.log("Success: Alert dispatched to Discord with @everyone ping.");
                     resolve({ statusCode: 200, body: 'Alert Sent' });
                 } else {
                     console.error(`Discord API rejected request. Status: ${res.statusCode}. Response: ${responseBody}`);
