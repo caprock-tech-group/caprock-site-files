@@ -1,58 +1,62 @@
 const https = require('https');
 
 exports.handler = async function(event, context) {
-    // Parse the Netlify event body
+    console.log("--- New Form Submission Detected ---");
+
+    // 1. Parse the Netlify event body
     let payload;
     try {
-        payload = JSON.parse(event.body).payload;
+        const body = JSON.parse(event.body);
+        payload = body.payload;
+        console.log(`Processing form: ${payload.data['form-name'] || 'Unknown'}`);
     } catch (e) {
-        console.error("Error parsing event body:", e);
+        console.error("Critical Error: Could not parse event body.", e);
         return { statusCode: 400, body: "Invalid Request Body" };
     }
     
-    const { data } = payload;
+    const data = payload.data || {};
     
-    // Your Hardcoded Discord Webhook URL for Caprock Command Center
+    // 2. Your Hardcoded Discord Webhook URL
     const DISCORD_URL = "https://discord.com/api/webhooks/1459433932553584703/H1hmPninZQ888hL7lFDrtIzAVo0mnMs0axjYm0i6nfsmTLqi1F7t7YHsXyqySxKyp91k";
 
-    // Determine form type for the header to differentiate between MSP leads and Solar leads
-    const formName = data['form-name'] || 'Unknown Form';
+    // 3. Determine framing based on the form used
+    const formName = data['form-name'] || 'General Contact';
     let title = "🚨 NEW INTEL: Site Lead";
     let color = 4906624; // Brand Blue (#4ade80)
 
     if (formName === 'solar-inquiry') {
         title = "☀️ HOT LEAD: Tactical Solar Trailer";
-        color = 16761095; // Bright Yellow for high-impact visibility
+        color = 16761095; // High-visibility Yellow
     }
 
-    // Construct the Discord Embed structure for a professional "Ops Center" look
+    // 4. Construct the Payload for Discord
     const embed = {
         title: title,
         color: color,
         fields: [
             {
                 name: "Lead Source",
-                value: formName,
+                value: String(formName),
                 inline: true
             },
             {
                 name: "Contact Person",
-                value: data.name || data['full-name'] || "N/A",
+                value: String(data.name || data['full-name'] || "Anonymous"),
                 inline: true
             },
             {
                 name: "Mobile / Phone",
-                value: data.phone || "N/A", 
+                value: String(data.phone || "No Phone Provided"), 
                 inline: false 
             },
             {
                 name: "Email Address",
-                value: data.email || "N/A",
+                value: String(data.email || "No Email Provided"),
                 inline: true
             },
             {
                 name: "Intel / Message",
-                value: data.message || "Request for information only.",
+                value: String(data.message || "No message provided."),
                 inline: false
             }
         ],
@@ -62,9 +66,12 @@ exports.handler = async function(event, context) {
         timestamp: new Date().toISOString()
     };
 
-    const body = JSON.stringify({ embeds: [embed] });
+    const discordPayload = JSON.stringify({
+        username: "Caprock Bot",
+        embeds: [embed]
+    });
 
-    // Send the POST request to Discord
+    // 5. Dispatch to Discord
     return new Promise((resolve, reject) => {
         const url = new URL(DISCORD_URL);
         const options = {
@@ -73,7 +80,8 @@ exports.handler = async function(event, context) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(body),
+                'Content-Length': Buffer.byteLength(discordPayload),
+                'User-Agent': 'Caprock-Lead-Bot/1.0'
             },
         };
 
@@ -82,20 +90,21 @@ exports.handler = async function(event, context) {
             res.on('data', (chunk) => { responseBody += chunk; });
             res.on('end', () => {
                 if (res.statusCode >= 200 && res.statusCode < 300) {
-                    resolve({ statusCode: 200, body: 'Alert Dispatched to Discord' });
+                    console.log("Success: Alert dispatched to Discord.");
+                    resolve({ statusCode: 200, body: 'Alert Sent' });
                 } else {
-                    console.error(`Discord API Error: ${res.statusCode} ${responseBody}`);
-                    resolve({ statusCode: res.statusCode, body: `Discord Error: ${responseBody}` });
+                    console.error(`Discord API rejected request. Status: ${res.statusCode}. Response: ${responseBody}`);
+                    resolve({ statusCode: res.statusCode, body: 'Discord API Error' });
                 }
             });
         });
 
         request.on('error', (e) => {
-            console.error('Network Error:', e);
-            reject({ statusCode: 500, body: e.message });
+            console.error('Network level error occurred:', e);
+            resolve({ statusCode: 500, body: 'Network Error' });
         });
 
-        request.write(body);
+        request.write(discordPayload);
         request.end();
     });
 };
