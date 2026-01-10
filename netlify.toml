@@ -1,12 +1,12 @@
 # netlify.toml
-[build]
-  functions = "netlify/functions"
+
+  
 # This section defines the build settings for your site.
 [build]
   # This command tells Netlify to install dependencies and then run your build script.
   # It runs from the root of your repository, where your package.json is located.
   command = "npm install && npm run build"
-  
+  functions = "netlify/functions"
   # This tells Netlify that the finished HTML files are in the root of the repository.
   publish = "public"
 
