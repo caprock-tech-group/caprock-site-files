@@ -1,5 +1,6 @@
 # netlify.toml
-
+[build]
+  functions = "netlify/functions"
 # This section defines the build settings for your site.
 [build]
   # This command tells Netlify to install dependencies and then run your build script.
