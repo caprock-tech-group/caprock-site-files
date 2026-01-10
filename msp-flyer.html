@@ -32,7 +32,10 @@
                 background: white !important;
                 -webkit-print-color-adjust: exact; 
             }
-            .no-print { display: none; }
+            /* Robust print hiding */
+            .no-print { 
+                display: none !important; 
+            }
             @page {
                 size: letter;
                 margin: 0;
@@ -211,7 +214,7 @@
     </div>
 
     <!-- UI Overlay (Hidden in Print) -->
-    <div class="no-print fixed bottom-8 right-8 flex gap-4">
+    <div class="no-print print:hidden fixed bottom-8 right-8 flex gap-4">
         <button onclick="window.print()" class="bg-electric-blue text-white px-6 py-3 rounded-full shadow-2xl hover:brightness-110 font-black uppercase text-xs tracking-widest transition-all">
             Print Document
         </button>
