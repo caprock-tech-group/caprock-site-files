@@ -19,14 +19,20 @@ exports.handler = async function(event, context) {
     // 2. Your Hardcoded Discord Webhook URL for Caprock Command Center
     const DISCORD_URL = "https://discord.com/api/webhooks/1459433932553584703/H1hmPninZQ888hL7lFDrtIzAVo0mnMs0axjYm0i6nfsmTLqi1F7t7YHsXyqySxKyp91k";
 
-    // 3. Determine framing based on the form used
-    const formName = data['form-name'] || 'General Contact';
+    // 3. Differentiate phrasing and colors based on form name
+    const formName = data['form-name'] || 'General Site Form';
     let title = "🚨 NEW INTEL: Site Lead";
-    let color = 4906624; // Brand Blue (#4ade80)
+    let color = 3447003; // Default Blue
 
+    // Solar Trailer Specific Branding
     if (formName === 'solar-inquiry') {
-        title = "☀️ HOT LEAD: Tactical Solar Trailer";
-        color = 16761095; // High-visibility Yellow
+        title = "☀️ HOT LEAD: Tactical Solar Trailer Availability";
+        color = 16761095; // Bright Yellow/Orange for "Heat"
+    } 
+    // Main MSP "Start Protection" Specific Branding
+    else if (formName === 'contact-v8') {
+        title = "🛡️ MSP INTEL: Start Protection Request";
+        color = 4906624; // Caprock Brand Blue (#4ade80)
     }
 
     // 4. Construct the Payload for Discord
@@ -35,7 +41,7 @@ exports.handler = async function(event, context) {
         color: color,
         fields: [
             {
-                name: "Lead Source",
+                name: "Submission Type",
                 value: String(formName),
                 inline: true
             },
@@ -55,8 +61,8 @@ exports.handler = async function(event, context) {
                 inline: true
             },
             {
-                name: "Intel / Message",
-                value: String(data.message || "No message provided."),
+                name: "Lead Details",
+                value: String(data.message || "Request for direct contact."),
                 inline: false
             }
         ],
@@ -66,10 +72,9 @@ exports.handler = async function(event, context) {
         timestamp: new Date().toISOString()
     };
 
-    // content: "@everyone" ensures the notification pings all members in the channel
     const discordPayload = JSON.stringify({
         username: "Caprock Bot",
-        content: "@everyone",
+        content: "@everyone", // Ensure the notification "dings" everyone
         embeds: [embed]
     });
 
@@ -92,7 +97,7 @@ exports.handler = async function(event, context) {
             res.on('data', (chunk) => { responseBody += chunk; });
             res.on('end', () => {
                 if (res.statusCode >= 200 && res.statusCode < 300) {
-                    console.log("Success: Alert dispatched to Discord with @everyone ping.");
+                    console.log(`Success: Dispatched ${formName} alert to Discord.`);
                     resolve({ statusCode: 200, body: 'Alert Sent' });
                 } else {
                     console.error(`Discord API rejected request. Status: ${res.statusCode}. Response: ${responseBody}`);
