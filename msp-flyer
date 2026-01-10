@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caprock Technology Group - Strategic IT Tiers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'deep-slate': '#1c1917',
+                        'electric-blue': '#3b82f6',
+                        'border-light': '#e5e7eb',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @media print {
+            body { 
+                background: white !important;
+                -webkit-print-color-adjust: exact; 
+            }
+            .no-print { display: none; }
+            @page {
+                size: letter;
+                margin: 0;
+            }
+        }
+        body {
+            background-color: #f9fafb;
+        }
+        .print-canvas {
+            width: 8.5in;
+            height: 11in;
+            background: white;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+            padding: 0.5in;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body class="text-deep-slate antialiased">
+
+    <!-- Print Canvas (8.5x11) -->
+    <div class="print-canvas">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-end border-b-2 border-electric-blue pb-8 mb-10">
+            <div>
+                <!-- Primary Logo Branding -->
+                <img src="caprock logo transparent BG 2 large.png" alt="Caprock Technology Group" class="h-16 w-auto object-contain">
+            </div>
+            <div class="text-right">
+                <h2 class="text-2xl font-bold text-deep-slate tracking-tight">Your Strategic IT Partner</h2>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-widest">Service Overview 2025</p>
+            </div>
+        </header>
+
+        <!-- The Logic -->
+        <section class="mb-12">
+            <h3 class="text-xs font-black text-electric-blue uppercase tracking-[0.3em] mb-3">The Logic</h3>
+            <div class="max-w-2xl">
+                <h4 class="text-2xl font-bold mb-4 tracking-tight">Industrial-Strength Technology for the Modern Office.</h4>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    We believe IT should be an invisible engine of productivity. Our systems are engineered to prevent failure through autonomous AI protection, standardized hardware deployments, and a relentless focus on business continuity. We don't just fix computers; we secure your competitive advantage.
+                </p>
+            </div>
+        </section>
+
+        <!-- The Tiers -->
+        <section class="flex-grow">
+            <h3 class="text-xs font-black text-electric-blue uppercase tracking-[0.3em] mb-6">Service Memberships</h3>
+            <div class="grid grid-cols-3 gap-0 border border-border-light rounded-lg overflow-hidden">
+                
+                <!-- The Watchtower -->
+                <div class="p-8 border-r border-border-light flex flex-col">
+                    <div class="mb-8">
+                        <h5 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-1">Watchtower</h5>
+                        <p class="text-xs font-medium text-gray-500 mb-4 uppercase">Silent Protection</p>
+                        <div class="flex items-baseline">
+                            <span class="text-4xl font-bold font-mono text-deep-slate">$75</span>
+                            <span class="text-[10px] font-black text-gray-400 ml-1 uppercase">/u/mo</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-4 flex-grow">
+                        <li class="text-[11px] leading-tight flex gap-2">
+                            <span class="text-electric-blue font-bold">●</span>
+                            <span>SentinelOne AI EDR (Ransomware Kill-Switch)</span>
+                        </li>
+                        <li class="text-[11px] leading-tight flex gap-2">
+                            <span class="text-electric-blue font-bold">●</span>
+                            <span>Automated OS & Third-Party Patching</span>
+                        </li>
+                        <li class="text-[11px] leading-tight flex gap-2">
+                            <span class="text-electric-blue font-bold">●</span>
+                            <span>24/7 Professional Threat Monitoring</span>
+                        </li>
+                        <li class="text-[11px] leading-tight flex gap-2">
+                            <span class="text-electric-blue font-bold">●</span>
+                            <span>Cloud Backup for Critical Documents</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- The Partner -->
+                <div class="p-8 border-r border-border-light flex flex-col bg-gray-50/50">
+                    <div class="mb-8">
+                        <h5 class="text-sm font-black text-electric-blue uppercase tracking-widest mb-1">Partner</h5>
+                        <p class="text-xs font-medium text-gray-500 mb-4 uppercase">Productivity Engine</p>
+                        <div class="flex items-baseline">
+                            <span class="text-4xl font-bold font-mono text-deep-slate">$125</span>
+                            <span class="text-[10px] font-black text-gray-400 ml-1 uppercase">/u/mo</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-4 flex-grow">
+                        <li class="text-[11px] leading-tight flex gap-2">
+                            <span class="text-electric-blue font-bold">●</span>
+                            <span class="font-semibold text-deep-slate">Everything in Watchtower</span>
+                        </li>
+                        <li class="text-[11px] leading-tight flex gap-2 font-bold text-deep-slate">
+                            <span class="text-electric-blue">●</span>
+                            <span>Unlimited Remote Helpdesk Support</span>
+                        </li>
+                        <li class="text-[11px] leading-tight flex gap-2">
+                            <span class="text-electric-blue font-bold">●</span>
+                            <span>Priority Response SLA (Business Hours)</span>
+                        </li>
+                        <li class="text-[11px] leading-tight flex gap-2">
+                            <span class="text-electric-blue font-bold">●</span>
+                            <span>Member Labor Rates for Projects</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- The VIP -->
+                <div class="p-8 flex flex-col relative border-l-2 border-electric-blue">
+                    <div class="absolute top-4 right-8">
+                        <span class="text-[9px] font-black text-white bg-electric-blue px-2 py-1 uppercase tracking-widest rounded-sm">Premium Standard</span>
+                    </div>
+                    <div class="mb-8">
+                        <h5 class="text-sm font-black text-deep-slate uppercase tracking-widest mb-1">VIP</h5>
+                        <p class="text-xs font-medium text-gray-500 mb-4 uppercase">Executive Solution</p>
+                        <div class="flex items-baseline">
+                            <span class="text-4xl font-bold font-mono text-deep-slate">$175</span>
+                            <span class="text-[10px] font-black text-gray-400 ml-1 uppercase">/u/mo</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-4 flex-grow">
+                        <li class="text-[11px] leading-tight flex gap-2">
+                            <span class="text-electric-blue font-bold">●</span>
+                            <span class="font-semibold text-deep-slate">Everything in Partner</span>
+                        </li>
+                        <li class="text-[11px] leading-tight flex gap-2 font-bold text-deep-slate">
+                            <span class="text-electric-blue">●</span>
+                            <span>Unlimited On-Site Repair Support</span>
+                        </li>
+                        <li class="text-[11px] leading-tight flex gap-2">
+                            <span class="text-electric-blue font-bold">●</span>
+                            <span>vCIO Strategic Reviews (Quarterly)</span>
+                        </li>
+                        <li class="text-[11px] leading-tight flex gap-2">
+                            <span class="text-electric-blue font-bold">●</span>
+                            <span>Vendor & ISP Management</span>
+                        </li>
+                        <li class="text-[11px] leading-tight flex gap-2">
+                            <span class="text-electric-blue font-bold">●</span>
+                            <span>Executive Emergency Response</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- The Rule -->
+        <footer class="mt-auto pt-8 border-t border-border-light flex justify-between items-end">
+            <div>
+                <h6 class="text-[10px] font-black text-deep-slate uppercase tracking-widest mb-2">The Panhandle Rule (Travel)</h6>
+                <div class="flex gap-8">
+                    <div>
+                        <p class="text-[9px] font-bold text-gray-400 uppercase">Zone A (Amarillo/Canyon)</p>
+                        <p class="text-xs font-bold text-electric-blue">$0.00 Trip Charge</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold text-gray-400 uppercase">Zone B (Outlying Area)</p>
+                        <p class="text-xs font-bold text-deep-slate">$1.50 per mile</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-1">Caprock Technology Group</p>
+                <p class="text-xs font-bold font-mono text-deep-slate tracking-tight">(806) 316-5070 • CAPROCKTECH.COM</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- UI Overlay (Hidden in Print) -->
+    <div class="no-print fixed bottom-8 right-8 flex gap-4">
+        <button onclick="window.print()" class="bg-electric-blue text-white px-6 py-3 rounded-full shadow-2xl hover:brightness-110 font-black uppercase text-xs tracking-widest transition-all">
+            Print Document
+        </button>
+    </div>
+
+</body>
+</html>
