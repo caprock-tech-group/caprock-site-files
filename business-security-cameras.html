@@ -269,42 +269,56 @@
             </div>
         </section>
 
-        <!-- Solar Surveillance Section (Klaff Framed) -->
+        <!-- Solar Surveillance Section (High Impact - Tactical HUD Style) -->
         <section class="py-24 bg-dark-bg border-t border-industrial-border relative">
             <div class="container mx-auto px-6">
-                <div class="flex flex-col lg:flex-row items-center gap-12">
-                    <div class="lg:w-1/2">
-                        <div class="flex items-center gap-4 mb-4">
-                            <span class="text-brand-blue font-mono text-xs font-bold uppercase tracking-widest block">/ Mobile Defense Unit</span>
-                            <span class="inline-flex items-center rounded-md bg-brand-blue/10 px-2 py-1 text-xs font-bold text-brand-blue ring-1 ring-inset ring-brand-blue/20 animate-pulse">NEW FLEET ARRIVAL</span>
+                <!-- The Tactical Container -->
+                <div class="relative rounded-xl border border-brand-blue/30 bg-gradient-to-br from-dark-card to-dark-bg p-8 lg:p-12 overflow-hidden shadow-[0_0_40px_rgba(74,222,128,0.05)]">
+                    
+                    <!-- Decorative "HUD" Corners -->
+                    <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-brand-blue z-10"></div>
+                    <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-brand-blue z-10"></div>
+                    
+                    <!-- Background Tech Texture -->
+                    <div class="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(74,222,128,0.05)_50%,transparent_75%,transparent_100%)] bg-[length:20px_20px] opacity-20"></div>
+
+                    <div class="relative z-20 flex flex-col lg:flex-row items-center gap-12">
+                        <!-- Content (Left) -->
+                        <div class="lg:w-1/2">
+                            <div class="flex items-center gap-4 mb-4">
+                                <span class="text-brand-blue font-mono text-xs font-bold uppercase tracking-widest block">/ Mobile Defense Unit</span>
+                                <span class="inline-flex items-center rounded-md bg-brand-blue/10 px-2 py-1 text-xs font-bold text-brand-blue ring-1 ring-inset ring-brand-blue/20 animate-pulse">NEW FLEET ARRIVAL</span>
+                            </div>
+                            <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-6">Tactical Mobile Surveillance Trailers</h2>
+                            <p class="text-gray-400 text-lg leading-relaxed mb-6">
+                                Your remote job sites are soft targets. Harden them instantly with our fleet of <strong>Montavue Solar Trailers</strong>. <span class="text-white font-bold">100% autonomous, rapid-deployment protection that creates an immediate perimeter around your most valuable assets.</span>
+                            </p>
+                            <p class="text-gray-400 text-sm leading-relaxed mb-8">
+                                Ideal for high-value targets like Construction Sites, Oil & Gas Rigs, and Agriculture. No power? No Internet? No problem.
+                            </p>
+                            <ul class="space-y-4 text-sm text-gray-300 mb-8">
+                                <li class="flex items-center"><span class="text-brand-blue mr-3">✓</span> 100% Solar Powered & Self-Contained</li>
+                                <li class="flex items-center"><span class="text-brand-blue mr-3">✓</span> 4G/LTE Cellular Connectivity</li>
+                                <li class="flex items-center"><span class="text-brand-blue mr-3">✓</span> Active Deterrence (Lights & Sirens)</li>
+                                <li class="flex items-center"><span class="text-brand-blue mr-3">✓</span> 24/7 Remote Access via App</li>
+                            </ul>
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <!-- Replaced Link with Button for Modal -->
+                                <button onclick="openModal()" class="inline-block border border-brand-blue text-brand-blue font-bold px-8 py-3 rounded-sm hover:bg-brand-blue hover:text-dark-bg transition-all uppercase tracking-widest text-xs text-center">
+                                    Check Unit Availability
+                                </button>
+                                <a href="Solar Trailer Brochure.pdf" download class="inline-flex items-center justify-center bg-gray-800 border border-gray-600 text-gray-300 font-bold px-8 py-3 rounded-sm hover:bg-gray-700 hover:text-white transition-all uppercase tracking-widest text-xs">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                    Download Specs
+                                </a>
+                            </div>
                         </div>
-                        <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-6">Tactical Mobile Surveillance Trailers</h2>
-                        <p class="text-gray-400 text-lg leading-relaxed mb-6">
-                            Your remote job sites are soft targets. Harden them instantly with our fleet of <strong>Montavue Solar Trailers</strong>. <span class="text-white font-bold">100% autonomous, rapid-deployment protection that creates an immediate perimeter around your most valuable assets.</span>
-                        </p>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-8">
-                            Ideal for high-value targets like Construction Sites, Oil & Gas Rigs, and Agriculture. No power? No Internet? No problem.
-                        </p>
-                        <ul class="space-y-4 text-sm text-gray-300 mb-8">
-                            <li class="flex items-center"><span class="text-brand-blue mr-3">✓</span> 100% Solar Powered & Self-Contained</li>
-                            <li class="flex items-center"><span class="text-brand-blue mr-3">✓</span> 4G/LTE Cellular Connectivity</li>
-                            <li class="flex items-center"><span class="text-brand-blue mr-3">✓</span> Active Deterrence (Lights & Sirens)</li>
-                            <li class="flex items-center"><span class="text-brand-blue mr-3">✓</span> 24/7 Remote Access via App</li>
-                        </ul>
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="#contact" class="inline-block border border-brand-blue text-brand-blue font-bold px-8 py-3 rounded-sm hover:bg-brand-blue hover:text-dark-bg transition-all uppercase tracking-widest text-xs text-center">
-                                Check Unit Availability
-                            </a>
-                            <a href="Solar Trailer Brochure.pdf" download class="inline-flex items-center justify-center bg-gray-800 border border-gray-600 text-gray-300 font-bold px-8 py-3 rounded-sm hover:bg-gray-700 hover:text-white transition-all uppercase tracking-widest text-xs">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                Download Specs
-                            </a>
-                        </div>
-                    </div>
-                    <div class="lg:w-1/2 w-full">
-                        <div class="relative aspect-video rounded-xl overflow-hidden border border-industrial-border shadow-2xl group">
-                            <!-- Google Drive Embed -->
-                            <iframe class="absolute inset-0 w-full h-full" src="https://drive.google.com/file/d/1iAl3HoAzGDoyv3W_CNkgUqRN5DCzQ8NE/preview" title="Montavue Solar Trailer" style="border:0" allow="autoplay" allowfullscreen></iframe>
+                        <!-- Video (Right) -->
+                        <div class="lg:w-1/2 w-full">
+                            <div class="relative aspect-video rounded-xl overflow-hidden border border-industrial-border shadow-2xl group">
+                                <!-- Google Drive Embed -->
+                                <iframe class="absolute inset-0 w-full h-full" src="https://drive.google.com/file/d/1iAl3HoAzGDoyv3W_CNkgUqRN5DCzQ8NE/preview" title="Montavue Solar Trailer" style="border:0" allow="autoplay" allowfullscreen></iframe>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -396,6 +410,75 @@
         </div>
     </footer>
 
+    <!-- Availability Modal -->
+    <div id="availability-modal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true" onclick="if(event.target === this) closeModal()">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-dark-bg/90 backdrop-blur-sm transition-opacity"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto pointer-events-none">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0 pointer-events-auto">
+                <!-- Modal Panel -->
+                <div class="relative transform overflow-hidden rounded-lg bg-dark-card border border-brand-blue/30 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                    
+                    <!-- Close Button -->
+                    <div class="absolute top-0 right-0 pt-4 pr-4">
+                        <button type="button" onclick="closeModal()" class="rounded-md text-gray-400 hover:text-white focus:outline-none">
+                            <span class="sr-only">Close</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="p-8">
+                        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-blue/10 mb-6">
+                            <svg class="h-6 w-6 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="text-2xl font-black text-white uppercase tracking-tight" id="modal-title">Fleet Status Check</h3>
+                            <p class="mt-2 text-sm text-gray-400">
+                                Demand is high. Connect directly with our dispatch team to confirm trailer availability for your site.
+                            </p>
+                        </div>
+                        
+                        <form name="solar-inquiry" method="POST" data-netlify="true" action="/thank-you.html" class="mt-8 space-y-6">
+                            <input type="hidden" name="form-name" value="solar-inquiry">
+                            <input type="hidden" name="subject" value="New Solar Trailer Availability Check">
+                            
+                            <div>
+                                <label for="name" class="sr-only">Full Name</label>
+                                <input type="text" name="name" id="name" required class="block w-full rounded-sm border border-industrial-border bg-dark-bg/50 px-4 py-3 text-white placeholder-gray-500 focus:border-brand-blue focus:ring-brand-blue sm:text-sm" placeholder="Your Name">
+                            </div>
+                            
+                            <div>
+                                <label for="phone" class="sr-only">Phone Number</label>
+                                <input type="tel" name="phone" id="phone" required class="block w-full rounded-sm border border-industrial-border bg-dark-bg/50 px-4 py-3 text-white placeholder-gray-500 focus:border-brand-blue focus:ring-brand-blue sm:text-sm" placeholder="Phone Number (Priority Contact)">
+                            </div>
+
+                            <div>
+                                <label for="email" class="sr-only">Email</label>
+                                <input type="email" name="email" id="email" required class="block w-full rounded-sm border border-industrial-border bg-dark-bg/50 px-4 py-3 text-white placeholder-gray-500 focus:border-brand-blue focus:ring-brand-blue sm:text-sm" placeholder="Email Address">
+                            </div>
+
+                            <button type="submit" class="w-full rounded-sm bg-brand-blue px-4 py-4 text-sm font-black text-dark-bg shadow-sm hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2 focus:ring-offset-dark-card uppercase tracking-widest">
+                                Request Availability
+                            </button>
+                        </form>
+
+                        <div class="mt-6 border-t border-industrial-border pt-6 text-center">
+                            <p class="text-xs text-gray-500 mb-2 uppercase tracking-wide font-bold">Prefer to speak now?</p>
+                            <a href="tel:806-316-5070" class="text-brand-blue font-black text-lg hover:text-white transition-colors">
+                                Call Dispatch: (806) 316-5070
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Header scroll effect
         const header = document.getElementById('header');
@@ -421,6 +504,15 @@
             });
         }, { threshold: 0.1 });
         document.querySelectorAll('.animated-section').forEach(section => { observer.observe(section); });
+
+        // Availability Modal Logic
+        const modal = document.getElementById('availability-modal');
+        function openModal() {
+            modal.classList.remove('hidden');
+        }
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
     </script>
 </body>
 </html>
