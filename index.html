@@ -60,6 +60,33 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        /* New Photo Card Styles */
+        .photo-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .photo-card-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.7s ease;
+        }
+        .photo-card:hover .photo-card-bg {
+            transform: scale(1.1);
+        }
+        .photo-card-content {
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.6), transparent);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+        }
         .animated-section {
             opacity: 0;
         }
@@ -119,15 +146,18 @@
     <main>
         <!-- Hero Section -->
         <section class="relative h-screen flex items-center justify-center text-center overflow-hidden">
-             <div class="absolute inset-0 bg-dark-bg opacity-80 z-10"></div>
-             <video autoplay loop muted playsinline class="absolute z-0 w-auto min-w-full min-h-full max-w-none grayscale opacity-30">
-                <source src="https://cdn.pixabay.com/video/2023/07/11/170648-843257014_large.mp4" type="video/mp4">
-            </video>
+             <!-- High Quality Background Image (Replaces Video) -->
+             <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" alt="Global Network Background" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-dark-bg/90 mix-blend-multiply"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-dark-bg via-transparent to-transparent"></div>
+             </div>
+             
             <div class="relative z-20 p-6 max-w-5xl">
-                <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight tracking-tighter uppercase animate-fade-in-up">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight tracking-tighter uppercase animate-fade-in-up drop-shadow-2xl">
                     IT That Drives Panhandle Businesses <span class="text-brand-blue italic">Forward.</span>
                 </h1>
-                <p class="mt-6 text-lg md:text-xl text-gray-400 max-w-3xl mx-auto font-medium">
+                <p class="mt-6 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto font-medium text-shadow">
                     We build strategic technology partnerships with Panhandle businesses, using an AI-driven platform to enhance productivity, fuel growth, and provide a genuine competitive edge.
                 </p>
                 <div class="mt-10 flex justify-center items-center space-x-4 animate-fade-in-up">
@@ -194,7 +224,7 @@
             </div>
         </section>
 
-        <!-- Who We Serve -->
+        <!-- Who We Serve (UPDATED WITH IMAGES) -->
         <section id="who-we-serve" class="py-24 bg-dark-card/30 border-t border-industrial-border">
             <div class="container mx-auto px-6">
                 <div class="text-center max-w-3xl mx-auto mb-16 animated-section">
@@ -202,27 +232,37 @@
                     <p class="mt-4 text-lg text-gray-400">Strategic IT partnerships for businesses that depend on technology to stay productive.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    <div class="glass-card p-8 rounded-xl text-center animated-section transform hover:-translate-y-2 transition-transform duration-300">
-                        <div class="bg-brand-blue/10 p-4 rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center text-brand-blue">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    
+                    <!-- Agriculture Card -->
+                    <div class="photo-card h-96 animated-section group cursor-default">
+                        <div class="photo-card-bg" style="background-image: url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2072&auto=format&fit=crop');"></div>
+                        <div class="photo-card-content">
+                            <h3 class="text-2xl font-bold text-white uppercase tracking-tighter mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Agriculture & Trades</h3>
+                            <div class="w-12 h-1 bg-brand-blue mb-4"></div>
+                            <p class="text-gray-200 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0 transform delay-100">Specialized support for the field—from rugged hardware to remote connectivity for the Panhandle's backbone.</p>
                         </div>
-                        <h3 class="text-2xl font-bold text-white uppercase tracking-tighter">Agriculture & Trades</h3>
-                        <p class="mt-4 text-gray-400 text-sm leading-relaxed">Specialized support for the field—from rugged hardware to remote connectivity for the Panhandle's backbone.</p>
                     </div>
-                    <div class="glass-card p-8 rounded-xl text-center animated-section transform hover:-translate-y-2 transition-transform duration-300" style="animation-delay: 0.2s;">
-                        <div class="bg-brand-blue/10 p-4 rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center text-brand-blue">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-10V4m0 10V4m0 10h1m-1 4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+
+                    <!-- Professional Card -->
+                    <div class="photo-card h-96 animated-section group cursor-default" style="animation-delay: 0.2s;">
+                        <div class="photo-card-bg" style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop');"></div>
+                        <div class="photo-card-content">
+                            <h3 class="text-2xl font-bold text-white uppercase tracking-tighter mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Professional Services</h3>
+                            <div class="w-12 h-1 bg-brand-blue mb-4"></div>
+                            <p class="text-gray-200 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0 transform delay-100">Security and reliability for Law offices, CPAs, and firms where client data confidentiality is non-negotiable.</p>
                         </div>
-                        <h3 class="text-2xl font-bold text-white uppercase tracking-tighter">Professional Services</h3>
-                        <p class="mt-4 text-gray-400 text-sm leading-relaxed">Security and reliability for Law offices, CPAs, and firms where client data confidentiality is non-negotiable.</p>
                     </div>
-                    <div class="glass-card p-8 rounded-xl text-center animated-section transform hover:-translate-y-2 transition-transform duration-300" style="animation-delay: 0.4s;">
-                        <div class="bg-brand-blue/10 p-4 rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center text-brand-blue">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+
+                    <!-- SMB Card -->
+                    <div class="photo-card h-96 animated-section group cursor-default" style="animation-delay: 0.4s;">
+                        <div class="photo-card-bg" style="background-image: url('https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=2070&auto=format&fit=crop');"></div>
+                        <div class="photo-card-content">
+                            <h3 class="text-2xl font-bold text-white uppercase tracking-tighter mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">SMB Growth</h3>
+                            <div class="w-12 h-1 bg-brand-blue mb-4"></div>
+                            <p class="text-gray-200 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0 transform delay-100">Enterprise-grade IT scaled for small to medium businesses. Predictable costs to fuel your expansion.</p>
                         </div>
-                        <h3 class="text-2xl font-bold text-white uppercase tracking-tighter">SMB Growth</h3>
-                        <p class="mt-4 text-gray-400 text-sm leading-relaxed">Enterprise-grade IT scaled for small to medium businesses. Predictable costs to fuel your expansion.</p>
                     </div>
+
                 </div>
             </div>
         </section>
@@ -403,8 +443,12 @@
         </section>
 
         <!-- Hardware-as-a-Service (HaaS) -->
-        <section id="haas-offerings" class="py-24 border-t border-industrial-border bg-dark-card/20">
-            <div class="container mx-auto px-6">
+        <section id="haas-offerings" class="py-24 border-t border-industrial-border relative overflow-hidden">
+            <!-- Background Image with Overlay -->
+            <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image: url('https://images.unsplash.com/photo-1558494949-ef526b0042a0?q=80&w=2070&auto=format&fit=crop');"></div>
+            <div class="absolute inset-0 bg-dark-bg/90"></div>
+
+            <div class="container mx-auto px-6 relative z-10">
                 <div class="text-center max-w-3xl mx-auto mb-16 animated-section">
                     <h2 class="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">Hardware-as-a-Service</h2>
                     <p class="mt-4 text-lg text-gray-400">Standardize your environment. Eliminate capital expenditure.</p>
