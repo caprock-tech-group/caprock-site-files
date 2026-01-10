@@ -13,42 +13,43 @@ exports.handler = async function(event, context) {
     try {
         const body = JSON.parse(event.body);
         payload = body.payload;
-        console.log(`Processing form: ${payload.form_name || 'Unknown'}`);
     } catch (e) {
         console.error("Critical Error: Could not parse event body.", e);
         return { statusCode: 400, body: "Invalid Request Body" };
     }
     
-    // Extract form identity and submitted data
-    const netlifyFormName = payload.form_name || "Unknown Form";
+    // Extract form identity - checking both possible Netlify locations
     const data = payload.data || {};
+    const netlifyFormName = payload.form_name || data['form-name'] || "Unknown Form";
     
-    // 2. Caprock Discord Webhook URL (Direct Dispatch)
+    console.log(`Detected Form Name: ${netlifyFormName}`);
+    
+    // 2. Caprock Discord Webhook URL
     const DISCORD_URL = "https://discord.com/api/webhooks/1459433932553584703/H1hmPninZQ888hL7lFDrtIzAVo0mnMs0axjYm0i6nfsmTLqi1F7t7YHsXyqySxKyp91k";
 
-    // 3. Define Branding & Terminology (Oren Klaff / Tactical Style)
+    // 3. Define Branding & Terminology
     let title = "🚨 NEW INTEL: Site Lead";
     let typeLabel = "General Site Form";
     let color = 3447003; // Default Blue
 
-    // Check against official Netlify form names for specific lead types
+    // Differentiation logic
     if (netlifyFormName === 'solar-inquiry') {
         title = "☀️ HOT LEAD: Solar Form Submission";
         typeLabel = "Solar Form";
-        color = 16761095; // High-visibility Yellow/Orange
+        color = 16761095; // Yellow
     } 
     else if (netlifyFormName === 'contact-v8') {
         title = "🛡️ MSP INTEL: MSP Information Request";
         typeLabel = "MSP Information Request";
-        color = 4906624; // Caprock Brand Blue (#4ade80)
+        color = 4906624; // Green/Blue
     }
     else if (netlifyFormName === 'surveillance-inquiry') {
         title = "👁️ SURVEILLANCE INTEL: Security Camera Inquiry";
         typeLabel = "Security Camera Inquiry";
-        color = 4906624; // Caprock Brand Blue (#4ade80)
+        color = 4906624; // Green/Blue
     }
 
-    // 4. Construct the Payload for Discord (Tactical Embed)
+    // 4. Construct the Payload for Discord
     const embed = {
         title: title,
         color: color,
@@ -87,11 +88,11 @@ exports.handler = async function(event, context) {
 
     const discordPayload = JSON.stringify({
         username: "Caprock Bot",
-        content: "@everyone", // Dings the team immediately
+        content: "@everyone", 
         embeds: [embed]
     });
 
-    // 5. Dispatch the POST request to Discord
+    // 5. Dispatch to Discord
     return new Promise((resolve, reject) => {
         const url = new URL(DISCORD_URL);
         const options = {
@@ -110,10 +111,10 @@ exports.handler = async function(event, context) {
             res.on('data', (chunk) => { responseBody += chunk; });
             res.on('end', () => {
                 if (res.statusCode >= 200 && res.statusCode < 300) {
-                    console.log(`Success: Dispatched ${typeLabel} alert to Discord.`);
+                    console.log(`Success: Dispatched ${typeLabel} alert.`);
                     resolve({ statusCode: 200, body: 'Alert Dispatched' });
                 } else {
-                    console.error(`Discord API Error: ${res.statusCode}. Response: ${responseBody}`);
+                    console.error(`Discord API Error: ${res.statusCode}.`);
                     resolve({ statusCode: res.statusCode, body: 'Discord API Error' });
                 }
             });
