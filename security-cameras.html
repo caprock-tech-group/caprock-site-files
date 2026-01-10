@@ -121,7 +121,7 @@
                 <a href="partners.html" class="mobile-nav-link hover:text-brand-blue uppercase">Partners</a>
                 <a href="index.html#pricing" class="mobile-nav-link hover:text-brand-blue uppercase">Memberships</a>
                 <a href="blog.html" class="mobile-nav-link hover:text-brand-blue uppercase">Blog</a>
-                <a href="/support" target="_blank" class="mobile-nav-link hover:text-brand-blue uppercase">Client Login</a>
+                <a href="/support" target=\"_blank\" class="mobile-nav-link hover:text-brand-blue uppercase">Client Login</a>
             </nav>
         </div>
     </header>
@@ -130,7 +130,7 @@
         <!-- Hero Section -->
         <section class="relative py-32 flex items-center justify-center text-center overflow-hidden bg-dark-card">
              <!-- Enhanced Background -->
-             <div class="absolute inset-0 z-0">
+             <div class=\"absolute inset-0 z-0\">
                 <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop" alt="Surveillance Technology" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-dark-bg/90 mix-blend-multiply"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-dark-bg via-transparent to-transparent"></div>
@@ -144,9 +144,10 @@
                     Professional, reliable security camera solutions for your business and home, backed by local Amarillo expertise.
                 </p>
                 <div class="mt-10 animate-fade-in-up" style="animation-delay: 0.2s;">
-                    <a href="#contact" class="bg-brand-blue text-dark-bg font-black px-10 py-4 rounded-sm shadow-xl hover:brightness-110 transition-all uppercase tracking-widest text-sm">
+                    <!-- Replaced Anchor with Button for Lead Capture -->
+                    <button onclick="openModal()" class="bg-brand-blue text-dark-bg font-black px-10 py-4 rounded-sm shadow-xl hover:brightness-110 transition-all uppercase tracking-widest text-sm">
                         Request Quote
-                    </a>
+                    </button>
                 </div>
             </div>
         </section>
@@ -178,7 +179,7 @@
 
                     <!-- Home Card -->
                      <a href="home-security-cameras.html" class="photo-card h-[500px] animated-section group block" style="animation-delay: 0.2s;">
-                        <div class="photo-card-bg" style="background-image: url('https://images.unsplash.com/photo-1558036117-15d82a90b9b1?q=80&w=2070&auto=format&fit=crop');"></div>
+                        <div class=\"photo-card-bg\" style="background-image: url('https://images.unsplash.com/photo-1558036117-15d82a90b9b1?q=80&w=2070&auto=format&fit=crop');"></div>
                         <div class="photo-card-content">
                             <div class="mb-4">
                                 <span class="bg-white text-dark-bg text-xs font-black px-3 py-1 uppercase tracking-widest rounded-sm">Residential</span>
@@ -216,7 +217,7 @@
                     </div>
                      <div class="glass-card p-8 rounded-xl text-center animated-section hover:-translate-y-2 transition-transform duration-300" style="animation-delay: 0.1s;">
                         <div class="bg-brand-blue/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-brand-blue">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z\"></path></svg>
                         </div>
                         <h3 class="text-xl font-bold text-white uppercase tracking-tight">Proactive Management</h3>
                         <p class="mt-4 text-gray-400 text-sm leading-relaxed">We monitor your system's health to ensure it's always online and recording. <br><span class="text-brand-blue text-xs font-bold mt-2 block">(Note: We fix cameras; you view the alerts.)</span></p>
@@ -252,9 +253,10 @@
                 <h2 class="text-4xl md:text-5xl font-extrabold text-white tracking-tighter">Ready to Secure Your Property?</h2>
                 <p class="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">Contact us today for a free consultation and a custom quote to protect your assets.</p>
                 <div class="mt-10">
-                    <a href="index.html#contact" class="bg-brand-blue text-dark-bg font-black px-10 py-4 rounded-sm shadow-xl hover:brightness-110 transition-all uppercase tracking-widest text-sm">
+                    <!-- Replaced Anchor with Button for Lead Capture -->
+                    <button onclick="openModal()" class="bg-brand-blue text-dark-bg font-black px-10 py-4 rounded-sm shadow-xl hover:brightness-110 transition-all uppercase tracking-widest text-sm">
                         Schedule Consultation
-                    </a>
+                    </button>
                 </div>
             </div>
         </section>
@@ -278,6 +280,79 @@
             <p class="text-[10px] uppercase tracking-[0.4em] font-bold">&copy; 2025 Caprock Technology Group, LLC. Amarillo, Texas.</p>
         </div>
     </footer>
+
+    <!-- Surveillance Inquiry Modal -->
+    <div id="surveillance-modal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true" onclick="if(event.target === this) closeModal()">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-dark-bg/95 backdrop-blur-sm transition-opacity"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto pointer-events-none">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0 pointer-events-auto">
+                <!-- Modal Panel -->
+                <div class="relative transform overflow-hidden rounded-lg bg-dark-card border border-brand-blue/20 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                    
+                    <!-- Close Button -->
+                    <div class="absolute top-0 right-0 pt-4 pr-4">
+                        <button type="button" onclick="closeModal()" class="rounded-md text-gray-400 hover:text-white focus:outline-none">
+                            <span class="sr-only">Close</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="p-8">
+                        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-blue/10 mb-6">
+                            <svg class="h-6 w-6 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6.75h.75a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V9a2.25 2.25 0 012.25-2.25h.75m0-3l-3 3m0 0l3 3m-3-3h12.75" />
+                            </svg>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="text-2xl font-black text-white uppercase tracking-tight" id="modal-title">Surveillance Consultation</h3>
+                            <p class="mt-2 text-sm text-gray-400">
+                                Connect with a specialist to design your ideal security perimeter. We handle the design, install, and maintenance.
+                            </p>
+                        </div>
+                        
+                        <form name="surveillance-inquiry" method="POST" data-netlify="true" action="/thank-you.html" class="mt-8 space-y-6">
+                            <input type="hidden" name="form-name" value="surveillance-inquiry">
+                            
+                            <div>
+                                <label for="name" class="sr-only">Full Name</label>
+                                <input type="text" name="name" id="name" required class="block w-full rounded-sm border border-industrial-border bg-dark-bg/50 px-4 py-3 text-white placeholder-gray-500 focus:border-brand-blue focus:ring-brand-blue sm:text-sm" placeholder="Your Name">
+                            </div>
+                            
+                            <div>
+                                <label for="phone" class="sr-only">Phone Number</label>
+                                <input type="tel" name="phone" id="phone" required class="block w-full rounded-sm border border-industrial-border bg-dark-bg/50 px-4 py-3 text-white placeholder-gray-500 focus:border-brand-blue focus:ring-brand-blue sm:text-sm" placeholder="Phone Number">
+                            </div>
+
+                            <div>
+                                <label for="email" class="sr-only">Email</label>
+                                <input type="email" name="email" id="email" required class="block w-full rounded-sm border border-industrial-border bg-dark-bg/50 px-4 py-3 text-white placeholder-gray-500 focus:border-brand-blue focus:ring-brand-blue sm:text-sm" placeholder="Email Address">
+                            </div>
+
+                            <div>
+                                <label for=\"message\" class=\"sr-only\">Brief Project Details</label>
+                                <textarea name=\"message\" id=\"message\" rows=\"3\" class=\"block w-full rounded-sm border border-industrial-border bg-dark-bg/50 px-4 py-3 text-white placeholder-gray-500 focus:border-brand-blue focus:ring-brand-blue sm:text-sm\" placeholder=\"Brief details (e.g. Home, Business, Number of cameras)\"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full rounded-sm bg-brand-blue px-4 py-4 text-sm font-black text-dark-bg shadow-sm hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2 focus:ring-offset-dark-card uppercase tracking-widest">
+                                Dispatched Request
+                            </button>
+                        </form>
+
+                        <div class="mt-6 border-t border-industrial-border pt-6 text-center">
+                            <p class="text-xs text-gray-500 mb-2 uppercase tracking-wide font-bold">Immediate Support</p>
+                            <a href="tel:806-316-5070" class="text-brand-blue font-black text-lg hover:text-white transition-colors">
+                                Call Now: (806) 316-5070
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Header scroll effect
@@ -304,6 +379,17 @@
             });
         }, { threshold: 0.1 });
         document.querySelectorAll('.animated-section').forEach(section => { observer.observe(section); });
+
+        // Lead Modal Logic
+        const modal = document.getElementById('surveillance-modal');
+        function openModal() {
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+        function closeModal() {
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
     </script>
 </body>
 </html>
