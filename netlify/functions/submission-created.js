@@ -22,16 +22,19 @@ exports.handler = async function(event, context) {
     // 3. Differentiate phrasing and colors based on form name
     const formName = data['form-name'] || 'General Site Form';
     let title = "🚨 NEW INTEL: Site Lead";
+    let typeDisplay = "General Inquiry";
     let color = 3447003; // Default Blue
 
     // Solar Trailer Specific Branding
     if (formName === 'solar-inquiry') {
-        title = "☀️ HOT LEAD: Tactical Solar Trailer Availability";
-        color = 16761095; // Bright Yellow/Orange for "Heat"
+        title = "☀️ HOT LEAD: Solar Form Submission";
+        typeDisplay = "Tactical Solar Trailer Form";
+        color = 16761095; // Bright Yellow/Orange
     } 
     // Main MSP "Start Protection" Specific Branding
     else if (formName === 'contact-v8') {
-        title = "🛡️ MSP INTEL: Start Protection Request";
+        title = "🛡️ MSP INTEL: MSP Information Request";
+        typeDisplay = "Main Site MSP Form (V8)";
         color = 4906624; // Caprock Brand Blue (#4ade80)
     }
 
@@ -42,7 +45,7 @@ exports.handler = async function(event, context) {
         fields: [
             {
                 name: "Submission Type",
-                value: String(formName),
+                value: String(typeDisplay),
                 inline: true
             },
             {
