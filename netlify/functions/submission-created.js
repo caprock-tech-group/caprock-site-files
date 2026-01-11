@@ -4,6 +4,7 @@ const https = require('https');
  * Netlify Background Function: submission-created
  * This runs automatically every time a form is submitted on your site.
  * It dispatches a tactical alert to your Discord Command Center.
+ * Updated to handle high-status Solar Sentry leads with priority routing.
  */
 exports.handler = async function(event, context) {
     console.log("--- New Form Submission Received ---");
@@ -18,41 +19,37 @@ exports.handler = async function(event, context) {
         return { statusCode: 400, body: "Invalid Request Body" };
     }
     
-    // Extract form identity - checking multiple locations for maximum reliability
+    // Extract form identity
     const data = payload.data || {};
-    const netlifyFormName = (payload.form_name || data['form-name'] || "Unknown Form").toLowerCase();
+    const netlifyFormName = payload.form_name || data['form-name'] || "Unknown Form";
     
-    console.log(`Processing form: ${netlifyFormName}`);
+    console.log(`Detected Form Name: ${netlifyFormName}`);
     
-    // 2. Secure Discord Webhook URL via Environment Variable
-    const DISCORD_URL = process.env.DISCORD_WEBHOOK_URL;
+    // 2. Caprock Discord Webhook URL
+    const DISCORD_URL = "https://discord.com/api/webhooks/1459433932553584703/H1hmPninZQ888hL7lFDrtIzAVo0mnMs0axjYm0i6nfsmTLqi1F7t7YHsXyqySxKyp91k";
 
-    if (!DISCORD_URL) {
-        console.error("Missing DISCORD_WEBHOOK_URL environment variable.");
-        return { statusCode: 500, body: "Configuration Error" };
-    }
-
-    // 3. Define Branding & Terminology (Tactical Style)
+    // 3. Strategic Branding & Escalation Logic
     let title = "🚨 NEW INTEL: Site Lead";
     let typeLabel = "General Site Form";
     let color = 3447003; // Default Blue
+    let mention = "";
 
-    // Differentiation logic - Expanded for spelling resilience
-    if (netlifyFormName.includes('solar')) {
-        title = "☀️ HOT LEAD: Solar Form Submission";
-        typeLabel = "Solar Form";
-        color = 16761095; 
+    // Specific logic for the Solar Sentry ($44,999.95 asset)
+    if (netlifyFormName === 'sentry-lead' || netlifyFormName === 'solar-inquiry') {
+        title = "⚡ HIGH-VALUE TARGET: Solar Sentry Inquiry";
+        typeLabel = "Solar Sentry Strategic Assessment";
+        color = 16347926; // Safety Orange (#f97316)
+        mention = "@everyone"; // Immediate escalation for high-ticket inquiries
     } 
-    else if (netlifyFormName.includes('contact-v8') || netlifyFormName.includes('protection') || netlifyFormName.includes('msp')) {
-        title = "🛡️ MSP INTEL: MSP Information Request";
+    else if (netlifyFormName === 'contact-v8') {
+        title = "🛡️ MSP INTEL: Managed Services Request";
         typeLabel = "MSP Information Request";
-        color = 4906624; 
+        color = 4906624; // Caprock Green (#4ade80)
     }
-    // Added 'surve' and 'quote' to catch single-L spellings or alternate names
-    else if (netlifyFormName.includes('surve') || netlifyFormName.includes('camera') || netlifyFormName.includes('quote')) {
+    else if (netlifyFormName === 'surveillance-inquiry') {
         title = "👁️ SURVEILLANCE INTEL: Security Camera Inquiry";
-        typeLabel = "Security Camera Inquiry";
-        color = 4906624; 
+        typeLabel = "Fixed Surveillance Project";
+        color = 4906624; // Caprock Green (#4ade80)
     }
 
     // 4. Construct the Payload for Discord
@@ -61,28 +58,28 @@ exports.handler = async function(event, context) {
         color: color,
         fields: [
             {
-                name: "Submission Type",
+                name: "Lead Type",
                 value: String(typeLabel),
                 inline: true
             },
             {
-                name: "Contact Person",
-                value: String(data.name || data['full-name'] || data['name'] || "Anonymous"),
+                name: "Commander / Contact",
+                value: String(data.name || data['full-name'] || "Anonymous"),
                 inline: true
             },
             {
-                name: "Mobile / Phone",
-                value: String(data.phone || data['telephone'] || "No Phone Provided"), 
+                name: "Direct Line",
+                value: String(data.phone || "No Phone Provided"), 
                 inline: false 
             },
             {
-                name: "Email Address",
+                name: "Secure Email",
                 value: String(data.email || "No Email Provided"),
                 inline: true
             },
             {
-                name: "Lead Details / Project Scope",
-                value: String(data.message || data['details'] || "Request for direct contact."),
+                name: "Site Intel / Project Scope",
+                value: String(data.message || data['site-details'] || "Request for direct contact."),
                 inline: false
             }
         ],
@@ -93,12 +90,12 @@ exports.handler = async function(event, context) {
     };
 
     const discordPayload = JSON.stringify({
-        username: "Caprock Bot",
-        content: "@everyone",
+        username: "Caprock Dispatch",
+        content: mention, 
         embeds: [embed]
     });
 
-    // 5. Dispatch the POST request to Discord
+    // 5. Dispatch to Discord
     return new Promise((resolve, reject) => {
         const url = new URL(DISCORD_URL);
         const options = {
@@ -108,7 +105,7 @@ exports.handler = async function(event, context) {
             headers: {
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(discordPayload),
-                'User-Agent': 'Caprock-Lead-Bot/3.0'
+                'User-Agent': 'Caprock-Dispatch-Bot/3.0'
             },
         };
 
@@ -117,8 +114,8 @@ exports.handler = async function(event, context) {
             res.on('data', (chunk) => { responseBody += chunk; });
             res.on('end', () => {
                 if (res.statusCode >= 200 && res.statusCode < 300) {
-                    console.log(`Success: Dispatched ${typeLabel} alert to Discord.`);
-                    resolve({ statusCode: 200, body: 'Alert Sent' });
+                    console.log(`Success: Dispatched ${typeLabel} alert.`);
+                    resolve({ statusCode: 200, body: 'Alert Dispatched' });
                 } else {
                     console.error(`Discord API Error: ${res.statusCode}.`);
                     resolve({ statusCode: res.statusCode, body: 'Discord API Error' });
