@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar Sentry | Autonomous Jobsite Defense | Caprock Technology Group</title>
+    <title>Solar Sentry | Autonomous Site Defense | Caprock Technology Group</title>
     <meta name="description" content="Secure your high-value jobsite with the Solar Sentry. 4K AI autotracking and 1380W industrial solar. A permanent defense asset for Panhandle operations.">
     <link rel="icon" type="image/png" href="caprock logo transparent BG 1.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -17,10 +17,10 @@
             theme: {
                 extend: {
                     colors: {
-                        'brand-blue': '#4ade80',
-                        'brand-orange': '#f97316',
-                        'dark-bg': '#0f172a',
-                        'dark-card': '#1e293b',
+                        'brand-blue': '#4ade80',    // Caprock Green
+                        'brand-orange': '#f97316',  // Safety Orange
+                        'dark-bg': '#0f172a',       // Deep Navy
+                        'dark-card': '#1e293b',     // Surface
                         'industrial-border': '#334155',
                     },
                     fontFamily: {
@@ -34,21 +34,37 @@
     
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .hud-border { border: 1px solid rgba(74, 222, 128, 0.2); position: relative; background: #000; }
-        .hud-border::before { content: ''; position: absolute; top: -1px; left: -1px; width: 16px; height: 16px; border-top: 4px solid #4ade80; border-left: 4px solid #4ade80; z-index: 30; }
-        .hud-border::after { content: ''; position: absolute; bottom: -1px; right: -1px; width: 16px; height: 16px; border-bottom: 4px solid #4ade80; border-right: 4px solid #4ade80; z-index: 30; }
-        .scanline { width: 100%; height: 2px; background: rgba(74, 222, 128, 0.05); position: absolute; top: 0; animation: scan 6s linear infinite; pointer-events: none; z-index: 40; }
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-        .hero-gradient { background: linear-gradient(to bottom, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 1) 100%); }
-        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .sticky-cta { transform: translateY(100px); opacity: 0; transition: all 0.5s ease; }
-        .sticky-cta.visible { transform: translateY(0); opacity: 1; }
+        .glass-panel { 
+            background: rgba(30, 41, 59, 0.4); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+        }
+        .hud-accent { 
+            position: relative; 
+        }
+        .hud-accent::before { 
+            content: ''; position: absolute; top: 0; left: 0; width: 8px; height: 8px; 
+            border-top: 2px solid #4ade80; border-left: 2px solid #4ade80; 
+        }
+        .hud-accent::after { 
+            content: ''; position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; 
+            border-bottom: 2px solid #4ade80; border-right: 2px solid #4ade80; 
+        }
+        .hero-gradient { 
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 1) 100%); 
+        }
+        .sticky-cta { 
+            transform: translateY(100px); opacity: 0; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+        .sticky-cta.visible { 
+            transform: translateY(0); opacity: 1; 
+        }
     </style>
 </head>
 <body class="bg-dark-bg text-gray-300 overflow-x-hidden selection:bg-brand-blue selection:text-dark-bg font-sans">
 
-    <!-- Sticky Assessment CTA -->
-    <div id="sticky-cta" class="fixed bottom-6 right-6 lg:top-10 lg:right-10 lg:bottom-auto z-[70] sticky-cta">
+    <!-- Sticky Assessment CTA: Moved to bottom-right to avoid blocking header/nav -->
+    <div id="sticky-cta" class="fixed bottom-8 right-8 z-[70] sticky-cta">
         <a href="#assessment" class="bg-brand-blue text-dark-bg font-black px-6 py-4 rounded-sm shadow-2xl hover:bg-white hover:scale-105 transition-all uppercase tracking-widest text-[10px] flex items-center gap-3">
             <span class="relative flex h-3 w-3">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-dark-bg opacity-40"></span>
@@ -59,167 +75,84 @@
     </div>
 
     <!-- Minimal Header -->
-    <header class="fixed w-full z-50 bg-dark-card/90 border-b border-industrial-border backdrop-blur-md">
+    <header class="fixed w-full z-50 bg-dark-card/80 border-b border-industrial-border backdrop-blur-md">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="index.html" class="flex items-center gap-2">
-                <div class="bg-white p-1 rounded-md">
+                <div class="bg-white p-1 rounded-md shadow-sm">
                     <img src="caprock logo transparent BG 2.png" alt="Caprock Tech" class="h-8 lg:h-10">
                 </div>
             </a>
-            <nav class="hidden lg:flex gap-8 text-[10px] font-black uppercase tracking-[0.3em]">
-                <a href="#specs" class="hover:text-brand-blue transition-colors">Technical Matrix</a>
-                <a href="#investment" class="hover:text-brand-blue transition-colors">Asset Protection</a>
-                <a href="#assessment" class="text-brand-blue hover:text-white transition-colors border border-brand-blue/30 px-4 py-2">Request Assessment</a>
+            <nav class="hidden lg:flex gap-10 text-[10px] font-black uppercase tracking-[0.3em]">
+                <a href="#specs" class="hover:text-brand-blue transition-colors">Technical loadout</a>
+                <a href="#investment" class="hover:text-brand-blue transition-colors border-l border-industrial-border pl-10 text-white">Investment</a>
             </nav>
-            <div class="font-mono text-[10px] text-brand-blue border border-brand-blue/30 px-3 py-1">SENTRY_OPS_v4.2</div>
+            <div class="font-mono text-[10px] text-brand-blue/60 bg-brand-blue/5 px-3 py-1 border border-brand-blue/20">
+                OPS: SENTRY_4.2
+            </div>
         </div>
     </header>
 
     <main>
-        <!-- Hero Section: Establishing the Frame -->
-        <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden border-b border-industrial-border">
-            <!-- BACKGROUND AMBIENT LOOP (Subconscious Authority) -->
+        <!-- Hero: The Frame -->
+        <section class="relative min-h-screen flex items-center pt-20 overflow-hidden border-b border-industrial-border">
             <div class="absolute inset-0 z-0">
-                <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-15 grayscale">
+                <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-20 grayscale brightness-75">
                     <source src="https://res.cloudinary.com/delpl6e47/video/upload/v1768093653/solar-sentry_bccc67.mp4" type="video/mp4">
                 </video>
                 <div class="absolute inset-0 hero-gradient z-10"></div>
             </div>
 
-            <div class="container mx-auto px-6 relative z-20 text-center">
-                <div class="max-w-6xl mx-auto">
-                    <div class="inline-flex items-center gap-4 mb-8">
-                        <span class="h-[1px] w-12 bg-brand-blue/40"></span>
-                        <span class="font-mono text-brand-blue text-xs font-bold uppercase tracking-[0.5em]">Command & Control Asset</span>
-                        <span class="h-[1px] w-12 bg-brand-blue/40"></span>
+            <div class="container mx-auto px-6 relative z-20">
+                <div class="max-w-4xl">
+                    <div class="inline-flex items-center gap-4 mb-6">
+                        <span class="font-mono text-brand-blue text-[10px] font-bold uppercase tracking-[0.6em]">Autonomous Defense System</span>
                     </div>
 
-                    <h1 class="text-6xl lg:text-[9rem] font-black text-white leading-[0.85] tracking-tighter uppercase mb-10">
-                        Terminate Jobsite Theft.<br>
-                        <span class="text-brand-blue italic opacity-90">Own Your Defense.</span>
+                    <h1 class="text-5xl lg:text-8xl font-black text-white leading-[0.95] tracking-tighter uppercase mb-8">
+                        Terminate Theft.<br>
+                        <span class="text-brand-blue italic opacity-95">Own Your Defense.</span>
                     </h1>
 
-                    <p class="text-lg lg:text-2xl text-gray-400 max-w-3xl mx-auto mb-16 font-medium leading-relaxed">
-                        Commercial jobsites are high-value targets. The Solar Sentry provides autonomous 4K AI immunity—replacing recurring security costs with a permanent defense asset.
+                    <p class="text-lg lg:text-xl text-gray-400 max-w-2xl mb-12 font-medium leading-relaxed">
+                        The Solar Sentry replaces recurring security expenses with a permanent 4K AI asset. Built for commercial jobsites that require total perimeter immunity.
                     </p>
 
-                    <div class="flex justify-center gap-6">
-                        <a href="#journey" class="bg-brand-blue text-dark-bg font-black px-10 py-5 rounded-sm hover:bg-white transition-all uppercase tracking-widest text-xs shadow-xl">
+                    <div class="flex flex-col sm:flex-row gap-6">
+                        <a href="#journey" class="bg-brand-blue text-dark-bg font-black px-12 py-5 rounded-sm hover:bg-white transition-all uppercase tracking-widest text-xs shadow-xl text-center font-bold">
                             Explore Capability
                         </a>
-                        <a href="#assessment" class="border border-industrial-border text-white font-black px-10 py-5 rounded-sm hover:bg-industrial-border transition-all uppercase tracking-widest text-xs">
-                            Request Assessment
+                        <a href="#assessment" class="border border-industrial-border text-white font-black px-12 py-5 rounded-sm hover:bg-industrial-border transition-all uppercase tracking-widest text-xs text-center font-bold">
+                            Request Strategic Assessment
                         </a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- The Journey Section: Inducing Intrigue -->
-        <section id="journey" class="py-24 bg-dark-bg border-b border-industrial-border">
+        <!-- The Journey: Proof Phase -->
+        <section id="journey" class="py-32 bg-dark-bg border-b border-industrial-border">
             <div class="container mx-auto px-6">
-                <div class="max-w-4xl mx-auto text-center mb-16">
-                    <h2 class="text-3xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-6">Autonomous Capability Demo</h2>
-                    <p class="text-gray-400 text-lg font-medium">Click below to witness the active tracking and deterrence sequence. Experience the "journey" of target acquisition at your own pace.</p>
+                <div class="max-w-3xl mx-auto text-center mb-20">
+                    <span class="text-[10px] font-mono text-brand-blue uppercase tracking-widest block mb-4">// Intelligence Journey</span>
+                    <h2 class="text-3xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-6">System Capability Demo</h2>
+                    <p class="text-gray-500 text-lg font-medium leading-relaxed">Witness the target acquisition sequence. This is not a rental—it is an engineering standard for high-value asset protection.</p>
                 </div>
 
-                <!-- CENTERPIECE (Click to Engage) -->
-                <div class="max-w-5xl mx-auto hud-border rounded-sm group relative shadow-[0_0_100px_rgba(0,0,0,1)] bg-dark-card overflow-hidden">
-                    <div class="scanline"></div>
-                    
-                    <!-- Tactical Interface Labels -->
-                    <div class="absolute top-6 left-6 z-40">
-                        <div class="flex items-center gap-3">
-                            <span class="h-3 w-3 rounded-full bg-brand-blue shadow-[0_0_10px_#4ade80]"></span>
-                            <span class="bg-black/80 text-white text-[10px] font-bold px-3 py-1 border border-white/10 uppercase tracking-[0.2em] font-mono">STATUS: STANDBY // READY_FOR_DEMO</span>
-                        </div>
-                    </div>
-
-                    <!-- Gated Journey Trigger -->
-                    <div id="video-placeholder" class="relative aspect-video flex items-center justify-center cursor-pointer group/play" onclick="openVideoModal()">
-                        <!-- High-res still placeholder with subtle movement -->
-                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover/play:scale-105" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop');">
-                            <div class="absolute inset-0 bg-dark-bg/60 backdrop-blur-[2px]"></div>
-                        </div>
-                        
-                        <div class="relative z-10 text-center">
-                            <div class="bg-brand-blue text-dark-bg p-8 rounded-full mb-6 transform group-hover/play:scale-110 transition-all shadow-[0_0_50px_rgba(74,222,128,0.4)]">
-                                <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg>
+                <div class="max-w-5xl mx-auto glass-panel p-2 rounded-sm shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden bg-black">
+                    <div id="video-placeholder" class="relative aspect-video flex items-center justify-center cursor-pointer group/play overflow-hidden" onclick="openVideoModal()">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-40 grayscale group-hover/play:scale-105 transition-transform duration-1000" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop');"></div>
+                        <div class="absolute inset-0 p-8 flex flex-col justify-between pointer-events-none">
+                            <div class="flex justify-between font-mono text-[9px] text-brand-blue/40 uppercase tracking-widest font-bold">
+                                <span>REC // DATA_LINK_READY</span>
+                                <span>35.2220 N, 101.8313 W</span>
                             </div>
-                            <span class="text-white font-black uppercase tracking-[0.4em] text-sm block">Initiate System Demo</span>
-                            <span class="text-brand-blue font-mono text-[10px] mt-2 block uppercase opacity-80">Target Acquisition & Active Deterrence [42s]</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-dark-card/95 p-6 border-t border-industrial-border flex justify-between items-center px-10 relative z-30 font-mono text-[10px] font-bold">
-                        <p class="text-gray-500 uppercase tracking-widest flex items-center gap-3">
-                            <span class="text-brand-blue">●</span> Sentry Core Intelligence v4.2
-                        </p>
-                        <span class="text-gray-400 uppercase tracking-widest hidden md:block">Click Overlay to Begin Journey</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Technical Matrix: Supporting the Claim -->
-        <section id="specs" class="py-24 bg-dark-card/20 border-b border-industrial-border">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-20">
-                    <h2 class="text-4xl lg:text-7xl font-black text-white uppercase tracking-tighter leading-none">Technical Matrix</h2>
-                    <p class="text-brand-blue font-mono text-[11px] mt-4 uppercase tracking-[0.5em] font-bold">/ Mission-Critical Specifications /</p>
-                </div>
-
-                <div class="grid lg:grid-cols-3 gap-12 max-w-7xl mx-auto">
-                    <!-- Visual Matrix -->
-                    <div class="glass-panel p-10 rounded-sm hover:border-brand-blue transition-all group border-t-4 border-brand-blue/30">
-                        <div class="text-brand-blue mb-10">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        </div>
-                        <h3 class="text-2xl font-black text-white uppercase mb-8 tracking-tighter">Optical Dominance</h3>
-                        <div class="space-y-8">
-                            <div>
-                                <h4 class="text-[10px] font-mono text-brand-blue uppercase tracking-widest mb-2 font-bold font-black">Dual 4K Imaging</h4>
-                                <p class="text-sm font-medium text-gray-400 leading-relaxed">Sony Starvis™ low-light sensors integrated into dual 8MP PTZ units for identification in total darkness.</p>
+                            <div class="flex justify-center">
+                                <div class="bg-brand-blue text-dark-bg p-8 rounded-full shadow-[0_0_50px_rgba(74,222,128,0.4)] group-hover/play:scale-110 transition-transform">
+                                    <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg>
+                                </div>
                             </div>
-                            <div>
-                                <h4 class="text-[10px] font-mono text-brand-blue uppercase tracking-widest mb-2 font-bold font-black">AI Object Classification</h4>
-                                <p class="text-sm font-medium text-gray-400 leading-relaxed">Autonomous differentiation between human and vehicle targets with real-time 25x optical zooming.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Energy Matrix -->
-                    <div class="glass-panel p-10 rounded-sm hover:border-brand-blue transition-all group border-t-4 border-brand-blue/30 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]">
-                        <div class="text-brand-blue mb-10">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
-                        </div>
-                        <h3 class="text-2xl font-black text-white uppercase mb-8 tracking-tighter">Energy Autonomy</h3>
-                        <div class="space-y-8">
-                            <div>
-                                <h4 class="text-[10px] font-mono text-brand-blue uppercase tracking-widest mb-2 font-bold font-black">1380W Industrial Array</h4>
-                                <p class="text-sm font-medium text-gray-400 leading-relaxed">Triple 460W high-efficiency panels engineered for consistent harvest in West Texas winters.</p>
-                            </div>
-                            <div>
-                                <h4 class="text-[10px] font-mono text-brand-blue uppercase tracking-widest mb-2 font-bold font-black">Reserve Architecture</h4>
-                                <p class="text-sm font-medium text-gray-400 leading-relaxed">System logic maintains operational status for up to 8 days of zero solar harvest via industrial battery cells.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Deterrence Matrix -->
-                    <div class="glass-panel p-10 rounded-sm hover:border-brand-orange transition-all group border-t-4 border-brand-orange/30">
-                        <div class="text-brand-orange mb-10">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5.882V19.297A1.708 1.708 0 019.293 21H5.707A1.708 1.708 0 014 19.297V5.882c0-.94.766-1.706 1.707-1.706h3.586c.941 0 1.707.766 1.707 1.706zM14 14l2 2m0-4l-2 2m5-11L5 19"/></svg>
-                        </div>
-                        <h3 class="text-2xl font-black text-white uppercase mb-8 tracking-tighter">Active Deterrence</h3>
-                        <div class="space-y-8">
-                            <div>
-                                <h4 class="text-[10px] font-mono text-brand-orange uppercase tracking-widest mb-2 font-bold font-black">Force Projection</h4>
-                                <p class="text-sm font-medium text-gray-400 leading-relaxed">Dual 120dB speakers for real-time 2-way tactical broadcast and programmed siren deterrents.</p>
-                            </div>
-                            <div>
-                                <h4 class="text-[10px] font-mono text-brand-orange uppercase tracking-widest mb-2 font-bold font-black">Visual Interdiction</h4>
-                                <p class="text-sm font-medium text-gray-400 leading-relaxed">Integrated Red/Blue strobe arrays and a 5000LM floodlight for high-visibility perimeter enforcement.</p>
+                            <div class="text-center font-mono text-[10px] text-white/40 uppercase tracking-[0.4em] font-bold">
+                                Click to Initiate System Journey [42s]
                             </div>
                         </div>
                     </div>
@@ -227,152 +160,192 @@
             </div>
         </section>
 
-        <!-- Investment Section: The Strategic Outcome -->
-        <section id="investment" class="py-24 relative overflow-hidden bg-dark-bg">
+        <!-- Technical Matrix -->
+        <section id="specs" class="py-32 bg-dark-card/10 border-b border-industrial-border">
+            <div class="container mx-auto px-6">
+                <div class="mb-20 text-center lg:text-left">
+                    <span class="text-[10px] font-mono text-brand-blue uppercase tracking-widest block mb-4">// Specification Matrix</span>
+                    <h2 class="text-4xl lg:text-6xl font-black text-white uppercase tracking-tighter">Mission Critical Loadout</h2>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <div class="hud-accent p-10 glass-panel hover:bg-dark-card/50 transition-colors">
+                        <div class="font-mono text-brand-blue text-[10px] mb-8 font-bold uppercase tracking-widest">/ Optical dominance /</div>
+                        <h3 class="text-2xl font-black text-white uppercase mb-6 tracking-tight font-mono">Dual 4K Logic</h3>
+                        <p class="text-sm font-medium text-gray-400 mb-10 leading-relaxed">Sony Starvis™ sensors combined with 25x optical zoom classification for identification in zero-lux environments.</p>
+                        <ul class="space-y-4 font-mono text-[10px] text-gray-500 uppercase font-black">
+                            <li class="flex justify-between border-b border-industrial-border pb-2"><span>Resolution</span> <span class="text-white">8MP x2</span></li>
+                            <li class="flex justify-between border-b border-industrial-border pb-2"><span>Detection</span> <span class="text-white">AI Active Tracking</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="hud-accent p-10 glass-panel hover:bg-dark-card/50 transition-colors border-t-2 border-brand-blue">
+                        <div class="font-mono text-brand-blue text-[10px] mb-8 font-bold uppercase tracking-widest">/ Energy independence /</div>
+                        <h3 class="text-2xl font-black text-white uppercase mb-6 tracking-tight font-mono">1380W Harvest</h3>
+                        <p class="text-sm font-medium text-gray-400 mb-10 leading-relaxed">Triple 460W industrial solar panels. 8-day reserve architecture ensures 24/7/365 operational status.</p>
+                        <ul class="space-y-4 font-mono text-[10px] text-gray-500 uppercase font-black">
+                            <li class="flex justify-between border-b border-industrial-border pb-2"><span>Power Array</span> <span class="text-white">1380 Watts</span></li>
+                            <li class="flex justify-between border-b border-industrial-border pb-2"><span>Duty Cycle</span> <span class="text-white">24/7/365</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="hud-accent p-10 glass-panel hover:bg-dark-card/50 transition-colors border-t-2 border-brand-orange">
+                        <div class="font-mono text-brand-orange text-[10px] mb-8 font-bold uppercase tracking-widest">/ Active deterrence /</div>
+                        <h3 class="text-2xl font-black text-white uppercase mb-6 tracking-tight font-mono">Force Projection</h3>
+                        <p class="text-sm font-medium text-gray-400 mb-10 leading-relaxed">Dual 120dB speakers and Red/Blue strobe arrays. Active interdiction of targets via 2-way tactical audio.</p>
+                        <ul class="space-y-4 font-mono text-[10px] text-gray-500 uppercase font-black">
+                            <li class="flex justify-between border-b border-industrial-border pb-2"><span>Audio Projection</span> <span class="text-white">120dB SPL</span></li>
+                            <li class="flex justify-between border-b border-industrial-border pb-2"><span>Security</span> <span class="text-white">GPS Recovery</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Investment Section -->
+        <section id="investment" class="py-32 bg-dark-bg relative overflow-hidden">
             <div class="container mx-auto px-6 max-w-6xl">
                 <div class="grid lg:grid-cols-2 gap-20 items-center">
                     <div>
-                        <h2 class="text-5xl lg:text-[5.5rem] font-black text-white uppercase tracking-tighter leading-[0.85] mb-8">
-                            Investment in <br><span class="text-brand-blue">Asset Protection.</span>
+                        <span class="text-[10px] font-mono text-brand-blue uppercase tracking-widest block mb-4">// Asset Valuation</span>
+                        <h2 class="text-5xl lg:text-7xl font-black text-white uppercase tracking-tighter leading-[0.85] mb-10">
+                            Strategic <br><span class="text-brand-blue">Investment.</span>
                         </h2>
                         <p class="text-xl text-gray-400 mb-12 leading-relaxed font-medium">
-                            Traditional security is a recurring expense with no terminal value. The Solar Sentry is a tangible company asset—offering superior protection and significant multi-project utility.
+                            Owning the Solar Sentry transforms a recurring capital drain into a high-value defense asset for your company fleet.
                         </p>
                         
-                        <!-- MSRP Reveal -->
-                        <div class="bg-dark-card border-l-8 border-brand-blue p-10 mb-12 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] transform hover:-translate-y-1 transition-transform">
-                            <h4 class="text-[10px] font-mono text-brand-blue uppercase tracking-[0.4em] mb-4 font-black">Direct Purchase Investment (CapEx)</h4>
-                            <div class="flex items-baseline gap-4">
-                                <span class="text-6xl lg:text-[7rem] font-black text-white tracking-tighter">$44,999.95</span>
-                                <span class="text-gray-500 font-bold uppercase text-sm tracking-widest">MSRP</span>
+                        <!-- REFINED MSRP BLOCK: Balanced Size & Professional Labels -->
+                        <div class="bg-dark-card border border-industrial-border p-6 mb-10 shadow-2xl rounded-sm max-w-sm">
+                            <div class="flex flex-col">
+                                <span class="text-[9px] font-mono text-brand-blue uppercase tracking-[0.4em] mb-4 font-black opacity-80">Purchase Price</span>
+                                <div class="flex items-center gap-4">
+                                    <span class="text-2xl lg:text-3xl font-black text-white tracking-tight font-mono">$44,999.95</span>
+                                    <span class="text-gray-500 font-bold uppercase text-[9px] tracking-widest border border-gray-800 px-2 py-1">MSRP</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="flex flex-col sm:flex-row gap-6">
-                            <a href="#assessment" class="bg-brand-blue text-dark-bg font-black px-12 py-6 rounded-sm hover:bg-white transition-all uppercase tracking-widest text-xs text-center shadow-lg shadow-brand-blue/10">
-                                Request Strategic Assessment
-                            </a>
-                        </div>
+                        <a href="#assessment" class="inline-block bg-brand-blue text-dark-bg font-black px-12 py-6 rounded-sm hover:bg-white transition-all uppercase tracking-widest text-xs shadow-lg font-bold">
+                            Request Strategic Assessment
+                        </a>
                     </div>
                     
                     <div class="space-y-8">
-                        <div class="glass-panel p-10 rounded-sm relative border border-white/5 bg-white/[0.02]">
-                            <div class="absolute top-0 right-0 p-5 font-mono text-[10px] text-red-500 font-black tracking-widest uppercase">The Rental loop</div>
-                            <h4 class="text-white font-black text-sm uppercase mb-6 tracking-[0.2em]">Incurred Expense</h4>
-                            <ul class="space-y-5 text-[11px] font-mono text-gray-500 uppercase font-black">
-                                <li class="flex items-center gap-3"><span class="h-[2px] w-4 bg-red-900"></span> - $36,000 Average Annual Capital Loss</li>
-                                <li class="flex items-center gap-3"><span class="h-[2px] w-4 bg-red-900"></span> - Zero Equity Value at Project Conclusion</li>
-                                <li class="flex items-center gap-3"><span class="h-[2px] w-4 bg-red-900"></span> - Inconsistent Technical Hardware Standards</li>
-                            </ul>
+                        <div class="p-10 glass-panel border-l-2 border-red-500/50">
+                            <h4 class="text-white font-black text-xs uppercase mb-6 tracking-widest">Incurred Expense Logic</h4>
+                            <p class="text-sm font-mono text-gray-500 uppercase leading-loose font-bold">
+                                - $36,000 Annual Rental Drain <br>
+                                - Zero Asset Equity Post-Project <br>
+                                <span class="text-red-500">- Perpetual Dependency</span>
+                            </p>
                         </div>
-                        <div class="glass-panel p-10 rounded-sm border-brand-blue border-l-4 relative bg-brand-blue/[0.03]">
-                            <div class="absolute top-0 right-0 p-5 font-mono text-[10px] text-brand-blue font-black tracking-widest uppercase">The Sentry Frame</div>
-                            <h4 class="text-white font-black text-sm uppercase mb-6 tracking-[0.2em]">Asset Equity</h4>
-                            <ul class="space-y-5 text-[11px] font-mono text-gray-200 uppercase font-black">
-                                <li class="flex items-center gap-3"><span class="h-[2px] w-4 bg-brand-blue"></span> + 100% Tax Deductible (Section 179 Eligible)</li>
-                                <li class="flex items-center gap-3"><span class="h-[2px] w-4 bg-brand-blue"></span> + Multi-Project Strategic Deployment Asset</li>
-                                <li class="flex items-center gap-3"><span class="h-[2px] w-4 bg-brand-blue"></span> + Predictable, Standardized Fleet Hardware</li>
-                            </ul>
+                        <div class="p-10 glass-panel border-l-2 border-brand-blue bg-brand-blue/[0.02]">
+                            <h4 class="text-white font-black text-xs uppercase mb-6 tracking-widest">Sentry Ownership Logic</h4>
+                            <p class="text-sm font-mono text-gray-300 uppercase leading-loose font-bold">
+                                + 100% Tax Deductible (Section 179) <br>
+                                + Multi-Project Operational Value <br>
+                                <span class="text-brand-blue">+ Tangible Asset Equity</span>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Final Assessment Inquiry: Qualifying the Lead -->
-        <section id="assessment" class="py-24 bg-dark-card border-t border-industrial-border">
+        <!-- Final Assessment -->
+        <section id="assessment" class="py-32 bg-dark-card border-t border-industrial-border">
             <div class="container mx-auto px-6 max-w-4xl">
-                <div class="hud-border bg-dark-bg p-8 lg:p-20 rounded-sm relative shadow-2xl">
-                    <div class="scanline"></div>
-                    <div class="text-center mb-16 relative z-10">
-                        <h2 class="text-4xl lg:text-7xl font-black text-white uppercase tracking-tighter mb-4 leading-none">Strategic Assessment</h2>
-                        <p class="text-gray-400 text-sm font-medium tracking-wide">Finalize your defense requirements with our West Texas engineering team.</p>
-                        <div class="mt-10 flex justify-center gap-8 text-[10px] font-mono text-brand-blue font-black tracking-[0.3em]">
-                            <span class="bg-dark-card px-4 py-2 border border-brand-blue/30 uppercase">Secure_Line_Active</span>
-                            <span class="bg-dark-card px-4 py-2 border border-brand-blue/30 uppercase">Amarillo_HQ</span>
+                <div class="hud-accent bg-dark-bg p-10 lg:p-20 rounded-sm relative shadow-2xl">
+                    <div class="text-center mb-16">
+                        <div class="inline-block bg-white p-2 rounded-md mb-8 shadow-sm">
+                            <img src="caprock logo transparent BG 2.png" alt="Caprock" class="h-10">
                         </div>
+                        <h2 class="text-4xl lg:text-6xl font-black text-white uppercase tracking-tighter mb-4 leading-none">Strategic Assessment</h2>
+                        <p class="text-gray-500 text-sm font-medium tracking-wide font-bold">Finalize site defense requirements with our West Texas engineering team.</p>
                     </div>
 
-                    <form name="sentry-lead" method="POST" data-netlify="true" class="space-y-8 relative z-10">
+                    <form name="sentry-lead" method="POST" data-netlify="true" class="space-y-10">
                         <input type="hidden" name="form-name" value="sentry-lead">
-                        <div class="grid lg:grid-cols-2 gap-8">
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Commander / Name</label>
-                                <input type="text" name="name" required class="w-full bg-dark-card border border-industrial-border p-5 text-xs font-mono text-white focus:border-brand-blue outline-none transition-all placeholder:text-gray-800" placeholder="ENTER NAME">
+                        <div class="grid lg:grid-cols-2 gap-10">
+                            <div class="space-y-3">
+                                <label class="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1 font-bold">Name / Point of Contact</label>
+                                <input type="text" name="name" required class="w-full bg-dark-card border border-industrial-border p-5 text-xs font-mono text-white focus:border-brand-blue outline-none transition-all placeholder:text-gray-800" placeholder="ENTER FULL NAME">
                             </div>
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Direct Line</label>
+                            <div class="space-y-3">
+                                <label class="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1 font-bold">Direct Line</label>
                                 <input type="tel" name="phone" required class="w-full bg-dark-card border border-industrial-border p-5 text-xs font-mono text-white focus:border-brand-blue outline-none transition-all placeholder:text-gray-800" placeholder="(806) 000-0000">
                             </div>
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Secure Business Email</label>
-                            <input type="email" name="email" required class="w-full bg-dark-card border border-industrial-border p-5 text-xs font-mono text-white focus:border-brand-blue outline-none transition-all placeholder:text-gray-800" placeholder="COMMAND@COMPANY.COM">
+                        <div class="space-y-3">
+                            <label class="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1 font-bold">Secure Business Email</label>
+                            <input type="email" name="email" required class="w-full bg-dark-card border border-industrial-border p-5 text-xs font-mono text-white focus:border-brand-blue outline-none transition-all placeholder:text-gray-800" placeholder="NAME@COMPANY.COM">
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Proposed Deployment Location / scope</label>
-                            <textarea id="site-message" name="message" rows="4" required class="w-full bg-dark-card border border-industrial-border p-5 text-xs font-mono text-white focus:border-brand-blue outline-none transition-all placeholder:text-gray-800" placeholder="DESCRIBE THE PERIMETER AND ASSETS TO BE PROTECTED..."></textarea>
+                        <div class="space-y-3">
+                            <label class="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1 font-bold">Target Jobsite Coordinates / Scope</label>
+                            <textarea name="message" rows="4" required class="w-full bg-dark-card border border-industrial-border p-5 text-xs font-mono text-white focus:border-brand-blue outline-none transition-all placeholder:text-gray-800" placeholder="DESCRIBE PERIMETER AND ASSETS..."></textarea>
                         </div>
                         
                         <div class="pt-6">
-                            <button type="submit" class="w-full bg-brand-blue text-dark-bg font-black py-7 uppercase tracking-[0.5em] text-sm hover:bg-white transition-all shadow-[0_0_50px_rgba(74,222,128,0.3)]">
+                            <button type="submit" class="w-full bg-brand-blue text-dark-bg font-black py-7 uppercase tracking-[0.4em] text-xs hover:bg-white transition-all shadow-[0_0_50px_rgba(74,222,128,0.2)] font-bold">
                                 Request Strategic Assessment
                             </button>
                         </div>
                     </form>
                     
-                    <div class="mt-12 text-center text-[10px] text-gray-600 font-mono uppercase tracking-[0.4em] font-black">
-                        Current Response Window: &lt; 12 Hours
+                    <!-- MSRP Anchor at End -->
+                    <div class="mt-12 flex flex-col items-center gap-4 text-center">
+                        <div class="flex items-center gap-3 text-[10px] font-mono text-gray-500 font-bold uppercase tracking-widest">
+                            <span>Purchase Price:</span>
+                            <span class="text-brand-blue">$44,999.95 MSRP</span>
+                        </div>
+                        <p class="text-[10px] text-gray-700 font-mono uppercase tracking-[0.3em] font-black">
+                            Current Response Window: &lt; 12 Hours // Amarillo HQ
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Tactical Journey Modal -->
+    <!-- Tactical Modal -->
     <div id="video-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 lg:p-20 transition-all duration-300">
         <div class="absolute inset-0 bg-dark-bg/98 backdrop-blur-xl" onclick="closeVideoModal()"></div>
-        <div class="relative w-full max-w-6xl aspect-video hud-border shadow-[0_0_150px_rgba(0,0,0,1)] z-10 bg-black">
+        <div class="relative w-full max-w-6xl aspect-video hud-accent shadow-[0_0_150px_rgba(0,0,0,1)] z-10 bg-black">
             <button onclick="closeVideoModal()" class="absolute -top-12 right-0 text-white font-mono text-[10px] uppercase tracking-widest flex items-center gap-3 hover:text-brand-blue transition-colors font-bold">
-                [ ESC ] TERMINATE CONNECTION <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                [ ESC ] TERMINATE <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
-            <div id="modal-player" class="w-full h-full">
-                <!-- Video injected via JS on user action -->
-            </div>
+            <div id="modal-player" class="w-full h-full"></div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="bg-dark-bg py-24 border-t border-industrial-border text-center">
         <div class="container mx-auto px-6">
-            <div class="flex justify-center mb-12 opacity-20 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
-                <img src="caprock logo transparent BG 2.png" alt="Caprock" class="h-10">
+            <div class="flex justify-center mb-12 opacity-30 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
+                <div class="bg-white p-1 rounded-md shadow-sm">
+                    <img src="caprock logo transparent BG 2.png" alt="Caprock" class="h-8 lg:h-10">
+                </div>
             </div>
-            <p class="text-[10px] font-mono text-gray-700 uppercase tracking-[0.6em] font-black">
-                © 2026 Caprock Technology Group // Amarillo, Texas // Tactical Site Infrastructure
+            <p class="text-[9px] font-mono text-gray-700 uppercase tracking-[0.6em] font-black">
+                © 2026 Caprock Technology Group // Amarillo, Texas // Tactical Infrastructure
             </p>
         </div>
     </footer>
 
     <script>
-        // Sticky CTA Reveal
         const stickyCta = document.getElementById('sticky-cta');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 600) {
-                stickyCta.classList.add('visible');
-            } else {
-                stickyCta.classList.remove('visible');
-            }
+            // Revealed later to ensure primary flow isn't interrupted
+            if (window.scrollY > 800) { stickyCta.classList.add('visible'); } 
+            else { stickyCta.classList.remove('visible'); }
         });
 
-        // JOURNEY MODAL LOGIC (Non-Autoplay Journeys)
         const modal = document.getElementById('video-modal');
         const player = document.getElementById('modal-player');
 
         function openVideoModal() {
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            // The video source is loaded ONLY when the user clicks, respecting their pace.
             player.innerHTML = `
                 <video class="w-full h-full" controls autoplay playsinline>
                     <source src="https://res.cloudinary.com/delpl6e47/video/upload/v1768093653/solar-sentry_bccc67.mp4" type="video/mp4">
@@ -387,10 +360,7 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Key Listeners
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeVideoModal();
-        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeVideoModal(); });
     </script>
 </body>
 </html>
