@@ -2,101 +2,87 @@ const https = require('https');
 
 /**
  * Netlify Background Function: submission-created
- * Dispatches tactical alerts to the Caprock Discord Command Center.
- * Optimized for high-ticket asset leads and cross-environment reliability.
+ * This runs automatically every time a form is submitted on your site.
+ * It dispatches a tactical alert to your Discord Command Center.
  */
 exports.handler = async function(event, context) {
-    console.log("--- DISPATCH INITIATED: New Form Intel ---");
+    console.log("--- New Form Submission Received ---");
 
-    // 1. Parse and Detect Netlify Event Payload
-    let body;
+    // 1. Parse the Netlify event body
+    let payload;
     try {
-        // Handle potential base64 encoding from Netlify environment
-        const rawBody = event.isBase64Encoded 
-            ? Buffer.from(event.body, 'base64').toString('utf8') 
-            : event.body;
-            
-        body = JSON.parse(rawBody);
+        const body = JSON.parse(event.body);
+        payload = body.payload;
     } catch (e) {
-        console.error("CRITICAL ERROR: Failed to parse submission body.", e);
+        console.error("Critical Error: Could not parse event body.", e);
         return { statusCode: 400, body: "Invalid Request Body" };
     }
     
-    // Netlify submission-created events wrap data in a 'payload' object
-    const payload = body.payload || body;
+    // Extract form identity - checking multiple locations for maximum reliability
     const data = payload.data || {};
-    const netlifyFormName = payload.form_name || data['form-name'] || "Unknown_Source";
+    const netlifyFormName = (payload.form_name || data['form-name'] || "Unknown Form").toLowerCase();
     
-    console.log(`SOURCE DETECTED: [${netlifyFormName}]`);
+    console.log(`Processing form: ${netlifyFormName}`);
     
-    // 2. Caprock Discord Webhook Configuration
-    // SECURE: Prioritize the Environment Variable from Netlify Dashboard
-    const DISCORD_URL = process.env.DISCORD_WEBHOOK_URL || "https://discord.com/api/webhooks/1459433932553584703/H1hmPninZQ888hL7lFDrtIzAVo0mnMs0axjYm0i6nfsmTLqi1F7t7YHsXyqySxKyp91k";
+    // 2. Secure Discord Webhook URL via Environment Variable
+    const DISCORD_URL = process.env.DISCORD_WEBHOOK_URL;
 
-    if (!DISCORD_URL || DISCORD_URL.length < 10) {
-        console.error("CRITICAL ERROR: Discord Webhook URL is missing or invalid.");
+    if (!DISCORD_URL) {
+        console.error("Missing DISCORD_WEBHOOK_URL environment variable.");
         return { statusCode: 500, body: "Configuration Error" };
     }
 
-    // 3. Strategic Branding & Escalation Matrix
+    // 3. Define Branding & Terminology (Tactical Style)
     let title = "🚨 NEW INTEL: Site Lead";
     let typeLabel = "General Site Form";
     let color = 3447003; // Default Blue
-    let mention = "";
 
-    // High-Ticket Sentry Logic (Safety Orange Branding)
-    if (netlifyFormName === 'sentry-lead' || netlifyFormName === 'solar-inquiry') {
-        title = "⚡ HIGH-VALUE TARGET: Solar Sentry Inquiry";
-        typeLabel = "Solar Sentry Strategic Assessment";
-        color = 16347926; // Safety Orange (#f97316)
-        mention = "@everyone"; 
+    // Differentiation logic - Expanded for spelling resilience
+    if (netlifyFormName.includes('solar')) {
+        title = "☀️ HOT LEAD: Solar Form Submission";
+        typeLabel = "Solar Form";
+        color = 16761095; 
     } 
-    else if (netlifyFormName === 'contact-v8') {
-        title = "🛡️ MSP INTEL: Managed Services Request";
+    else if (netlifyFormName.includes('contact-v8') || netlifyFormName.includes('protection') || netlifyFormName.includes('msp')) {
+        title = "🛡️ MSP INTEL: MSP Information Request";
         typeLabel = "MSP Information Request";
-        color = 4906624; // Caprock Green (#4ade80)
+        color = 4906624; 
     }
-    else if (netlifyFormName === 'surveillance-inquiry') {
+    // Added 'surve' and 'quote' to catch single-L spellings or alternate names
+    else if (netlifyFormName.includes('surve') || netlifyFormName.includes('camera') || netlifyFormName.includes('quote')) {
         title = "👁️ SURVEILLANCE INTEL: Security Camera Inquiry";
-        typeLabel = "Fixed Surveillance Project";
-        color = 4906624; // Caprock Green (#4ade80)
+        typeLabel = "Security Camera Inquiry";
+        color = 4906624; 
     }
 
-    // 4. Construct and Sanitize the Payload
-    const cleanValue = (val, fallback) => (val && String(val).trim() !== "") ? String(val) : fallback;
-
+    // 4. Construct the Payload for Discord
     const embed = {
         title: title,
         color: color,
         fields: [
             {
-                name: "Lead Type",
-                value: cleanValue(typeLabel, "Site Submission"),
+                name: "Submission Type",
+                value: String(typeLabel),
                 inline: true
             },
             {
-                name: "Form Source",
-                value: cleanValue(netlifyFormName, "Internal"),
+                name: "Contact Person",
+                value: String(data.name || data['full-name'] || data['name'] || "Anonymous"),
                 inline: true
             },
             {
-                name: "Commander / Contact",
-                value: cleanValue(data.name || data['full-name'] || data['commander-name'], "Anonymous / Unspecified"),
-                inline: false
+                name: "Mobile / Phone",
+                value: String(data.phone || data['telephone'] || "No Phone Provided"), 
+                inline: false 
             },
             {
-                name: "Direct Line",
-                value: cleanValue(data.phone, "No Phone Provided"), 
-                inline: true 
-            },
-            {
-                name: "Secure Email",
-                value: cleanValue(data.email, "No Email Provided"),
+                name: "Email Address",
+                value: String(data.email || "No Email Provided"),
                 inline: true
             },
             {
-                name: "Site Intel / Message",
-                value: cleanValue(data.message || data['site-details'] || data['site-message'], "Request for direct contact.").substring(0, 1000),
+                name: "Lead Details / Project Scope",
+                value: String(data.message || data['details'] || "Request for direct contact."),
                 inline: false
             }
         ],
@@ -107,51 +93,45 @@ exports.handler = async function(event, context) {
     };
 
     const discordPayload = JSON.stringify({
-        username: "Caprock Dispatch",
-        content: mention || undefined, 
+        username: "Caprock Bot",
+        content: "@everyone",
         embeds: [embed]
     });
 
-    // 5. Tactical Dispatch to Discord via HTTPS
+    // 5. Dispatch the POST request to Discord
     return new Promise((resolve, reject) => {
-        try {
-            const url = new URL(DISCORD_URL);
-            const options = {
-                hostname: url.hostname,
-                path: url.pathname + url.search,
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Content-Length': Buffer.byteLength(discordPayload),
-                    'User-Agent': 'Caprock-Dispatch-Bot/3.3'
-                },
-            };
+        const url = new URL(DISCORD_URL);
+        const options = {
+            hostname: url.hostname,
+            path: url.pathname + url.search,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(discordPayload),
+                'User-Agent': 'Caprock-Lead-Bot/3.0'
+            },
+        };
 
-            const request = https.request(options, (res) => {
-                let responseBody = '';
-                res.on('data', (chunk) => { responseBody += chunk; });
-                res.on('end', () => {
-                    console.log(`DISCORD RESPONSE CODE: [${res.statusCode}]`);
-                    if (res.statusCode >= 200 && res.statusCode < 300) {
-                        console.log("SUCCESS: Intel successfully relayed to Discord.");
-                        resolve({ statusCode: 200, body: 'Alert Dispatched' });
-                    } else {
-                        console.error(`DISCORD API FAILURE: ${res.statusCode}. Details: ${responseBody}`);
-                        resolve({ statusCode: res.statusCode, body: 'Discord API Error' });
-                    }
-                });
+        const request = https.request(options, (res) => {
+            let responseBody = '';
+            res.on('data', (chunk) => { responseBody += chunk; });
+            res.on('end', () => {
+                if (res.statusCode >= 200 && res.statusCode < 300) {
+                    console.log(`Success: Dispatched ${typeLabel} alert to Discord.`);
+                    resolve({ statusCode: 200, body: 'Alert Sent' });
+                } else {
+                    console.error(`Discord API Error: ${res.statusCode}.`);
+                    resolve({ statusCode: res.statusCode, body: 'Discord API Error' });
+                }
             });
+        });
 
-            request.on('error', (e) => {
-                console.error('NETWORK ERROR: Connection to Command Center lost.', e);
-                resolve({ statusCode: 500, body: 'Network Error' });
-            });
+        request.on('error', (e) => {
+            console.error('Network Error:', e);
+            resolve({ statusCode: 500, body: 'Network Error' });
+        });
 
-            request.write(discordPayload);
-            request.end();
-        } catch (urlError) {
-            console.error("CRITICAL ERROR: Malformed Discord URL.", urlError);
-            resolve({ statusCode: 500, body: 'Malformed Webhook URL' });
-        }
+        request.write(discordPayload);
+        request.end();
     });
 };
