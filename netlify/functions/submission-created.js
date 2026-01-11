@@ -2,44 +2,44 @@ const https = require('https');
 
 /**
  * Netlify Background Function: submission-created
- * This runs automatically every time a form is submitted on your site.
- * It dispatches a tactical alert to your Discord Command Center.
- * Updated to handle high-status Solar Sentry leads with priority routing.
+ * Dispatches tactical alerts to the Caprock Discord Command Center.
+ * Optimized for robustness and cross-environment payload detection.
  */
 exports.handler = async function(event, context) {
-    console.log("--- New Form Submission Received ---");
+    console.log("--- DISPATCH INITIATED: New Form Intel ---");
 
-    // 1. Parse the Netlify event body
+    // 1. Parse and Detect Netlify Event Payload
     let payload;
     try {
         const body = JSON.parse(event.body);
-        payload = body.payload;
+        // Netlify sometimes wraps the submission in a 'payload' key
+        payload = body.payload || body;
     } catch (e) {
-        console.error("Critical Error: Could not parse event body.", e);
+        console.error("CRITICAL ERROR: Failed to parse submission body.", e);
         return { statusCode: 400, body: "Invalid Request Body" };
     }
     
-    // Extract form identity
+    // Extract form identity and data
     const data = payload.data || {};
-    const netlifyFormName = payload.form_name || data['form-name'] || "Unknown Form";
+    const netlifyFormName = payload.form_name || data['form-name'] || "Unknown_Source";
     
-    console.log(`Detected Form Name: ${netlifyFormName}`);
+    console.log(`SOURCE DETECTED: [${netlifyFormName}]`);
     
-    // 2. Caprock Discord Webhook URL
+    // 2. Caprock Discord Webhook Configuration
     const DISCORD_URL = "https://discord.com/api/webhooks/1459433932553584703/H1hmPninZQ888hL7lFDrtIzAVo0mnMs0axjYm0i6nfsmTLqi1F7t7YHsXyqySxKyp91k";
 
-    // 3. Strategic Branding & Escalation Logic
+    // 3. Strategic Branding & Escalation Matrix
     let title = "🚨 NEW INTEL: Site Lead";
     let typeLabel = "General Site Form";
     let color = 3447003; // Default Blue
     let mention = "";
 
-    // Specific logic for the Solar Sentry ($44,999.95 asset)
+    // High-Ticket Sentry Logic
     if (netlifyFormName === 'sentry-lead' || netlifyFormName === 'solar-inquiry') {
         title = "⚡ HIGH-VALUE TARGET: Solar Sentry Inquiry";
         typeLabel = "Solar Sentry Strategic Assessment";
         color = 16347926; // Safety Orange (#f97316)
-        mention = "@everyone"; // Immediate escalation for high-ticket inquiries
+        mention = "@everyone"; 
     } 
     else if (netlifyFormName === 'contact-v8') {
         title = "🛡️ MSP INTEL: Managed Services Request";
@@ -52,11 +52,16 @@ exports.handler = async function(event, context) {
         color = 4906624; // Caprock Green (#4ade80)
     }
 
-    // 4. Construct the Payload for Discord
+    // 4. Construct the Payload for Discord Command Center
     const embed = {
         title: title,
         color: color,
         fields: [
+            {
+                name: "Form Name",
+                value: String(netlifyFormName),
+                inline: true
+            },
             {
                 name: "Lead Type",
                 value: String(typeLabel),
@@ -64,13 +69,13 @@ exports.handler = async function(event, context) {
             },
             {
                 name: "Commander / Contact",
-                value: String(data.name || data['full-name'] || "Anonymous"),
-                inline: true
+                value: String(data.name || data['full-name'] || data['name'] || "Anonymous"),
+                inline: false
             },
             {
                 name: "Direct Line",
                 value: String(data.phone || "No Phone Provided"), 
-                inline: false 
+                inline: true 
             },
             {
                 name: "Secure Email",
@@ -78,7 +83,7 @@ exports.handler = async function(event, context) {
                 inline: true
             },
             {
-                name: "Site Intel / Project Scope",
+                name: "Site Intel / Message",
                 value: String(data.message || data['site-details'] || "Request for direct contact."),
                 inline: false
             }
@@ -91,11 +96,11 @@ exports.handler = async function(event, context) {
 
     const discordPayload = JSON.stringify({
         username: "Caprock Dispatch",
-        content: mention, 
+        content: mention || undefined, 
         embeds: [embed]
     });
 
-    // 5. Dispatch to Discord
+    // 5. Tactical Dispatch to Discord
     return new Promise((resolve, reject) => {
         const url = new URL(DISCORD_URL);
         const options = {
@@ -105,7 +110,7 @@ exports.handler = async function(event, context) {
             headers: {
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(discordPayload),
-                'User-Agent': 'Caprock-Dispatch-Bot/3.0'
+                'User-Agent': 'Caprock-Dispatch-Bot/3.1'
             },
         };
 
@@ -113,18 +118,19 @@ exports.handler = async function(event, context) {
             let responseBody = '';
             res.on('data', (chunk) => { responseBody += chunk; });
             res.on('end', () => {
+                console.log(`DISCORD RESPONSE: [${res.statusCode}]`);
                 if (res.statusCode >= 200 && res.statusCode < 300) {
-                    console.log(`Success: Dispatched ${typeLabel} alert.`);
+                    console.log("SUCCESS: Alert dispatched to Command Center.");
                     resolve({ statusCode: 200, body: 'Alert Dispatched' });
                 } else {
-                    console.error(`Discord API Error: ${res.statusCode}.`);
+                    console.error(`DISCORD FAILURE: Status ${res.statusCode}. Body: ${responseBody}`);
                     resolve({ statusCode: res.statusCode, body: 'Discord API Error' });
                 }
             });
         });
 
         request.on('error', (e) => {
-            console.error('Network Error:', e);
+            console.error('NETWORK ERROR: Communication link failed.', e);
             resolve({ statusCode: 500, body: 'Network Error' });
         });
 
