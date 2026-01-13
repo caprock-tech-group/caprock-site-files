@@ -1,0 +1,1709 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Immunity Check</title>
+
+  <!-- jsPDF for in-browser PDF generation -->
+  <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <style>
+    :root {
+      --brand: #2563eb;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --shadow: 0 10px 30px rgba(2,6,23,.06);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 12px 14px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brandblock { display: flex; flex-direction: column; gap: 2px; }
+    .brandblock .title { font-weight: 800; font-size: 14px; }
+    .brandblock .subtitle { font-size: 12px; color: var(--muted); }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: transform .02s ease;
+      box-shadow: 0 1px 0 rgba(2,6,23,.04);
+      white-space: nowrap;
+    }
+    .btn:active { transform: scale(.99); }
+    .btn.primary {
+      border-color: #0f172a;
+      background: #0f172a;
+      color: #fff;
+    }
+    .btn.brand {
+      border-color: var(--brand);
+      background: var(--brand);
+      color: #fff;
+    }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    .wrap { max-width: 720px; margin: 0 auto; padding: 14px; padding-bottom: 94px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .row { display:flex; gap:10px; align-items:center; }
+    .row.between { justify-content: space-between; }
+    .stack { display:flex; flex-direction:column; gap: 12px; }
+
+    .pill {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    .progressbar {
+      height: 10px;
+      background: #eef2f7;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .progressbar > div {
+      height: 100%;
+      background: var(--brand);
+      width: 0%;
+      transition: width .2s ease;
+    }
+    .stepdots { display:flex; gap:6px; flex-wrap: wrap; margin-top: 10px; }
+    .dot {
+      width: 28px; height: 26px;
+      border-radius: 999px;
+      display:flex; align-items:center; justify-content:center;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid var(--border);
+      background: #f1f5f9;
+      color: #334155;
+    }
+    .dot.active { background:#0f172a; color:#fff; border-color:#0f172a; }
+
+    .toggle2 {
+      display:flex;
+      padding: 6px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #fff;
+      box-shadow: 0 1px 0 rgba(2,6,23,.04);
+      width: 100%;
+      gap: 6px;
+    }
+    .toggle2 button {
+      flex: 1;
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 10px;
+      font-weight: 900;
+      cursor: pointer;
+      background: transparent;
+      color: #334155;
+    }
+    .toggle2 button.active {
+      background: #0f172a;
+      color: #fff;
+    }
+
+    .h2 { font-size: 16px; font-weight: 900; margin: 0; }
+    .muted { color: var(--muted); font-size: 13px; line-height: 1.4; }
+    .label { font-size: 13px; font-weight: 800; }
+    .req::after { content:" *"; color: #ef4444; font-weight: 900; }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+    }
+    textarea { resize: vertical; }
+
+    .grid2 { display:grid; grid-template-columns: 1fr; gap: 10px; }
+    @media(min-width: 640px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+
+    .ansRow { display:flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .ansBtn {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 900;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .ansBtn.active { background: #0f172a; color:#fff; border-color:#0f172a; }
+
+    .tip {
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #334155;
+    }
+
+    .script {
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .script header {
+      background: #fff;
+      padding: 12px;
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .script .body {
+      padding: 12px;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      display: none;
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.5;
+    }
+    .script.open .body { display:block; }
+
+    .bottomNav {
+      position: fixed; left:0; right:0; bottom:0;
+      border-top: 1px solid var(--border);
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      z-index: 40;
+    }
+    .bottomNav-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 10px 14px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .scoreBox {
+      border-radius: 18px;
+      padding: 16px;
+      background: #0f172a;
+      color: #fff;
+    }
+    .scoreBox .big { font-size: 44px; font-weight: 1000; line-height: 1; margin-top: 4px; }
+    .risk { margin-top: 10px; border-radius: 12px; padding: 10px 12px; background: rgba(239,68,68,.16); color: #fecaca; font-weight: 900; }
+
+    .barRow { border: 1px solid var(--border); border-radius: 14px; padding: 12px; background:#fff; }
+    .barTrack { height: 10px; border-radius: 999px; background:#eef2f7; overflow:hidden; margin-top: 8px; }
+    .barFill { height: 100%; width: 0%; background: var(--brand); }
+
+    .callout {
+      border: 1px solid #bbf7d0;
+      background: #ecfdf5;
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .callout .t { font-weight: 1000; color:#065f46; }
+    .callout .d { margin-top: 6px; color:#065f46; font-size: 13px; line-height:1.45; }
+
+    .warn {
+      border: 1px solid #fde68a;
+      background: #fffbeb;
+      border-radius: 14px;
+      padding: 10px 12px;
+      color: #92400e;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .toast {
+      position: fixed;
+      left: 0; right: 0;
+      bottom: 74px;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 14px;
+      z-index: 60;
+      display: none;
+    }
+    .toast .inner {
+      background:#0f172a;
+      color:#fff;
+      padding: 12px 14px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(2,6,23,.2);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .modal {
+      position: fixed; inset: 0; z-index: 80;
+      background: rgba(2,6,23,.42);
+      display: none;
+      padding: 14px;
+    }
+    .modal .panel {
+      max-width: 720px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 30px 90px rgba(2,6,23,.25);
+      display:flex;
+      flex-direction: column;
+      max-height: calc(100vh - 28px);
+    }
+    .modal header {
+      padding: 14px;
+      border-bottom: 1px solid var(--border);
+      display:flex; justify-content: space-between; align-items:center;
+      gap: 10px;
+      font-weight: 1000;
+    }
+    .modal .content {
+      padding: 14px;
+      overflow: auto;
+    }
+    .modal footer {
+      padding: 14px;
+      border-top: 1px solid var(--border);
+      display:flex;
+      justify-content: flex-end;
+      gap: 10px;
+      background:#fff;
+    }
+
+    .small { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    @media print {
+      .noPrint { display: none !important; }
+      body { background: #fff; }
+      .wrap { padding-bottom: 0; }
+      .card { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar noPrint">
+    <div class="topbar-inner">
+      <div class="brandblock">
+        <div class="title" id="companyNameTop">Immunity Check</div>
+        <div class="subtitle">Non-intrusive, 10–15 minute guided check</div>
+      </div>
+      <div class="row" style="gap:8px;">
+        <button class="btn" id="btnResume" title="Resume last saved draft">Resume</button>
+        <button class="btn" id="btnNew">New Client</button>
+        <button class="btn primary" id="btnSettings">Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap stack">
+
+    <div class="card stack">
+      <div class="row between">
+        <div class="h2" id="stepTitle">Step</div>
+        <div class="pill" id="pctLabel">0%</div>
+      </div>
+      <div class="progressbar"><div id="pctBar"></div></div>
+      <div class="stepdots" id="dots"></div>
+    </div>
+
+    <div class="row" style="gap:10px;">
+      <div class="toggle2 noPrint" style="flex:1;">
+        <button id="modeRemote" type="button">Remote (screen share)</button>
+        <button id="modeOnsite" type="button">On-Site (walkthrough)</button>
+      </div>
+      <button class="btn noPrint" id="btnSettings2">Branding</button>
+    </div>
+
+    <div class="card script noPrint" id="scriptPanel">
+      <header id="scriptHeader">
+        <span>Sales Script</span>
+        <span class="small" id="scriptToggleText">Show</span>
+      </header>
+      <div class="body" id="scriptBody"></div>
+    </div>
+
+    <div id="content" class="stack"></div>
+
+  </div>
+
+  <div class="bottomNav noPrint">
+    <div class="bottomNav-inner">
+      <button class="btn" id="btnBack">Back</button>
+      <div class="small" id="stepCount">Step 1 of 6</div>
+      <button class="btn primary" id="btnNext">Next</button>
+    </div>
+  </div>
+
+  <div class="toast noPrint" id="toast">
+    <div class="inner" id="toastText">Saved</div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal noPrint" id="settingsModal">
+    <div class="panel">
+      <header>
+        <span>Branding & Settings</span>
+        <button class="btn" id="settingsClose">Close</button>
+      </header>
+
+      <div class="content stack">
+        <div class="grid2">
+          <div>
+            <div class="label">Company name</div>
+            <input id="setCompanyName" placeholder="Caprock Technology Group" />
+          </div>
+          <div>
+            <div class="label">Primary color</div>
+            <div class="row" style="gap:10px;">
+              <input id="setPrimaryColor" type="color" style="width:70px; height:42px; padding:6px;" />
+              <input id="setPrimaryColorHex" placeholder="#2563eb" />
+            </div>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div>
+            <div class="label">Phone</div>
+            <input id="setPhone" placeholder="(806) 555-0199" />
+          </div>
+          <div>
+            <div class="label">Email</div>
+            <input id="setEmail" placeholder="hello@caprocktech.com" />
+          </div>
+        </div>
+
+        <div>
+          <div class="label">Website</div>
+          <input id="setWebsite" placeholder="caprocktech.com" />
+        </div>
+
+        <div class="card" style="box-shadow:none;">
+          <div class="label">Logo upload (PNG/JPG)</div>
+          <input id="setLogo" type="file" accept="image/png,image/jpeg" />
+          <div class="small" style="margin-top:8px;">
+            Stored locally in your browser. Used in PDF header when possible.
+          </div>
+          <div id="logoPreviewWrap" style="margin-top:10px; display:none;">
+            <img id="logoPreview" alt="Logo preview" style="max-height:56px;" />
+            <div style="margin-top:8px;">
+              <button class="btn" id="btnRemoveLogo">Remove logo</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="small">
+          Everything is client-side. Draft + branding are saved in your browser’s localStorage unless you export JSON.
+        </div>
+      </div>
+
+      <footer>
+        <button class="btn" id="settingsCancel">Cancel</button>
+        <button class="btn brand" id="settingsSave">Save</button>
+      </footer>
+    </div>
+  </div>
+
+<script>
+(function () {
+  const DRAFT_KEY = "immunity_check_draft_single_v1";
+  const BRAND_KEY = "immunity_check_brand_single_v1";
+
+  const steps = [
+    { key: "client", title: "Client Info" },
+    { key: "identity", title: "Identity & Email" },
+    { key: "backup", title: "Backup & Recovery" },
+    { key: "endpoint", title: "Endpoint & Patching" },
+    { key: "remote", title: "Remote Access" },
+    { key: "results", title: "Results" }
+  ];
+
+  const salesScripts = {
+    client: {
+      remote:
+        "In 10–15 minutes, I’ll run a non-intrusive Immunity Check. No passwords, no scanning, no installs—just quick confirmations and optional proof like a screenshot. At the end you’ll get a clear score, top business-stoppers, and one quick win.",
+      onsite:
+        "I’ll do a quick, non-intrusive Immunity Check. No passwords or scanning—just simple confirmations and, if available, quick proof like a screenshot or ticket. You’ll leave with a score, top business-stoppers, and one quick win."
+    },
+    identity: {
+      remote:
+        "We’ll start with identity and email—this is where most breaches begin. I’ll ask a couple of yes/no questions and, if you have it, a quick screenshot to confirm settings.",
+      onsite:
+        "We’ll start with identity and email—most incidents begin here. Quick yes/no confirmations and optional proof if you already have it handy."
+    },
+    backup: {
+      remote:
+        "Now backup and recovery—this is what determines how fast you can get back to business after an incident. The key is whether restores have been tested and documented recently.",
+      onsite:
+        "Now backup and recovery—what matters is your ability to restore quickly. We’re looking for a recent restore test and evidence like a ticket or email."
+    },
+    endpoint: {
+      remote:
+        "Next endpoints and patching—this is about reducing exploit risk. We’ll confirm whether you have managed EDR vs basic antivirus, and whether updates are enforced.",
+      onsite:
+        "Next endpoints and patching—confirm protection level and whether updates are enforced automatically or left to users."
+    },
+    remote: {
+      remote:
+        "Finally remote access—this is a common ransomware entry point. We’ll confirm which tools are used and whether access is restricted behind VPN + MFA.",
+      onsite:
+        "Finally remote access—confirm tools in use and whether they’re restricted behind VPN + MFA."
+    },
+    results: {
+      remote:
+        "Here’s the dashboard: your score, category breakdown, top business-stoppers, and one quick win. If you’d like, I can generate a clean PDF you can keep or share internally.",
+      onsite:
+        "Here’s your score and the breakdown. I can generate a PDF report suitable for printing or emailing."
+    }
+  };
+
+  const defaultBranding = {
+    companyName: "Caprock Technology Group",
+    companyPhone: "(806) 555-0199",
+    companyEmail: "hello@caprocktech.com",
+    companyWebsite: "caprocktech.com",
+    primaryColor: "#2563eb",
+    logoDataUrl: null
+  };
+
+  function blankState() {
+    const now = Date.now();
+    return {
+      version: 1,
+      updatedAt: now,
+      stepIndex: 0,
+      mode: "remote",
+      branding: loadBranding(),
+      client: {
+        businessName: "",
+        primaryContact: "",
+        email: "",
+        phone: "",
+        domain: "",
+        industry: "",
+        users: null,
+        notes: ""
+      },
+      questions: {
+        emailPlatform: { id:"emailPlatform", emailPlatform:"unknown", notes:"" },
+        mfaEnforced: { id:"mfaEnforced", ynu:"unknown", proof:false, notes:"" },
+        sharedCreds: { id:"sharedCreds", ynu:"unknown", notes:"" },
+        restoreTest: { id:"restoreTest", ynu:"unknown", proof:false, notes:"" },
+        rto: { id:"rto", rto:"unknown", notes:"" },
+        backupIsolated: { id:"backupIsolated", ynu:"unknown", notes:"" },
+        edr: { id:"edr", edr:"unknown", notes:"" },
+        updates: { id:"updates", updates:"unknown", notes:"" },
+        remoteTools: { id:"remoteTools", remoteTools:"unknown", notes:"" },
+        remoteRestricted: { id:"remoteRestricted", ynu:"unknown", notes:"" }
+      }
+    };
+  }
+
+  function demoState() {
+    const s = blankState();
+    s.client = {
+      businessName: "Demo Realty Group",
+      primaryContact: "Jamie Carter",
+      email: "jamie@demorealty.com",
+      phone: "(806) 555-0101",
+      domain: "demorealty.com",
+      industry: "Real Estate",
+      users: 14,
+      notes: "Quick demo data pre-filled. Adjust as needed."
+    };
+    return s;
+  }
+
+  function loadBranding() {
+    try {
+      const raw = localStorage.getItem(BRAND_KEY);
+      if (!raw) return { ...defaultBranding };
+      const obj = JSON.parse(raw);
+      return { ...defaultBranding, ...obj };
+    } catch {
+      return { ...defaultBranding };
+    }
+  }
+
+  function saveBranding(b) {
+    localStorage.setItem(BRAND_KEY, JSON.stringify(b));
+  }
+
+  function loadDraft() {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return null;
+      const s = JSON.parse(raw);
+      if (!s || s.version !== 1) return null;
+      // merge branding
+      s.branding = { ...loadBranding(), ...(s.branding || {}) };
+      return s;
+    } catch {
+      return null;
+    }
+  }
+
+  function saveDraft(s) {
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...s, updatedAt: Date.now() }));
+    } catch {}
+  }
+
+  function clearDraft() {
+    localStorage.removeItem(DRAFT_KEY);
+  }
+
+  function setBrandColor(hex) {
+    document.documentElement.style.setProperty("--brand", hex || "#2563eb");
+  }
+
+  // UI elements
+  const el = (id) => document.getElementById(id);
+  const content = el("content");
+
+  const btnBack = el("btnBack");
+  const btnNext = el("btnNext");
+  const btnNew = el("btnNew");
+  const btnResume = el("btnResume");
+  const btnSettings = el("btnSettings");
+  const btnSettings2 = el("btnSettings2");
+
+  const stepTitle = el("stepTitle");
+  const stepCount = el("stepCount");
+  const pctLabel = el("pctLabel");
+  const pctBar = el("pctBar");
+  const dots = el("dots");
+
+  const modeRemote = el("modeRemote");
+  const modeOnsite = el("modeOnsite");
+
+  const scriptPanel = el("scriptPanel");
+  const scriptHeader = el("scriptHeader");
+  const scriptBody = el("scriptBody");
+  const scriptToggleText = el("scriptToggleText");
+
+  const toast = el("toast");
+  const toastText = el("toastText");
+
+  const companyNameTop = el("companyNameTop");
+
+  // Settings modal
+  const settingsModal = el("settingsModal");
+  const settingsClose = el("settingsClose");
+  const settingsCancel = el("settingsCancel");
+  const settingsSave = el("settingsSave");
+
+  const setCompanyName = el("setCompanyName");
+  const setPhone = el("setPhone");
+  const setEmail = el("setEmail");
+  const setWebsite = el("setWebsite");
+  const setPrimaryColor = el("setPrimaryColor");
+  const setPrimaryColorHex = el("setPrimaryColorHex");
+  const setLogo = el("setLogo");
+  const logoPreviewWrap = el("logoPreviewWrap");
+  const logoPreview = el("logoPreview");
+  const btnRemoveLogo = el("btnRemoveLogo");
+
+  let state = loadDraft() || demoState();
+
+  // Autosave debounce
+  let saveTimer = null;
+  function scheduleSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      saveDraft(state);
+    }, 250);
+  }
+
+  function showToast(msg) {
+    toastText.textContent = msg;
+    toast.style.display = "block";
+    setTimeout(() => (toast.style.display = "none"), 2200);
+  }
+
+  function requiredOk() {
+    const b = (state.client.businessName || "").trim();
+    const d = (state.client.domain || "").trim();
+    const u = state.client.users;
+    return b.length > 1 && d.length > 2 && typeof u === "number" && u > 0;
+  }
+
+  // Scoring per your rules
+  function computeScores() {
+    const q = state.questions;
+
+    let identity = 0;
+    const mfa = q.mfaEnforced.ynu || "unknown";
+    identity += (mfa === "yes") ? 15 : (mfa === "no") ? 0 : 5;
+    const shared = q.sharedCreds.ynu || "unknown";
+    identity += (shared === "no") ? 10 : (shared === "yes") ? 0 : 5;
+    identity = Math.min(25, identity);
+
+    let backupRecovery = 0;
+    const rt = q.restoreTest.ynu || "unknown";
+    const proof = !!q.restoreTest.proof;
+    if (rt === "yes" && proof) backupRecovery += 20;
+    else if (rt === "yes" && !proof) backupRecovery += 12;
+    else if (rt === "no") backupRecovery += 0;
+    else backupRecovery += 6;
+
+    const rto = q.rto.rto || "unknown";
+    backupRecovery += (rto === "lt4") ? 10 :
+                     (rto === "sameDay") ? 7 :
+                     (rto === "1to3") ? 3 :
+                     (rto === "gt3") ? 0 : 2;
+
+    const iso = q.backupIsolated.ynu || "unknown";
+    backupRecovery += (iso === "yes") ? 5 : (iso === "no") ? 0 : 2;
+    backupRecovery = Math.min(35, backupRecovery);
+
+    let endpointPatching = 0;
+    const edr = q.edr.edr || "unknown";
+    endpointPatching += (edr === "managed") ? 15 :
+                        (edr === "basic") ? 7 :
+                        (edr === "none") ? 0 : 5;
+
+    const upd = q.updates.updates || "unknown";
+    endpointPatching += (upd === "enforced") ? 10 :
+                        (upd === "user") ? 3 : 5;
+    endpointPatching = Math.min(25, endpointPatching);
+
+    let remoteAccess = 0;
+    const tools = q.remoteTools.remoteTools || "unknown";
+    if (tools === "none") remoteAccess += 8;
+    else if (tools === "unknown") remoteAccess += 4;
+    else remoteAccess += 4;
+
+    const rr = q.remoteRestricted.ynu || "unknown";
+    remoteAccess += (rr === "yes") ? 7 : (rr === "no") ? 0 : 3;
+    remoteAccess = Math.min(15, remoteAccess);
+
+    const highRisk = (tools !== "none" && tools !== "unknown") && rr === "no";
+    const total = Math.max(0, Math.min(100, identity + backupRecovery + endpointPatching + remoteAccess));
+
+    return { identity, backupRecovery, endpointPatching, remoteAccess, total, highRisk };
+  }
+
+  function topBusinessStoppers(scores) {
+    const q = state.questions;
+    const findings = [];
+
+    if ((q.mfaEnforced.ynu || "unknown") === "no") {
+      findings.push({
+        title: "MFA is not enforced for all users",
+        detail: "A single phished password can compromise email, files, and financial workflows.",
+        severity: "high"
+      });
+    }
+
+    const rt = q.restoreTest.ynu || "unknown";
+    const proof = !!q.restoreTest.proof;
+    if (rt !== "yes" || !proof) {
+      findings.push({
+        title: "No verified restore test in the last 90 days",
+        detail: !proof
+          ? "Backups are only as good as a proven restore; evidence was not shown."
+          : "Restore test is not confirmed as completed recently.",
+        severity: "high"
+      });
+    }
+
+    if ((q.sharedCreds.ynu || "unknown") === "yes") {
+      findings.push({
+        title: "Shared credentials are in use",
+        detail: "Shared logins reduce accountability and increase breach impact; they also complicate offboarding.",
+        severity: "high"
+      });
+    }
+
+    const rto = q.rto.rto || "unknown";
+    if (rto === "gt3" || rto === "unknown") {
+      findings.push({
+        title: "Recovery time is too long or unclear",
+        detail: "If operations are down, the business may lose revenue, customer trust, and productivity.",
+        severity: (rto === "gt3") ? "high" : "medium"
+      });
+    }
+
+    const tools = q.remoteTools.remoteTools || "unknown";
+    const rr = q.remoteRestricted.ynu || "unknown";
+    if ((tools !== "none" && tools !== "unknown") && rr === "no") {
+      findings.push({
+        title: "Remote access is not restricted behind VPN + MFA",
+        detail: "Unrestricted remote tools are a frequent ransomware entry vector.",
+        severity: "high"
+      });
+    }
+
+    const edr = q.edr.edr || "unknown";
+    const upd = q.updates.updates || "unknown";
+    if (edr === "basic" || edr === "none" || upd === "user") {
+      findings.push({
+        title: "Endpoint protection and patching are below baseline",
+        detail: "Gaps in protection or user-driven updates increase exploit and malware risk.",
+        severity: "medium"
+      });
+    }
+
+    // Fill if needed by lowest category
+    if (findings.length < 3) {
+      const pairs = [
+        ["Identity controls are weak", scores.identity, "Improve MFA and account hygiene to reduce compromise risk."],
+        ["Backup and recovery readiness is limited", scores.backupRecovery, "Validate restores and tighten recovery objectives."],
+        ["Endpoint and patching discipline is inconsistent", scores.endpointPatching, "Enforce updates and modern endpoint protection."],
+        ["Remote access exposure needs review", scores.remoteAccess, "Restrict remote access and reduce unmanaged tools."]
+      ].sort((a,b)=>a[1]-b[1]);
+
+      for (const [title, , detail] of pairs) {
+        if (findings.length >= 3) break;
+        if (!findings.some(f => f.title === title)) findings.push({ title, detail, severity:"low" });
+      }
+    }
+
+    return findings.slice(0,3);
+  }
+
+  function quickWin() {
+    const q = state.questions;
+
+    if ((q.mfaEnforced.ynu || "unknown") === "no") {
+      return { title: "Enforce MFA for all email users", detail: "Roll out MFA enforcement across all accounts and confirm with a quick proof screenshot." };
+    }
+
+    const rt = q.restoreTest.ynu || "unknown";
+    const proof = !!q.restoreTest.proof;
+    if (rt !== "yes" || !proof) {
+      return { title: "Schedule a monthly restore test and capture proof", detail: "Run a test restore, document results, and retain a screenshot/ticket for auditability." };
+    }
+
+    if ((q.sharedCreds.ynu || "unknown") === "yes") {
+      return { title: "Remove shared credentials and use delegated access", detail: "Convert shared logins into delegated/shared mailbox access with per-user accounts." };
+    }
+
+    const tools = q.remoteTools.remoteTools || "unknown";
+    const rr = q.remoteRestricted.ynu || "unknown";
+    if ((tools !== "none" && tools !== "unknown") && rr !== "yes") {
+      return { title: "Restrict/remove unmanaged remote access tools; require VPN + MFA", detail: "Standardize remote access behind VPN + MFA and remove ad-hoc remote tools." };
+    }
+
+    if ((q.updates.updates || "unknown") === "user") {
+      return { title: "Enforce a patching policy", detail: "Move to enforced update rings and maintenance windows to eliminate patch drift." };
+    }
+
+    return { title: "Separate guest Wi-Fi", detail: "If not already separated, isolate guest Wi-Fi from business systems to reduce lateral movement risk." };
+  }
+
+  // Rendering helpers
+  function h(tag, attrs, children) {
+    const node = document.createElement(tag);
+    if (attrs) {
+      for (const [k,v] of Object.entries(attrs)) {
+        if (k === "class") node.className = v;
+        else if (k === "html") node.innerHTML = v;
+        else if (k.startsWith("on") && typeof v === "function") node.addEventListener(k.slice(2).toLowerCase(), v);
+        else node.setAttribute(k, v);
+      }
+    }
+    (children || []).forEach(ch => node.appendChild(typeof ch === "string" ? document.createTextNode(ch) : ch));
+    return node;
+  }
+
+  function inputRow(label, value, onInput, opts) {
+    const id = "i_" + Math.random().toString(16).slice(2);
+    const isReq = opts && opts.req;
+    return h("div", null, [
+      h("div", { class: "label" + (isReq ? " req" : "") }, [label]),
+      (opts && opts.type === "textarea")
+        ? h("textarea", { rows: opts.rows || 4, id, placeholder: opts.placeholder || "", oninput: (e)=>onInput(e.target.value) }, [value || ""])
+        : h("input", { id, value: value || "", placeholder: (opts && opts.placeholder) || "", type: (opts && opts.type) || "text", oninput: (e)=>onInput(e.target.value) })
+    ]);
+  }
+
+  function selectRow(label, value, options, onChange) {
+    const sel = h("select", { onchange: (e)=>onChange(e.target.value) }, []);
+    options.forEach(o => sel.appendChild(h("option", { value: o.value }, [o.label])));
+    sel.value = value;
+    return h("div", null, [
+      h("div", { class:"label" }, [label]),
+      sel
+    ]);
+  }
+
+  function ynuButtons(current, set) {
+    const items = [
+      { v:"yes", t:"Yes" },
+      { v:"no", t:"No" },
+      { v:"unknown", t:"Unknown" }
+    ];
+    return h("div", { class:"ansRow" }, items.map(i =>
+      h("button", {
+        type:"button",
+        class:"ansBtn" + (current === i.v ? " active" : ""),
+        onclick: ()=>set(i.v)
+      }, [i.t])
+    ));
+  }
+
+  function cardQuestion(title, subtitle, tip, bodyNodes) {
+    return h("div", { class:"card stack" }, [
+      h("div", { class:"row between" }, [
+        h("div", null, [
+          h("div", { class:"h2" }, [title]),
+          h("div", { class:"muted" }, [subtitle])
+        ]),
+        h("div", { class:"pill" }, [state.mode === "remote" ? "Remote tips" : "On-site tips"])
+      ]),
+      h("div", { class:"tip" }, [tip]),
+      ...bodyNodes
+    ]);
+  }
+
+  function render() {
+    // Branding
+    companyNameTop.textContent = state.branding.companyName || "Immunity Check";
+    setBrandColor(state.branding.primaryColor || "#2563eb");
+
+    // Mode buttons
+    modeRemote.classList.toggle("active", state.mode === "remote");
+    modeOnsite.classList.toggle("active", state.mode === "onsite");
+
+    // Steps UI
+    const idx = state.stepIndex;
+    const pct = Math.round(((idx + 1) / steps.length) * 100);
+    stepTitle.textContent = steps[idx].title;
+    stepCount.textContent = `Step ${idx + 1} of ${steps.length}`;
+    pctLabel.textContent = `${pct}%`;
+    pctBar.style.width = pct + "%";
+
+    dots.innerHTML = "";
+    steps.forEach((s, i) => {
+      const d = document.createElement("div");
+      d.className = "dot" + (i === idx ? " active" : "");
+      d.textContent = String(i + 1);
+      d.title = s.title;
+      d.onclick = () => { state.stepIndex = i; scheduleSave(); render(); window.scrollTo({top:0, behavior:"smooth"}); };
+      dots.appendChild(d);
+    });
+
+    // Sales Script
+    const stepKey = steps[idx].key;
+    const script = salesScripts[stepKey] ? (state.mode === "remote" ? salesScripts[stepKey].remote : salesScripts[stepKey].onsite) : "";
+    scriptBody.textContent = script;
+
+    // Content
+    content.innerHTML = "";
+
+    if (stepKey === "client") {
+      const c = state.client;
+      const gridA = h("div", { class:"card stack" }, [
+        h("div", null, [ h("div", { class:"h2" }, ["Client Info"]), h("div", { class:"muted" }, ["Required for report: Business name, Domain, # users."]) ]),
+        inputRow("Business name", c.businessName, v => { c.businessName = v; scheduleSave(); }, { req:true, placeholder:"Acme Realty" }),
+        inputRow("Primary contact", c.primaryContact, v => { c.primaryContact = v; scheduleSave(); }, { placeholder:"Name" }),
+        h("div", { class:"grid2" }, [
+          inputRow("Email", c.email, v => { c.email = v; scheduleSave(); }, { placeholder:"name@company.com" }),
+          inputRow("Phone", c.phone, v => { c.phone = v; scheduleSave(); }, { placeholder:"(xxx) xxx-xxxx" })
+        ]),
+        inputRow("Website/domain", c.domain, v => { c.domain = v; scheduleSave(); }, { req:true, placeholder:"company.com" }),
+        h("div", { class:"grid2" }, [
+          selectRow("Industry", c.industry, [
+            { value:"", label:"Select…" },
+            { value:"Real Estate", label:"Real Estate" },
+            { value:"Construction", label:"Construction" },
+            { value:"Healthcare", label:"Healthcare" },
+            { value:"Legal", label:"Legal" },
+            { value:"Finance", label:"Finance" },
+            { value:"Retail", label:"Retail" },
+            { value:"Manufacturing", label:"Manufacturing" },
+            { value:"Non-profit", label:"Non-profit" },
+            { value:"Other", label:"Other" },
+          ], v => { c.industry = v; scheduleSave(); }),
+          (function(){
+            const wrap = h("div", null, [
+              h("div", { class:"label req" }, ["# users"]),
+              h("input", {
+                type:"number", min:"1",
+                value: (c.users ?? ""),
+                placeholder:"14",
+                oninput: (e) => { const val = e.target.value; c.users = val ? Number(val) : null; scheduleSave(); }
+              })
+            ]);
+            return wrap;
+          })()
+        ]),
+        inputRow("Notes", c.notes, v => { c.notes = v; scheduleSave(); }, { type:"textarea", rows:4, placeholder:"Optional context, constraints, notable concerns…" })
+      ]);
+      content.appendChild(gridA);
+    }
+
+    if (stepKey === "identity") {
+      const q = state.questions;
+      content.appendChild(cardQuestion(
+        "1) Email platform",
+        "Microsoft 365 / Google Workspace / Other / Unknown",
+        state.mode === "remote"
+          ? "If on screen share, ask them to show the admin portal landing page (no login requested from you)."
+          : "Ask which platform hosts email and calendars. No deep technical details needed.",
+        [
+          selectRow("Select platform", q.emailPlatform.emailPlatform, [
+            { value:"m365", label:"Microsoft 365" },
+            { value:"google", label:"Google Workspace" },
+            { value:"other", label:"Other" },
+            { value:"unknown", label:"Unknown" }
+          ], v => { q.emailPlatform.emailPlatform = v; scheduleSave(); }),
+          inputRow("Notes", q.emailPlatform.notes, v => { q.emailPlatform.notes = v; scheduleSave(); }, { type:"textarea", rows:3, placeholder:"Optional notes…" })
+        ]
+      ));
+
+      content.appendChild(cardQuestion(
+        "2) MFA enforced for all users?",
+        "Yes / No / Unknown + Proof toggle",
+        state.mode === "remote"
+          ? "If they have it, ask for a quick screenshot of MFA enforcement policy (no sensitive data)."
+          : "Ask who is exempt, if anyone. Proof can be a screenshot/ticket.",
+        [
+          ynuButtons(q.mfaEnforced.ynu, v => { q.mfaEnforced.ynu = v; scheduleSave(); render(); }),
+          h("label", { class:"row", style:"gap:8px;margin-top:10px;font-size:13px;font-weight:800;" }, [
+            (function(){
+              const cb = document.createElement("input");
+              cb.type = "checkbox";
+              cb.checked = !!q.mfaEnforced.proof;
+              cb.onchange = (e)=>{ q.mfaEnforced.proof = e.target.checked; scheduleSave(); };
+              return cb;
+            })(),
+            document.createTextNode("Proof shown? (screenshot/ticket)")
+          ]),
+          inputRow("Notes", q.mfaEnforced.notes, v => { q.mfaEnforced.notes = v; scheduleSave(); }, { type:"textarea", rows:3, placeholder:"Optional notes…" })
+        ]
+      ));
+
+      content.appendChild(cardQuestion(
+        "3) Shared credentials used by multiple people?",
+        "Yes / No / Unknown",
+        state.mode === "remote"
+          ? "Clarify: shared mailbox is fine if users access via delegation, not shared password."
+          : "Look for examples like 'everyone logs into the same inbox'.",
+        [
+          ynuButtons(q.sharedCreds.ynu, v => { q.sharedCreds.ynu = v; scheduleSave(); }),
+          inputRow("Notes", q.sharedCreds.notes, v => { q.sharedCreds.notes = v; scheduleSave(); }, { type:"textarea", rows:3, placeholder:"Optional notes…" })
+        ]
+      ));
+    }
+
+    if (stepKey === "backup") {
+      const q = state.questions;
+
+      content.appendChild(cardQuestion(
+        "4) Restore test performed in last 90 days?",
+        "Yes / No / Unknown + Proof toggle",
+        state.mode === "remote"
+          ? "Ask for a ticket, email, or screenshot showing a test restore result."
+          : "If they can show a ticket number or email confirmation, toggle proof.",
+        [
+          ynuButtons(q.restoreTest.ynu, v => { q.restoreTest.ynu = v; scheduleSave(); }),
+          h("label", { class:"row", style:"gap:8px;margin-top:10px;font-size:13px;font-weight:800;" }, [
+            (function(){
+              const cb = document.createElement("input");
+              cb.type = "checkbox";
+              cb.checked = !!q.restoreTest.proof;
+              cb.onchange = (e)=>{ q.restoreTest.proof = e.target.checked; scheduleSave(); };
+              return cb;
+            })(),
+            document.createTextNode("Proof shown? (screenshot/email/ticket)")
+          ]),
+          inputRow("Notes", q.restoreTest.notes, v => { q.restoreTest.notes = v; scheduleSave(); }, { type:"textarea", rows:3, placeholder:"Optional notes…" })
+        ]
+      ));
+
+      content.appendChild(cardQuestion(
+        "5) Estimated Recovery Time Objective (RTO)",
+        "<4 hrs / same day / 1–3 days / >3 days / unknown",
+        state.mode === "remote"
+          ? "Ask: if your main system went down today, how fast could you be working again?"
+          : "Anchor to revenue/workflow impact: phones, email, line-of-business apps.",
+        [
+          selectRow("Select RTO", q.rto.rto, [
+            { value:"lt4", label:"< 4 hours" },
+            { value:"sameDay", label:"Same day" },
+            { value:"1to3", label:"1–3 days" },
+            { value:"gt3", label:"> 3 days" },
+            { value:"unknown", label:"Unknown" }
+          ], v => { q.rto.rto = v; scheduleSave(); }),
+          inputRow("Notes", q.rto.notes, v => { q.rto.notes = v; scheduleSave(); }, { type:"textarea", rows:3, placeholder:"Optional notes…" })
+        ]
+      ));
+
+      content.appendChild(cardQuestion(
+        "6) Backup isolated/immutable/offline/offsite?",
+        "Yes / No / Unknown",
+        state.mode === "remote"
+          ? "If they say 'cloud backup', ask whether it’s immutable or protected from deletion."
+          : "Confirm at a high level: offline/offsite and protected from ransomware tampering.",
+        [
+          ynuButtons(q.backupIsolated.ynu, v => { q.backupIsolated.ynu = v; scheduleSave(); }),
+          inputRow("Notes", q.backupIsolated.notes, v => { q.backupIsolated.notes = v; scheduleSave(); }, { type:"textarea", rows:3, placeholder:"Optional notes…" })
+        ]
+      ));
+    }
+
+    if (stepKey === "endpoint") {
+      const q = state.questions;
+
+      content.appendChild(cardQuestion(
+        "7) Endpoint protection level",
+        "Managed EDR vs Basic antivirus vs Unknown/None",
+        state.mode === "remote"
+          ? "If they have a dashboard screenshot handy, capture notes. No credentials required."
+          : "Ask for the product name. Managed EDR is materially better than basic AV.",
+        [
+          selectRow("Select protection", q.edr.edr, [
+            { value:"managed", label:"Managed EDR (SentinelOne/CrowdStrike/etc.)" },
+            { value:"basic", label:"Basic antivirus" },
+            { value:"none", label:"None" },
+            { value:"unknown", label:"Unknown" }
+          ], v => { q.edr.edr = v; scheduleSave(); }),
+          inputRow("Notes", q.edr.notes, v => { q.edr.notes = v; scheduleSave(); }, { type:"textarea", rows:3, placeholder:"Optional notes…" })
+        ]
+      ));
+
+      content.appendChild(cardQuestion(
+        "8) Updates enforced automatically?",
+        "Enforced vs User-driven vs Unknown",
+        state.mode === "remote"
+          ? "Ask whether updates are forced by policy or left to users to click “remind me later.”"
+          : "If they don’t know, keep as Unknown; it still drives a recommendation.",
+        [
+          selectRow("Select update policy", q.updates.updates, [
+            { value:"enforced", label:"Enforced automatically" },
+            { value:"user", label:"User-driven" },
+            { value:"unknown", label:"Unknown" }
+          ], v => { q.updates.updates = v; scheduleSave(); }),
+          inputRow("Notes", q.updates.notes, v => { q.updates.notes = v; scheduleSave(); }, { type:"textarea", rows:3, placeholder:"Optional notes…" })
+        ]
+      ));
+    }
+
+    if (stepKey === "remote") {
+      const q = state.questions;
+      const scores = computeScores();
+
+      content.appendChild(cardQuestion(
+        "9) Remote access tools used?",
+        "None / RDP / TeamViewer / AnyDesk / Other / Unknown",
+        state.mode === "remote"
+          ? "Ask what they use to remote into office PCs. If unsure, leave Unknown."
+          : "Many incidents start with unmanaged remote tools—this is a key control point.",
+        [
+          selectRow("Select remote tools", q.remoteTools.remoteTools, [
+            { value:"none", label:"None" },
+            { value:"rdp", label:"RDP" },
+            { value:"teamviewer", label:"TeamViewer" },
+            { value:"anydesk", label:"AnyDesk" },
+            { value:"other", label:"Other" },
+            { value:"unknown", label:"Unknown" }
+          ], v => { q.remoteTools.remoteTools = v; scheduleSave(); render(); }),
+          inputRow("Notes", q.remoteTools.notes, v => { q.remoteTools.notes = v; scheduleSave(); }, { type:"textarea", rows:3, placeholder:"Optional notes…" })
+        ]
+      ));
+
+      content.appendChild(cardQuestion(
+        "10) Remote access restricted behind VPN + MFA?",
+        "Yes / No / Unknown",
+        state.mode === "remote"
+          ? "If they use remote tools, confirm whether access requires VPN + MFA every time."
+          : "If remote tools exist and restriction is No, mark high risk.",
+        [
+          ynuButtons(q.remoteRestricted.ynu, v => { q.remoteRestricted.ynu = v; scheduleSave(); render(); }),
+          scores.highRisk ? h("div", { class:"warn" }, ["High Risk: Remote tools present without VPN+MFA restriction."]) : h("div", null, []),
+          inputRow("Notes", q.remoteRestricted.notes, v => { q.remoteRestricted.notes = v; scheduleSave(); }, { type:"textarea", rows:3, placeholder:"Optional notes…" })
+        ]
+      ));
+    }
+
+    if (stepKey === "results") {
+      const scores = computeScores();
+      const stoppers = topBusinessStoppers(scores);
+      const win = quickWin();
+
+      const resultsCard = h("div", { class:"stack" }, [
+        h("div", { class:"card stack" }, [
+          h("div", { class:"row between" }, [
+            h("div", null, [
+              h("div", { class:"h2" }, ["Results"]),
+              h("div", { class:"muted" }, ["Client: ", (state.client.businessName || "—")])
+            ]),
+            (function(){
+              const badge = document.createElement("div");
+              badge.className = "pill";
+              if (scores.total >= 85) { badge.textContent="Strong"; badge.style.background="#dcfce7"; badge.style.borderColor="#bbf7d0"; }
+              else if (scores.total >= 70) { badge.textContent="Moderate"; badge.style.background="#fef3c7"; badge.style.borderColor="#fde68a"; }
+              else { badge.textContent="At Risk"; badge.style.background="#fee2e2"; badge.style.borderColor="#fecaca"; }
+              return badge;
+            })()
+          ]),
+          h("div", { class:"scoreBox" }, [
+            h("div", { class:"small", style:"color:#cbd5e1;" }, ["Immunity Score"]),
+            h("div", { class:"big" }, [String(scores.total)]),
+            scores.highRisk ? h("div", { class:"risk" }, ["High Risk Flag: Remote tools present without VPN+MFA restriction"]) : h("div", null, [])
+          ]),
+          barRow("Identity", scores.identity, 25),
+          barRow("Backup/Recovery", scores.backupRecovery, 35),
+          barRow("Endpoint/Patching", scores.endpointPatching, 25),
+          barRow("Remote Access", scores.remoteAccess, 15)
+        ]),
+
+        h("div", { class:"card stack" }, [
+          h("div", { class:"h2" }, ["Top 3 Business-Stoppers"]),
+          h("div", { class:"stack" }, stoppers.map(f =>
+            h("div", { class:"tip", style:"background:#f8fafc;" }, [
+              h("div", { style:"font-weight:1000; margin-bottom:4px;" }, [f.title]),
+              h("div", { class:"small", style:"color:#334155;" }, [f.detail])
+            ])
+          ))
+        ]),
+
+        h("div", { class:"card stack" }, [
+          h("div", { class:"h2" }, ["1 Quick Win"]),
+          h("div", { class:"callout" }, [
+            h("div", { class:"t" }, [win.title]),
+            h("div", { class:"d" }, [win.detail])
+          ])
+        ]),
+
+        h("div", { class:"card stack noPrint" }, [
+          h("div", { class:"h2" }, ["Actions"]),
+          requiredOk() ? h("div", null, []) : h("div", { class:"warn" }, ["Required for PDF: Business name, domain, and # users."]),
+          h("div", { class:"grid2" }, [
+            h("button", { class:"btn primary", onclick: () => generatePdf(true) }, ["Download PDF"]),
+            h("button", { class:"btn", onclick: () => generatePdf(false) }, ["Print"]),
+            h("button", { class:"btn", onclick: copySummary }, ["Copy Summary to Clipboard"]),
+            h("button", { class:"btn", onclick: exportJson }, ["Export JSON"])
+          ]),
+          h("div", { class:"small" }, [
+            "Disclaimer: Non-intrusive assessment (no credentials requested, no network scanning performed). Findings based on public signals and client-provided confirmation."
+          ])
+        ])
+      ]);
+
+      content.appendChild(resultsCard);
+    }
+
+    // Buttons state
+    btnBack.disabled = state.stepIndex === 0;
+    btnNext.disabled = state.stepIndex === steps.length - 1;
+  }
+
+  function barRow(label, value, max) {
+    const pct = Math.round((value / max) * 100);
+    const wrap = h("div", { class:"barRow" }, [
+      h("div", { class:"row between" }, [
+        h("div", { style:"font-weight:1000;" }, [label]),
+        h("div", { class:"small" }, [`${value}/${max}`])
+      ]),
+      (function(){
+        const track = document.createElement("div");
+        track.className = "barTrack";
+        const fill = document.createElement("div");
+        fill.className = "barFill";
+        fill.style.width = pct + "%";
+        track.appendChild(fill);
+        return track;
+      })()
+    ]);
+    return wrap;
+  }
+
+  async function copySummary() {
+    const scores = computeScores();
+    const stoppers = topBusinessStoppers(scores);
+    const win = quickWin();
+
+    const lines = [
+      `Immunity Check — ${state.client.businessName || "Client"}`,
+      `Score: ${scores.total}/100 (Identity ${scores.identity}/25, Backup ${scores.backupRecovery}/35, Endpoint ${scores.endpointPatching}/25, Remote ${scores.remoteAccess}/15)`,
+      "Top 3 Business-Stoppers:",
+      ...stoppers.map((s, i) => `${i + 1}) ${s.title}`),
+      `Quick Win: ${win.title}`,
+      scores.highRisk ? "High Risk Flag: Remote tools present without VPN+MFA restriction." : ""
+    ].filter(Boolean);
+
+    try {
+      await navigator.clipboard.writeText(lines.join("\n"));
+      showToast("Summary copied to clipboard.");
+    } catch {
+      showToast("Clipboard copy failed (browser permissions).");
+    }
+  }
+
+  function exportJson() {
+    const payload = { ...state, exportedAt: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type:"application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    const safeName = (state.client.businessName || "Client").replace(/[^a-z0-9]+/gi, "_").replace(/^_+|_+$/g, "");
+    a.download = `Immunity_Check_${safeName}.json`;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 1500);
+    showToast("JSON exported.");
+  }
+
+  // PDF generation using jsPDF
+  async function generatePdf(download) {
+    if (!requiredOk()) {
+      showToast("Complete required fields: Business name, domain, # users.");
+      state.stepIndex = 0;
+      scheduleSave();
+      render();
+      window.scrollTo({top:0, behavior:"smooth"});
+      return;
+    }
+
+    // Ensure jsPDF loaded
+    const jspdfNS = window.jspdf;
+    if (!jspdfNS || !jspdfNS.jsPDF) {
+      showToast("PDF library not loaded. Check internet/CDN.");
+      return;
+    }
+    const { jsPDF } = jspdfNS;
+
+    const scores = computeScores();
+    const stoppers = topBusinessStoppers(scores);
+    const win = quickWin();
+
+    const doc = new jsPDF({ unit: "pt", format: "letter" });
+    const W = doc.internal.pageSize.getWidth();
+    const H = doc.internal.pageSize.getHeight();
+    const margin = 40;
+
+    // Brand color
+    const brand = state.branding.primaryColor || "#2563eb";
+    const brandRgb = hexToRgb(brand);
+
+    const now = new Date(state.updatedAt || Date.now());
+
+    // Header
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(20);
+    doc.text("Immunity Check Report", margin, 56);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(80);
+    doc.text(now.toLocaleString(), W - margin, 56, { align:"right" });
+
+    doc.setTextColor(80);
+    doc.setFontSize(9);
+    const companyLine =
+      `${safe(state.branding.companyName)} • ${safe(state.branding.companyPhone)} • ${safe(state.branding.companyEmail)} • ${safe(state.branding.companyWebsite)}`;
+    doc.text(companyLine, margin, 76);
+
+    // Optional logo
+    if (state.branding.logoDataUrl) {
+      try {
+        // jsPDF addImage supports base64 data URLs for PNG/JPEG
+        const imgType = state.branding.logoDataUrl.startsWith("data:image/png") ? "PNG" : "JPEG";
+        // place top right
+        doc.addImage(state.branding.logoDataUrl, imgType, W - margin - 110, 34, 110, 40, undefined, "FAST");
+      } catch {}
+    }
+
+    doc.setDrawColor(220);
+    doc.line(margin, 88, W - margin, 88);
+
+    let y = 112;
+
+    // Client info
+    doc.setTextColor(15);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("Client Information", margin, y);
+    y += 14;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(30);
+
+    const clientLinesLeft = [
+      `Business: ${safe(state.client.businessName)}`,
+      `Primary Contact: ${safe(state.client.primaryContact)}`,
+      `Email / Phone: ${safe(state.client.email)}${(state.client.email && state.client.phone) ? " / " : ""}${safe(state.client.phone)}`
+    ];
+    const clientLinesRight = [
+      `Website/Domain: ${safe(state.client.domain)}`,
+      `Industry: ${safe(state.client.industry)}`,
+      `# Users: ${state.client.users ?? ""}`
+    ];
+
+    clientLinesLeft.forEach((t, i) => doc.text(t, margin, y + i * 14));
+    clientLinesRight.forEach((t, i) => doc.text(t, margin + 310, y + i * 14));
+    y += 52;
+
+    // Scores
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("Scores", margin, y);
+    y += 14;
+
+    // Total box
+    doc.setFillColor(245,247,250);
+    doc.rect(margin, y, 150, 54, "F");
+    doc.setTextColor(80);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text("Immunity Score", margin + 10, y + 18);
+
+    doc.setTextColor(brandRgb.r, brandRgb.g, brandRgb.b);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(30);
+    doc.text(String(scores.total), margin + 10, y + 46);
+
+    // Subscore bars
+    const barsX = margin + 170;
+    const barW = W - margin - barsX;
+    const barH = 10;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(30);
+
+    const rows = [
+      ["Identity (0–25)", scores.identity, 25],
+      ["Backup/Recovery (0–35)", scores.backupRecovery, 35],
+      ["Endpoint/Patching (0–25)", scores.endpointPatching, 25],
+      ["Remote Access (0–15)", scores.remoteAccess, 15]
+    ];
+
+    let ry = y + 6;
+    rows.forEach((r) => {
+      const label = r[0], val = r[1], max = r[2];
+      doc.text(`${label}: ${val}/${max}`, barsX, ry + 10);
+
+      // track
+      doc.setFillColor(238,242,247);
+      doc.rect(barsX, ry + 18, barW, barH, "F");
+      // fill
+      doc.setFillColor(brandRgb.r, brandRgb.g, brandRgb.b);
+      const pct = (val / max) * barW;
+      doc.rect(barsX, ry + 18, Math.max(0, pct), barH, "F");
+
+      ry += 28;
+    });
+
+    y += 92;
+
+    // Top 3 business-stoppers
+    doc.setTextColor(15);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("Top 3 Business-Stoppers", margin, y);
+    y += 14;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(30);
+
+    stoppers.forEach((f) => {
+      const line = `• ${f.title} — ${f.detail}`;
+      const wrapped = doc.splitTextToSize(line, W - margin*2);
+      doc.text(wrapped, margin, y);
+      y += wrapped.length * 12 + 6;
+    });
+
+    // Quick win highlight
+    doc.setFillColor(236, 253, 245);
+    doc.rect(margin, y, W - margin*2, 64, "F");
+    doc.setFillColor(brandRgb.r, brandRgb.g, brandRgb.b);
+    doc.rect(margin, y, 6, 64, "F");
+
+    doc.setTextColor(15);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.text("1 Quick Win", margin + 14, y + 18);
+
+    doc.setTextColor(brandRgb.r, brandRgb.g, brandRgb.b);
+    doc.text(win.title, margin + 14, y + 36);
+
+    doc.setTextColor(30);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    const winWrap = doc.splitTextToSize(win.detail, W - margin*2 - 20);
+    doc.text(winWrap.slice(0, 2), margin + 14, y + 52);
+
+    y += 82;
+
+    // Notes (optional, truncated to avoid multi-page explosion)
+    if ((state.client.notes || "").trim()) {
+      doc.setTextColor(15);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text("Notes", margin, y);
+      y += 12;
+
+      doc.setTextColor(30);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      const notesWrap = doc.splitTextToSize(state.client.notes.trim(), W - margin*2);
+      const maxLines = 8;
+      doc.text(notesWrap.slice(0, maxLines), margin, y);
+      y += Math.min(maxLines, notesWrap.length) * 12 + 6;
+    }
+
+    // Disclaimer
+    doc.setTextColor(15);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.text("Disclaimer", margin, Math.min(y, H - 140));
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(90);
+    const disclaimer =
+      "Non-intrusive assessment: no credentials requested, no network scanning performed. Findings based on public signals and client-provided confirmation.";
+    const discWrap = doc.splitTextToSize(disclaimer, W - margin*2);
+    doc.text(discWrap, margin, Math.min(y, H - 124));
+
+    // Signature lines
+    const sigY = H - 82;
+    doc.setTextColor(30);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text("Prepared by:", margin, sigY);
+    doc.setDrawColor(180);
+    doc.line(margin + 74, sigY + 2, margin + 260, sigY + 2);
+
+    doc.text("Client:", margin + 300, sigY);
+    doc.line(margin + 342, sigY + 2, W - margin, sigY + 2);
+
+    // Footer
+    doc.setDrawColor(220);
+    doc.line(margin, H - 58, W - margin, H - 58);
+    doc.setFontSize(9);
+    doc.setTextColor(90);
+    doc.text(companyLine, margin, H - 40);
+
+    if (scores.highRisk) {
+      doc.setTextColor(180, 30, 30);
+      doc.setFont("helvetica", "bold");
+      doc.text("High Risk Flag: Remote tools present without VPN+MFA restriction.", margin, H - 24);
+    }
+
+    const safeName = (state.client.businessName || "Client").replace(/[^a-z0-9]+/gi, "_").replace(/^_+|_+$/g, "");
+    const fileName = `Immunity_Check_${safeName}.pdf`;
+
+    if (download) {
+      doc.save(fileName);
+      showToast("PDF downloaded.");
+    } else {
+      // Print: open blob in new tab (Safari-friendly)
+      const blob = doc.output("blob");
+      const url = URL.createObjectURL(blob);
+      const w = window.open(url, "_blank");
+      if (w) {
+        setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 800);
+      }
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      showToast("Print dialog opened.");
+    }
+  }
+
+  function hexToRgb(hex) {
+    const clean = (hex || "#2563eb").replace("#","").trim();
+    if (clean.length !== 6) return { r:37, g:99, b:235 };
+    return {
+      r: parseInt(clean.slice(0,2),16),
+      g: parseInt(clean.slice(2,4),16),
+      b: parseInt(clean.slice(4,6),16)
+    };
+  }
+  function safe(s) { return (s || "").toString().trim(); }
+
+  // Events
+  btnBack.onclick = () => {
+    state.stepIndex = Math.max(0, state.stepIndex - 1);
+    scheduleSave();
+    render();
+    window.scrollTo({top:0, behavior:"smooth"});
+  };
+  btnNext.onclick = () => {
+    state.stepIndex = Math.min(steps.length - 1, state.stepIndex + 1);
+    scheduleSave();
+    render();
+    window.scrollTo({top:0, behavior:"smooth"});
+  };
+
+  btnNew.onclick = () => {
+    state = blankState();
+    clearDraft();
+    scheduleSave();
+    render();
+    showToast("New client started.");
+    window.scrollTo({top:0, behavior:"smooth"});
+  };
+
+  btnResume.onclick = () => {
+    const d = loadDraft();
+    if (d) {
+      state = d;
+      render();
+      showToast("Draft resumed.");
+      window.scrollTo({top:0, behavior:"smooth"});
+    } else {
+      showToast("No saved draft found.");
+    }
+  };
+
+  btnSettings.onclick = openSettings;
+  btnSettings2.onclick = openSettings;
+
+  modeRemote.onclick = () => { state.mode = "remote"; scheduleSave(); render(); };
+  modeOnsite.onclick = () => { state.mode = "onsite"; scheduleSave(); render(); };
+
+  // Sales script collapse
+  scriptHeader.onclick = () => {
+    scriptPanel.classList.toggle("open");
+    scriptToggleText.textContent = scriptPanel.classList.contains("open") ? "Hide" : "Show";
+  };
+
+  // Settings modal logic
+  function openSettings() {
+    const b = state.branding;
+    setCompanyName.value = b.companyName || "";
+    setPhone.value = b.companyPhone || "";
+    setEmail.value = b.companyEmail || "";
+    setWebsite.value = b.companyWebsite || "";
+    setPrimaryColor.value = b.primaryColor || "#2563eb";
+    setPrimaryColorHex.value = b.primaryColor || "#2563eb";
+
+    if (b.logoDataUrl) {
+      logoPreview.src = b.logoDataUrl;
+      logoPreviewWrap.style.display = "block";
+    } else {
+      logoPreviewWrap.style.display = "none";
+    }
+
+    settingsModal.style.display = "block";
+  }
+
+  function closeSettings() {
+    settingsModal.style.display = "none";
+    setLogo.value = "";
+  }
+
+  settingsClose.onclick = closeSettings;
+  settingsCancel.onclick = closeSettings;
+
+  setPrimaryColor.oninput = (e) => {
+    setPrimaryColorHex.value = e.target.value;
+  };
+  setPrimaryColorHex.oninput = (e) => {
+    const v = e.target.value.trim();
+    if (v.startsWith("#") && v.length === 7) setPrimaryColor.value = v;
+  };
+
+  settingsSave.onclick = () => {
+    const b = {
+      companyName: setCompanyName.value.trim(),
+      companyPhone: setPhone.value.trim(),
+      companyEmail: setEmail.value.trim(),
+      companyWebsite: setWebsite.value.trim(),
+      primaryColor: setPrimaryColorHex.value.trim() || "#2563eb",
+      logoDataUrl: state.branding.logoDataUrl || null
+    };
+    state.branding = b;
+    saveBranding(b);
+    scheduleSave();
+    render();
+    closeSettings();
+    showToast("Branding updated.");
+  };
+
+  setLogo.onchange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      state.branding.logoDataUrl = String(reader.result || "");
+      logoPreview.src = state.branding.logoDataUrl;
+      logoPreviewWrap.style.display = "block";
+      saveBranding(state.branding);
+      scheduleSave();
+      render();
+      showToast("Logo saved locally.");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  btnRemoveLogo.onclick = () => {
+    state.branding.logoDataUrl = null;
+    logoPreviewWrap.style.display = "none";
+    saveBranding(state.branding);
+    scheduleSave();
+    render();
+    showToast("Logo removed.");
+  };
+
+  // Init
+  setBrandColor(state.branding.primaryColor || "#2563eb");
+  render();
+  scheduleSave();
+})();
+</script>
+
+</body>
+</html>
