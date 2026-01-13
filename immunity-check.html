@@ -57,7 +57,7 @@
         <div id="step-1" class="step-content active">
             <div class="mb-8">
                 <h2 class="text-3xl font-black text-white uppercase tracking-tighter">Site Intel</h2>
-                <p class="text-gray-400 text-sm">Capture basic operational data before starting the audit.</p>
+                <p class="text-gray-400 text-sm">Capture operational data for the final report.</p>
             </div>
             
             <div class="space-y-6">
@@ -68,7 +68,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Primary Contact</label>
-                        <input type="text" id="contactName" class="w-full bg-dark-card border border-industrial-border rounded p-4 text-white focus:border-brand-blue outline-none" placeholder="Full Name">
+                        <input type="text" id="contactName" class="w-full bg-dark-card border border-industrial-border rounded p-4 text-white focus:border-brand-blue outline-none" placeholder="Name">
                     </div>
                     <div>
                         <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">User Count</label>
@@ -82,7 +82,7 @@
                         <option>Agriculture / Field Services</option>
                         <option>Manufacturing / Industrial</option>
                         <option>Medical / Healthcare</option>
-                        <option>Retail / Non-Profit</option>
+                        <option>Other / Small Business</option>
                     </select>
                 </div>
             </div>
@@ -90,32 +90,25 @@
 
         <div id="step-2" class="step-content">
             <div class="mb-8">
-                <h2 class="text-3xl font-black text-white uppercase tracking-tighter">Identity & Email</h2>
-                <div class="bg-brand-blue/10 border-l-2 border-brand-blue p-3 mt-4">
-                    <p class="text-[11px] font-mono text-brand-blue leading-tight italic">"We're looking at how you protect the front door to your data. Most breaches start with a simple email login."</p>
+                <h2 class="text-3xl font-black text-white uppercase tracking-tighter">Identity</h2>
+                <div class="bg-brand-blue/10 border-l-2 border-brand-blue p-3 mt-4 italic font-mono text-[11px] text-brand-blue">
+                    "We're auditing the 'front door' to your data. Most breaches start here."
                 </div>
             </div>
 
             <div class="space-y-8">
-                <div>
-                    <p class="text-white font-bold mb-4">1. Email Platform?</p>
-                    <div class="grid grid-cols-2 gap-3">
-                        <input type="radio" name="q1" id="q1_m365" value="M365" class="hidden" checked><label for="q1_m365" class="border border-industrial-border p-3 text-center rounded cursor-pointer text-xs font-bold uppercase">M365</label>
-                        <input type="radio" name="q1" id="q1_google" value="Google" class="hidden"><label for="q1_google" class="border border-industrial-border p-3 text-center rounded cursor-pointer text-xs font-bold uppercase">Google</label>
-                    </div>
-                </div>
                 <div class="glass-card p-6 rounded-xl">
-                    <p class="text-white font-bold mb-2">2. MFA Enforced for ALL users?</p>
+                    <p class="text-white font-bold mb-2">1. MFA Enforced for ALL users?</p>
                     <div class="flex gap-4 mb-4">
                         <button onclick="setAnswer('q2', 'yes')" id="btn_q2_yes" class="flex-1 bg-industrial-border py-2 rounded text-xs font-bold">YES</button>
                         <button onclick="setAnswer('q2', 'no')" id="btn_q2_no" class="flex-1 bg-industrial-border py-2 rounded text-xs font-bold">NO</button>
                     </div>
-                    <label class="flex items-center gap-2 text-xs text-gray-400 font-mono">
-                        <input type="checkbox" id="q2_proof" class="accent-brand-blue"> Confirm visual proof (Admin Panel/Phone)
+                    <label class="flex items-center gap-2 text-[10px] text-gray-400 font-mono">
+                        <input type="checkbox" id="q2_proof" class="accent-brand-blue"> Verified via Admin Portal
                     </label>
                 </div>
                 <div class="glass-card p-6 rounded-xl">
-                    <p class="text-white font-bold mb-2">3. Shared passwords/accounts used?</p>
+                    <p class="text-white font-bold mb-2">2. Shared accounts in use?</p>
                     <div class="flex gap-4">
                         <button onclick="setAnswer('q3', 'no')" id="btn_q3_no" class="flex-1 bg-industrial-border py-2 rounded text-xs font-bold">NO (Secure)</button>
                         <button onclick="setAnswer('q3', 'yes')" id="btn_q3_yes" class="flex-1 bg-industrial-border py-2 rounded text-xs font-bold">YES (Risk)</button>
@@ -126,30 +119,29 @@
 
         <div id="step-3" class="step-content">
             <div class="mb-8">
-                <h2 class="text-3xl font-black text-white uppercase tracking-tighter">Backup & Recovery</h2>
-                <div class="bg-brand-blue/10 border-l-2 border-brand-blue p-3 mt-4">
-                    <p class="text-[11px] font-mono text-brand-blue leading-tight italic">"If your server died right now, how long until you're back in business? Not just having data, but being productive."</p>
+                <h2 class="text-3xl font-black text-white uppercase tracking-tighter">Backup</h2>
+                <div class="bg-brand-blue/10 border-l-2 border-brand-blue p-3 mt-4 italic font-mono text-[11px] text-brand-blue">
+                    "If your server fails today, how long until you're back in business?"
                 </div>
             </div>
-
             <div class="space-y-8">
                 <div class="glass-card p-6 rounded-xl">
-                    <p class="text-white font-bold mb-2">4. Restore test in last 90 days?</p>
+                    <p class="text-white font-bold mb-2">3. Restore test in last 90 days?</p>
                     <div class="flex gap-4 mb-4">
                         <button onclick="setAnswer('q4', 'yes')" id="btn_q4_yes" class="flex-1 bg-industrial-border py-2 rounded text-xs font-bold">YES</button>
                         <button onclick="setAnswer('q4', 'no')" id="btn_q4_no" class="flex-1 bg-industrial-border py-2 rounded text-xs font-bold">NO</button>
                     </div>
-                    <label class="flex items-center gap-2 text-xs text-gray-400 font-mono">
-                        <input type="checkbox" id="q4_proof" class="accent-brand-blue"> Proof shown (Screenshot/Ticket)
+                    <label class="flex items-center gap-2 text-[10px] text-gray-400 font-mono">
+                        <input type="checkbox" id="q4_proof" class="accent-brand-blue"> Proof shown (Ticket/Screenshot)
                     </label>
                 </div>
                 <div>
-                    <p class="text-white font-bold mb-4">5. Recovery Time Objective (RTO)?</p>
+                    <label class="block text-white font-bold mb-4">4. Recovery Time (RTO)?</label>
                     <select id="q5" class="w-full bg-dark-card border border-industrial-border rounded p-4 text-white text-sm">
-                        <option value="fast">&lt; 4 Hours (Industrial Standard)</option>
+                        <option value="fast">&lt; 4 Hours</option>
                         <option value="day">Same Day</option>
-                        <option value="days">1-3 Days (High Impact)</option>
-                        <option value="none">&gt; 3 Days (Critical Risk)</option>
+                        <option value="days">1-3 Days</option>
+                        <option value="none">&gt; 3 Days</option>
                     </select>
                 </div>
             </div>
@@ -158,24 +150,23 @@
         <div id="step-4" class="step-content">
             <div class="mb-8">
                 <h2 class="text-3xl font-black text-white uppercase tracking-tighter">Endpoints</h2>
-                <div class="bg-brand-blue/10 border-l-2 border-brand-blue p-3 mt-4">
-                    <p class="text-[11px] font-mono text-brand-blue leading-tight italic">"Standard Antivirus is reactive. We're looking for AI-driven EDR that kills ransomware in milliseconds."</p>
+                <div class="bg-brand-blue/10 border-l-2 border-brand-blue p-3 mt-4 italic font-mono text-[11px] text-brand-blue">
+                    "Legacy Antivirus is reactive. We audit for AI-driven EDR protection."
                 </div>
             </div>
-
             <div class="space-y-8">
                 <div class="glass-card p-6 rounded-xl">
-                    <p class="text-white font-bold mb-2">6. Protection Type?</p>
-                    <select id="q6" class="w-full bg-dark-card border border-industrial-border rounded p-4 text-white text-sm mb-4">
-                        <option value="edr">Managed EDR (SentinelOne/Crowdstrike)</option>
-                        <option value="av">Basic Antivirus (Norton/McAfee/Free)</option>
+                    <p class="text-white font-bold mb-2">5. Protection Level?</label>
+                    <select id="q6" class="w-full bg-dark-card border border-industrial-border rounded p-4 text-white text-sm">
+                        <option value="edr">Managed EDR (S1/Crowdstrike)</option>
+                        <option value="av">Basic Antivirus</option>
                         <option value="none">None / Unknown</option>
                     </select>
                 </div>
                 <div class="glass-card p-6 rounded-xl">
-                    <p class="text-white font-bold mb-2">7. Updates & Patching?</p>
+                    <p class="text-white font-bold mb-2">6. Patching Strategy?</p>
                     <div class="flex gap-4">
-                        <button onclick="setAnswer('q7', 'auto')" id="btn_q7_auto" class="flex-1 bg-industrial-border py-2 rounded text-[10px] font-black uppercase">Enforced / Auto</button>
+                        <button onclick="setAnswer('q7', 'auto')" id="btn_q7_auto" class="flex-1 bg-industrial-border py-2 rounded text-[10px] font-black uppercase">Auto/Enforced</button>
                         <button onclick="setAnswer('q7', 'manual')" id="btn_q7_manual" class="flex-1 bg-industrial-border py-2 rounded text-[10px] font-black uppercase">User-Driven</button>
                     </div>
                 </div>
@@ -185,21 +176,20 @@
         <div id="step-5" class="step-content">
             <div class="mb-8">
                 <h2 class="text-3xl font-black text-white uppercase tracking-tighter">Remote Access</h2>
-                <div class="bg-brand-blue/10 border-l-2 border-brand-blue p-3 mt-4">
-                    <p class="text-[11px] font-mono text-brand-blue leading-tight italic">"Unmanaged remote tools like TeamViewer or open RDP ports are like leaving your back door unlocked in a storm."</p>
+                <div class="bg-brand-blue/10 border-l-2 border-brand-blue p-3 mt-4 italic font-mono text-[11px] text-brand-blue">
+                    "Unmanaged remote tools are open backdoors for ransomware."
                 </div>
             </div>
-
             <div class="space-y-8">
                 <div class="glass-card p-6 rounded-xl">
-                    <p class="text-white font-bold mb-2">8. Remote tools present?</p>
+                    <p class="text-white font-bold mb-2">7. Remote tools present?</p>
                     <div class="flex gap-4">
                         <button onclick="setAnswer('q8', 'none')" id="btn_q8_none" class="flex-1 bg-industrial-border py-2 rounded text-xs font-bold">NONE</button>
                         <button onclick="setAnswer('q8', 'yes')" id="btn_q8_yes" class="flex-1 bg-industrial-border py-2 rounded text-xs font-bold">YES</button>
                     </div>
                 </div>
                 <div class="glass-card p-6 rounded-xl">
-                    <p class="text-white font-bold mb-2">9. Restricted behind VPN + MFA?</p>
+                    <p class="text-white font-bold mb-2">8. Secured by VPN + MFA?</p>
                     <div class="flex gap-4">
                         <button onclick="setAnswer('q9', 'yes')" id="btn_q9_yes" class="flex-1 bg-industrial-border py-2 rounded text-xs font-bold">YES</button>
                         <button onclick="setAnswer('q9', 'no')" id="btn_q9_no" class="flex-1 bg-industrial-border py-2 rounded text-xs font-bold">NO / UNKNOWN</button>
@@ -208,25 +198,22 @@
             </div>
         </div>
 
-        <div id="step-6" class="step-content">
-            <div class="text-center mb-8">
-                <div class="inline-block px-4 py-1 bg-brand-blue/20 text-brand-blue text-[10px] font-black uppercase tracking-widest rounded mb-2">Audit Complete</div>
-                <h2 class="text-5xl font-black text-white uppercase tracking-tighter" id="final-score-display">00</h2>
-                <p class="text-gray-400 font-mono text-xs uppercase tracking-widest">Immunity Score</p>
+        <div id="step-6" class="step-content text-center">
+            <div class="mb-8">
+                <div class="inline-block px-3 py-1 bg-brand-blue/20 text-brand-blue text-[10px] font-black uppercase rounded mb-2 tracking-widest">Audit Summary</div>
+                <h2 class="text-7xl font-black text-white tracking-tighter" id="final-score-display">00</h2>
+                <p class="text-gray-500 font-mono text-xs uppercase tracking-widest">Immunity Score</p>
             </div>
 
-            <div class="space-y-4">
-                <div id="findings-list" class="space-y-2">
-                    </div>
-                
-                <div class="bg-brand-blue p-4 rounded text-dark-bg mt-6">
-                    <h4 class="font-black uppercase text-xs tracking-widest mb-1">Recommended Quick Win:</h4>
+            <div class="space-y-4 text-left">
+                <div id="findings-list" class="space-y-2"></div>
+                <div class="bg-brand-blue p-5 rounded text-dark-bg mt-6">
+                    <h4 class="font-black uppercase text-[10px] tracking-widest mb-1">Recommended Quick Win:</h4>
                     <p id="quick-win" class="text-sm font-bold"></p>
                 </div>
-
                 <div class="grid grid-cols-2 gap-4 mt-8">
-                    <button onclick="generatePDF()" class="bg-white text-dark-bg font-black py-4 rounded uppercase tracking-widest text-xs hover:bg-brand-blue transition-all">Download PDF Report</button>
-                    <button onclick="location.reload()" class="border border-industrial-border py-4 rounded uppercase tracking-widest text-[10px] font-bold">New Audit</button>
+                    <button onclick="generatePDF()" class="bg-white text-dark-bg font-black py-4 rounded uppercase tracking-widest text-xs hover:bg-brand-blue transition-all">Download PDF</button>
+                    <button onclick="location.reload()" class="border border-industrial-border py-4 rounded uppercase tracking-widest text-[10px] font-bold">Reset</button>
                 </div>
             </div>
         </div>
@@ -236,7 +223,7 @@
     <div class="fixed bottom-0 left-0 right-0 bg-dark-card border-t border-industrial-border p-4 z-50">
         <div class="container mx-auto max-w-2xl flex justify-between gap-4">
             <button id="prevBtn" onclick="changeStep(-1)" class="px-6 py-3 rounded font-bold text-xs uppercase tracking-widest text-gray-500 hidden">Back</button>
-            <button id="nextBtn" onclick="changeStep(1)" class="flex-1 bg-brand-blue text-dark-bg font-black py-4 rounded uppercase tracking-widest text-xs shadow-lg">Continue Audit &rarr;</button>
+            <button id="nextBtn" onclick="changeStep(1)" class="flex-1 bg-brand-blue text-dark-bg font-black py-4 rounded uppercase tracking-widest text-xs shadow-lg">Next &rarr;</button>
         </div>
     </div>
 
@@ -244,13 +231,10 @@
         const { jsPDF } = window.jspdf;
         let currentStep = 1;
         const totalSteps = 6;
-        let answers = {
-            q2: null, q3: null, q4: null, q7: null, q8: null, q9: null
-        };
+        let answers = { q2: null, q3: null, q4: null, q7: null, q8: null, q9: null };
 
         function setAnswer(key, val) {
             answers[key] = val;
-            // Update UI for buttons
             const buttons = document.querySelectorAll(`[id^="btn_${key}"]`);
             buttons.forEach(b => {
                 b.classList.remove('bg-brand-blue', 'text-dark-bg');
@@ -262,21 +246,14 @@
         }
 
         function changeStep(dir) {
-            if (currentStep === 1 && dir === 1) {
-                if (!document.getElementById('bizName').value) {
-                    alert('Business Name is required.'); return;
-                }
+            if (currentStep === 1 && dir === 1 && !document.getElementById('bizName').value) {
+                alert('Business Name is required.'); return;
             }
-
             document.getElementById(`step-${currentStep}`).classList.remove('active');
             currentStep += dir;
             document.getElementById(`step-${currentStep}`).classList.add('active');
-
-            // Header progress
             document.getElementById('progress-text').innerText = `Step ${currentStep} of ${totalSteps}`;
             document.getElementById('progress-bar').style.width = `${(currentStep / totalSteps) * 100}%`;
-
-            // Button visibility
             document.getElementById('prevBtn').classList.toggle('hidden', currentStep === 1);
             if (currentStep === totalSteps) {
                 calculateScore();
@@ -291,104 +268,107 @@
         function calculateScore() {
             let score = 0;
             let findings = [];
-
-            // Identity (Max 25)
             if (answers.q2 === 'yes') score += document.getElementById('q2_proof').checked ? 15 : 12;
             else findings.push("Critical: MFA not enforced across email environment.");
-            
             if (answers.q3 === 'no') score += 10;
-            else findings.push("Security Gap: Shared credentials in use (violates compliance).");
-
-            // Backup (Max 35)
+            else findings.push("Security Gap: Shared credentials in use.");
             if (answers.q4 === 'yes') score += document.getElementById('q4_proof').checked ? 20 : 15;
-            else findings.push("Risk: No verified backup restores in the last 90 days.");
-
+            else findings.push("Risk: No verified backup restores in last 90 days.");
             const rto = document.getElementById('q5').value;
-            if (rto === 'fast') score += 15;
-            else if (rto === 'day') score += 10;
-            else findings.push("Operational Risk: Recovery time exceeds 24 hours.");
+            if (rto === 'fast') score += 15; else findings.push("Operational Risk: Recovery time exceeds 24 hours.");
+            const prot = document.getElementById('q6').value;
+            if (prot === 'edr') score += 15; else findings.push("Risk: Missing Managed AI-EDR.");
+            if (answers.q7 === 'auto') score += 10; else findings.push("Maintenance Gap: Manual patching in place.");
+            if (answers.q8 === 'none') score += 15; else if (answers.q9 === 'yes') score += 10;
+            else findings.push("Vulnerability: Unsecured remote access ports detected.");
 
-            // Endpoint (Max 25)
-            const protection = document.getElementById('q6').value;
-            if (protection === 'edr') score += 15;
-            else findings.push("Risk: Missing AI-Driven EDR (using basic AV or none).");
-
-            if (answers.q7 === 'auto') score += 10;
-            else findings.push("Maintenance Gap: Software updates are user-driven.");
-
-            // Remote (Max 15)
-            if (answers.q8 === 'none') score += 15;
-            else {
-                if (answers.q9 === 'yes') score += 10;
-                else findings.push("Vulnerability: Remote access active without VPN/MFA restriction.");
-            }
-
-            // Display
             document.getElementById('final-score-display').innerText = score;
-            const list = document.getElementById('findings-list');
-            list.innerHTML = findings.slice(0, 3).map(f => `
-                <div class="bg-red-500/10 border border-red-500/20 p-3 rounded text-[11px] font-bold text-red-400">
-                    ⚠️ ${f}
-                </div>
+            document.getElementById('findings-list').innerHTML = findings.slice(0, 3).map(f => `
+                <div class="bg-red-500/10 border border-red-500/20 p-3 rounded text-[11px] font-bold text-red-400">⚠️ ${f}</div>
             `).join('');
-
-            // Quick Win logic
-            let win = "Enforce MFA for all administrative and user email accounts.";
-            if (answers.q4 !== 'yes') win = "Perform a file-level restore test this week to verify data integrity.";
-            if (answers.q9 === 'no' && answers.q8 === 'yes') win = "Immediately restrict remote access tools behind a hardware VPN.";
+            
+            let win = "Enforce MFA for all user email accounts.";
+            if (answers.q4 !== 'yes') win = "Perform a file-level restore test this week.";
+            if (answers.q9 === 'no' && answers.q8 === 'yes') win = "Restrict remote access tools behind a hardware VPN.";
             document.getElementById('quick-win').innerText = win;
         }
 
         function generatePDF() {
             const doc = new jsPDF();
-            const bizName = document.getElementById('bizName').value;
-            const score = document.getElementById('final-score-display').innerText;
+            const bizName = document.getElementById('bizName').value || "Valued Client";
+            const score = parseInt(document.getElementById('final-score-display').innerText);
             const win = document.getElementById('quick-win').innerText;
 
             doc.setFillColor(15, 23, 42);
-            doc.rect(0, 0, 210, 40, 'F');
-            
+            doc.rect(0, 0, 210, 45, 'F');
+            doc.setTextColor(74, 222, 128);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(24);
+            doc.text("CAPROCK TECHNOLOGY GROUP", 20, 25);
             doc.setTextColor(255, 255, 255);
-            doc.setFontSize(22);
-            doc.text("IMMUNITY CHECK REPORT", 20, 25);
-            
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text("STRATEGIC IT AUDIT // IMMUNITY CHECK v1.0", 20, 32);
+
             doc.setTextColor(15, 23, 42);
-            doc.setFontSize(10);
-            doc.text(`Client: ${bizName}`, 20, 50);
-            doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 55);
-            
-            doc.setFontSize(40);
-            doc.text(score, 160, 65);
-            doc.setFontSize(10);
-            doc.text("OVERALL SCORE", 155, 75);
-
-            doc.setDrawColor(74, 222, 128);
-            doc.setLineWidth(1);
-            doc.line(20, 85, 190, 85);
-
+            doc.text("PREPARED FOR:", 20, 60);
+            doc.setFont("helvetica", "bold");
             doc.setFontSize(14);
-            doc.text("TOP FINDINGS", 20, 100);
+            doc.text(bizName.toUpperCase(), 20, 68);
             doc.setFontSize(10);
-            
-            let y = 110;
-            document.querySelectorAll('#findings-list div').forEach(div => {
-                doc.text(`- ${div.innerText}`, 20, y);
-                y += 10;
-            });
+            doc.setFont("helvetica", "normal");
+            doc.text(`DATE: ${new Date().toLocaleDateString()}`, 20, 75);
 
-            doc.setFillColor(74, 222, 128);
-            doc.rect(20, 150, 170, 30, 'F');
+            let scoreColor = score >= 80 ? [74, 222, 128] : score >= 60 ? [245, 158, 11] : [239, 68, 68];
+            doc.setFillColor(...scoreColor);
+            doc.rect(140, 55, 50, 25, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(32);
+            doc.setFont("helvetica", "bold");
+            doc.text(score.toString(), 165, 73, { align: "center" });
+            doc.setFontSize(8);
+            doc.text("IMMUNITY SCORE", 165, 78, { align: "center" });
+
             doc.setTextColor(15, 23, 42);
             doc.setFontSize(12);
-            doc.text("IMMEDIATE QUICK WIN:", 25, 160);
+            doc.text("CORE VULNERABILITIES IDENTIFIED", 20, 100);
+            doc.setDrawColor(51, 65, 85);
+            doc.line(20, 103, 190, 103);
+
+            let y = 115;
             doc.setFontSize(10);
-            doc.text(win, 25, 170);
+            doc.setFont("helvetica", "normal");
+            document.querySelectorAll('#findings-list div').forEach(div => {
+                doc.setFillColor(51, 65, 85);
+                doc.circle(22, y-1, 1, 'F');
+                const splitText = doc.splitTextToSize(div.innerText.replace('⚠️ ', ''), 160);
+                doc.text(splitText, 28, y);
+                y += (splitText.length * 7);
+            });
 
-            doc.setTextColor(100, 100, 100);
-            doc.text("Disclaimer: Non-intrusive assessment based on client interview and visual proof.", 20, 260);
-            doc.text("Caprock Technology Group | Amarillo, TX | (806) 316-5070", 20, 270);
+            y = Math.max(y + 10, 160);
+            doc.setFillColor(248, 250, 252);
+            doc.rect(20, y, 170, 35, 'F');
+            doc.setDrawColor(74, 222, 128);
+            doc.setLineWidth(1.5);
+            doc.line(20, y, 20, y+35);
+            doc.setTextColor(21, 128, 61);
+            doc.setFont("helvetica", "bold");
+            doc.text("IMMEDIATE STRATEGIC ACTION (QUICK WIN):", 28, y + 12);
+            doc.setTextColor(15, 23, 42);
+            doc.setFont("helvetica", "normal");
+            const winText = doc.splitTextToSize(win, 155);
+            doc.text(winText, 28, y + 22);
 
-            doc.save(`${bizName}-Immunity-Report.pdf`);
+            doc.setFontSize(8);
+            doc.setTextColor(100, 116, 139);
+            const disclaimer = "DISCLAIMER: Non-intrusive audit based on client interview and visual proof. Findings reflect specific snapshots of infrastructure security levels.";
+            doc.text(doc.splitTextToSize(disclaimer, 170), 20, 265);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(15, 23, 42);
+            doc.text("CAPROCK TECHNOLOGY GROUP // AMARILLO, TX // (806) 316-5070 // CAPROCKTECH.COM", 105, 285, { align: "center" });
+
+            doc.save(`Caprock-Audit-${bizName.replace(/\s+/g, '-').toLowerCase()}.pdf`);
         }
     </script>
 </body>
