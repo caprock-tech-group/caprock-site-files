@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Assessment | Caprock Technology Group</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-blue': '#4ade80',
+                        'dark-bg': '#0f172a',
+                        'dark-card': '#1e293b',
+                        'industrial-border': '#334155',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #d1d5db; }
+        .risk-gradient { background: linear-gradient(180deg, rgba(74, 222, 128, 0.1) 0%, rgba(15, 23, 42, 1) 100%); }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .step-content { display: none; }
+        .step-content.active { display: block; animation: fadeInUp 0.4s ease-out; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="min-h-screen risk-gradient pb-24">
+
+    <header class="border-b border-industrial-border bg-dark-card/80 sticky top-0 z-50 backdrop-blur-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-white p-1 rounded">
+                    <img src="caprock logo transparent BG 2.png" alt="Caprock" class="h-8">
+                </div>
+                <h1 class="font-black uppercase tracking-tighter text-white">Business <span class="text-brand-blue">Risk Audit</span></h1>
+            </div>
+            <div id="progress-indicator" class="font-mono text-[10px] text-brand-blue uppercase font-bold tracking-[0.2em]">0% Complete</div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 mt-12 max-w-3xl">
+        
+        <div id="step-1" class="step-content active text-center">
+            <h2 class="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none mb-6">
+                Is your business <br><span class="text-brand-blue">Digital-Storm Proof?</span>
+            </h2>
+            <p class="text-gray-400 text-lg mb-10 max-w-xl mx-auto">
+                Most Amarillo businesses operate with hidden digital vulnerabilities. Take 2 minutes to calculate your <strong>Immunity Score</strong>. No technical knowledge required.
+            </p>
+            
+            <div class="glass-card p-8 rounded-2xl max-w-md mx-auto">
+                <div class="space-y-6 text-left">
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Company Name</label>
+                        <input type="text" id="bizName" class="w-full bg-dark-bg border border-industrial-border rounded p-4 text-white focus:border-brand-blue outline-none" placeholder="e.g. Smith & Sons Trading">
+                    </div>
+                    <button onclick="changeStep(1)" class="w-full bg-brand-blue text-dark-bg font-black py-4 rounded uppercase tracking-widest text-sm shadow-[0_0_30px_rgba(74,222,128,0.3)] hover:scale-[1.02] transition-all">
+                        Begin Audit &rarr;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="step-2" class="step-content">
+            <div class="mb-8">
+                <span class="text-brand-blue font-mono text-xs uppercase font-bold tracking-widest">Category 01 // Identity</span>
+                <h2 class="text-4xl font-black text-white uppercase tracking-tighter mt-2">The Front Door</h2>
+                <p class="text-gray-400">Breaches happen when digital keys are stolen. How strong is your lock?</p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="glass-card p-6 rounded-xl">
+                    <p class="text-white font-bold text-lg mb-4">Do all employees use a 'Second Lock' (MFA/Phone Code) to check email?</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="setAns('q1', 25); changeStep(1)" class="bg-industrial-border hover:bg-brand-blue hover:text-dark-bg py-4 rounded font-black text-xs uppercase transition-all">Yes, Always</button>
+                        <button onclick="setAns('q1', 0); changeStep(1)" class="bg-industrial-border hover:bg-red-500 py-4 rounded font-black text-xs uppercase transition-all">No / Some</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="step-3" class="step-content">
+            <div class="mb-8">
+                <span class="text-brand-blue font-mono text-xs uppercase font-bold tracking-widest">Category 02 // Survival</span>
+                <h2 class="text-4xl font-black text-white uppercase tracking-tighter mt-2">The Safety Net</h2>
+                <p class="text-gray-400">If your computers died today, how long until you're back making money?</p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="glass-card p-6 rounded-xl">
+                    <p class="text-white font-bold text-lg mb-4">Have you successfully tested a file recovery in the last 3 months?</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="setAns('q2', 35); changeStep(1)" class="bg-industrial-border hover:bg-brand-blue hover:text-dark-bg py-4 rounded font-black text-xs uppercase transition-all">Yes, Proven</button>
+                        <button onclick="setAns('q2', 5); changeStep(1)" class="bg-industrial-border hover:bg-red-500 py-4 rounded font-black text-xs uppercase transition-all">No / Unsure</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="step-4" class="step-content">
+            <div class="mb-8">
+                <span class="text-brand-blue font-mono text-xs uppercase font-bold tracking-widest">Category 03 // Defense</span>
+                <h2 class="text-4xl font-black text-white uppercase tracking-tighter mt-2">The Guard Dog</h2>
+                <p class="text-gray-400">Are your systems actively hunting for threats, or just waiting to get sick?</p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="glass-card p-6 rounded-xl">
+                    <p class="text-white font-bold text-lg mb-4">Do you use 'Active Defense' that kills viruses automatically before they spread?</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="setAns('q3', 25); changeStep(1)" class="bg-industrial-border hover:bg-brand-blue hover:text-dark-bg py-4 rounded font-black text-xs uppercase transition-all">Yes, High-Grade</button>
+                        <button onclick="setAns('q3', 0); changeStep(1)" class="bg-industrial-border hover:bg-red-500 py-4 rounded font-black text-xs uppercase transition-all">Standard / None</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="step-5" class="step-content text-center">
+            <div class="mb-10">
+                <h2 class="text-6xl font-black text-white uppercase tracking-tighter leading-none" id="displayScore">00</h2>
+                <p class="text-brand-blue font-mono text-sm uppercase tracking-widest font-bold mt-2">Audit: Final Score</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+                <div class="glass-card p-6 rounded-xl border-t-4 border-brand-blue">
+                    <p class="text-[10px] uppercase font-bold text-gray-500">Identity</p>
+                    <p class="text-white font-black text-xl" id="scoreId">--</p>
+                </div>
+                <div class="glass-card p-6 rounded-xl border-t-4 border-brand-blue">
+                    <p class="text-[10px] uppercase font-bold text-gray-500">Survival</p>
+                    <p class="text-white font-black text-xl" id="scoreSurv">--</p>
+                </div>
+                <div class="glass-card p-6 rounded-xl border-t-4 border-brand-blue">
+                    <p class="text-[10px] uppercase font-bold text-gray-500">Defense</p>
+                    <p class="text-white font-black text-xl" id="scoreDef">--</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-2xl text-dark-bg mb-8 text-left relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" /></svg>
+                </div>
+                <h4 class="font-black uppercase text-xs tracking-widest mb-2">Priority Business Insight:</h4>
+                <p id="insightText" class="text-lg font-bold leading-tight"></p>
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <button onclick="genFullReport()" class="w-full bg-brand-blue text-dark-bg font-black py-5 rounded uppercase tracking-widest text-sm shadow-xl">Download Strategic Report (PDF)</button>
+                <a href="#contact" class="text-brand-blue font-black uppercase tracking-widest text-xs hover:text-white transition-colors">Book Expert Briefing &rarr;</a>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const { jsPDF } = window.jspdf;
+        let currentStep = 1;
+        let answers = { q1: 0, q2: 0, q3: 0, q4: 15 }; // q4 is base remote access score
+
+        function changeStep(dir) {
+            if (currentStep === 1 && !document.getElementById('bizName').value) return alert('Enter Company Name');
+            
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            currentStep += dir;
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            
+            let progress = ((currentStep - 1) / 4) * 100;
+            document.getElementById('progress-indicator').innerText = `${progress}% Complete`;
+            
+            if (currentStep === 5) renderResults();
+            window.scrollTo(0,0);
+        }
+
+        function setAns(q, val) { answers[q] = val; }
+
+        function renderResults() {
+            const total = answers.q1 + answers.q2 + answers.q3 + answers.q4;
+            document.getElementById('displayScore').innerText = total;
+            document.getElementById('scoreId').innerText = `${answers.q1}/25`;
+            document.getElementById('scoreSurv').innerText = `${answers.q2}/35`;
+            document.getElementById('scoreDef').innerText = `${answers.q3}/25`;
+            
+            let insight = "Your business is in the Danger Zone. Critical 'Front Door' and 'Safety Net' vulnerabilities need immediate remediation.";
+            if (total > 80) insight = "Exceptional Posture. Your current systems are built for survival. Fine-tune your remote access for 100% immunity.";
+            else if (total > 60) insight = "Stable but Fragile. You have baseline defenses, but a single server failure or stolen password could stop production for days.";
+            document.getElementById('insightText').innerText = insight;
+        }
+
+        function genFullReport() {
+            const doc = new jsPDF();
+            const biz = document.getElementById('bizName').value || "Client";
+            const score = parseInt(document.getElementById('displayScore').innerText);
+
+            // Cover Style
+            doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 297, 'F');
+            doc.setTextColor(74, 222, 128); doc.setFontSize(26); doc.setFont("helvetica", "bold");
+            doc.text("CAPROCK STRATEGIC AUDIT", 20, 40);
+            
+            doc.setTextColor(255, 255, 255); doc.setFontSize(14);
+            doc.text(`PREPARED FOR: ${biz.toUpperCase()}`, 20, 52);
+            doc.setFontSize(10); doc.text(`DATE: ${new Date().toLocaleDateString()}`, 20, 60);
+
+            // Big Score Bar
+            doc.setDrawColor(74, 222, 128); doc.setLineWidth(2); doc.line(20, 80, 190, 80);
+            doc.setFontSize(60); doc.text(score.toString(), 20, 130);
+            doc.setFontSize(12); doc.text("OVERALL IMMUNITY SCORE", 20, 140);
+
+            // Category Breakdown
+            doc.setFontSize(14); doc.text("OPERATIONAL ANALYSIS", 20, 170);
+            doc.setFontSize(10);
+            doc.text(`IDENTITY LOCK (FRONT DOOR): ${answers.q1}/25`, 20, 185);
+            doc.text(`SURVIVAL RATE (BACKUP): ${answers.q2}/35`, 20, 195);
+            doc.text(`ACTIVE DEFENSE (GUARD DOG): ${answers.q3}/25`, 20, 205);
+
+            // Quick Win Box
+            doc.setFillColor(74, 222, 128); doc.rect(20, 230, 170, 30, 'F');
+            doc.setTextColor(15, 23, 42); doc.setFontSize(12); doc.setFont("helvetica", "bold");
+            doc.text("STRATEGIC QUICK WIN:", 25, 240);
+            doc.setFontSize(10); doc.setFont("helvetica", "normal");
+            doc.text(document.getElementById('insightText').innerText.split('.')[0] + ".", 25, 250);
+
+            doc.save(`Caprock-Risk-Audit-${biz}.pdf`);
+        }
+    </script>
+</body>
+</html>
