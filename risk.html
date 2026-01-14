@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Risk Assessment | Caprock Technology Group</title>
+    <title>Business Risk Audit | Caprock Technology Group</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -59,7 +59,7 @@
                 <div class="space-y-6 text-left">
                     <div>
                         <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Company Name</label>
-                        <input type="text" id="bizName" class="w-full bg-dark-bg border border-industrial-border rounded p-4 text-white focus:border-brand-blue outline-none" placeholder="e.g. Smith & Sons Trading">
+                        <input type="text" id="bizName" class="w-full bg-dark-bg border border-industrial-border rounded p-4 text-white focus:border-brand-blue outline-none font-bold" placeholder="e.g. Smith & Sons Trading">
                     </div>
                     <button onclick="changeStep(1)" class="w-full bg-brand-blue text-dark-bg font-black py-4 rounded uppercase tracking-widest text-sm shadow-[0_0_30px_rgba(74,222,128,0.3)] hover:scale-[1.02] transition-all">
                         Begin Audit &rarr;
@@ -124,34 +124,55 @@
 
         <div id="step-5" class="step-content text-center">
             <div class="mb-10">
-                <h2 class="text-6xl font-black text-white uppercase tracking-tighter leading-none" id="displayScore">00</h2>
+                <h2 class="text-7xl font-black text-white uppercase tracking-tighter leading-none" id="displayScore">00</h2>
                 <p class="text-brand-blue font-mono text-sm uppercase tracking-widest font-bold mt-2">Final Immunity Score</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 text-left">
                 <div class="glass-card p-6 rounded-xl border-t-4 border-brand-blue">
-                    <p class="text-[10px] uppercase font-bold text-gray-500">Identity</p>
+                    <p class="text-[10px] uppercase font-bold text-gray-500">Identity Lock</p>
                     <p class="text-white font-black text-xl" id="scoreId">--</p>
                 </div>
                 <div class="glass-card p-6 rounded-xl border-t-4 border-brand-blue">
-                    <p class="text-[10px] uppercase font-bold text-gray-500">Survival</p>
+                    <p class="text-[10px] uppercase font-bold text-gray-500">Survival Rate</p>
                     <p class="text-white font-black text-xl" id="scoreSurv">--</p>
                 </div>
                 <div class="glass-card p-6 rounded-xl border-t-4 border-brand-blue">
-                    <p class="text-[10px] uppercase font-bold text-gray-500">Defense</p>
+                    <p class="text-[10px] uppercase font-bold text-gray-500">Defense Active</p>
                     <p class="text-white font-black text-xl" id="scoreDef">--</p>
                 </div>
             </div>
 
             <div class="bg-white p-8 rounded-2xl text-dark-bg mb-8 text-left relative overflow-hidden">
-                <h4 class="font-black uppercase text-xs tracking-widest mb-2">Recommended Strategic Action:</h4>
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" /></svg>
+                </div>
+                <h4 class="font-black uppercase text-[10px] tracking-[0.2em] mb-2 text-gray-500">Strategic Quick Win:</h4>
                 <p id="quick-win-display" class="text-lg font-bold leading-tight"></p>
             </div>
 
-            <div class="flex flex-col gap-4">
-                <button onclick="genFullReport()" class="w-full bg-brand-blue text-dark-bg font-black py-5 rounded uppercase tracking-widest text-sm shadow-xl">Download Strategic Report (PDF)</button>
-                <a href="#contact" class="text-brand-blue font-black uppercase tracking-widest text-xs hover:text-white transition-colors">Book Expert Briefing &rarr;</a>
+            <div class="glass-card p-8 rounded-2xl text-left border border-brand-blue/30 shadow-2xl mb-8">
+                <h3 class="text-xl font-black text-white uppercase tracking-tight mb-2">Book Expert Briefing</h3>
+                <p class="text-gray-400 text-sm mb-6">Receive a custom breakdown of your score and a physical security roadmap.</p>
+                
+                <form name="risk-audit" method="POST" data-netlify="true" action="/thank-you.html" class="space-y-4">
+                    <input type="hidden" name="form-name" value="risk-audit">
+                    <input type="hidden" name="immunity-score" id="form-score">
+                    <input type="hidden" name="company-name-hidden" id="form-biz">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" name="name" required placeholder="Full Name" class="bg-dark-bg border border-industrial-border p-4 text-xs font-mono text-white focus:border-brand-blue outline-none font-bold">
+                        <input type="tel" name="phone" required placeholder="Phone Number" class="bg-dark-bg border border-industrial-border p-4 text-xs font-mono text-white focus:border-brand-blue outline-none font-bold">
+                    </div>
+                    <button type="submit" class="w-full bg-brand-blue text-dark-bg font-black py-5 rounded uppercase tracking-widest text-sm shadow-[0_0_40px_rgba(74,222,128,0.3)] hover:bg-white transition-all">
+                        Request Strategic Consultation
+                    </button>
+                </form>
             </div>
+
+            <button onclick="genFullReport()" class="w-full border border-industrial-border text-gray-400 font-bold py-3 rounded uppercase tracking-widest text-[10px] hover:text-white transition-all">
+                Download PDF Report Only
+            </button>
         </div>
 
     </main>
@@ -159,15 +180,18 @@
     <script>
         const { jsPDF } = window.jspdf;
         let currentStep = 1;
-        let answers = { q1: 0, q2: 0, q3: 0, base: 15 };
+        let answers = { q1: 0, q2: 0, q3: 0, remote: 15 }; 
 
         function changeStep(dir) {
             if (currentStep === 1 && !document.getElementById('bizName').value) return alert('Enter Company Name');
+            
             document.getElementById(`step-${currentStep}`).classList.remove('active');
             currentStep += dir;
             document.getElementById(`step-${currentStep}`).classList.add('active');
+            
             let progress = ((currentStep - 1) / 4) * 100;
             document.getElementById('progress-indicator').innerText = `${progress}% Complete`;
+            
             if (currentStep === 5) renderResults();
             window.scrollTo(0,0);
         }
@@ -175,12 +199,18 @@
         function setAns(q, val) { answers[q] = val; }
 
         function renderResults() {
-            const total = answers.q1 + answers.q2 + answers.q3 + answers.q4;
+            const total = parseInt(answers.q1) + parseInt(answers.q2) + parseInt(answers.q3) + parseInt(answers.remote);
+            
             document.getElementById('displayScore').innerText = total;
             document.getElementById('scoreId').innerText = `${answers.q1}/25`;
             document.getElementById('scoreSurv').innerText = `${answers.q2}/35`;
             document.getElementById('scoreDef').innerText = `${answers.q3}/25`;
+
+            // Populate hidden Netlify fields
+            document.getElementById('form-score').value = total;
+            document.getElementById('form-biz').value = document.getElementById('bizName').value;
             
+            // Tailored Win Logic
             let win = "Immediately enforce MFA for all business email accounts to secure your 'Front Door'.";
             if (answers.q1 === 25) win = "Schedule a monthly data restore test to ensure your 'Safety Net' is functional.";
             if (answers.q1 === 25 && answers.q2 === 35) win = "Upgrade to Managed EDR protection to provide a 'Guard Dog' for your endpoints.";
@@ -194,29 +224,50 @@
             const score = parseInt(document.getElementById('displayScore').innerText);
             const win = document.getElementById('quick-win-display').innerText;
 
+            // HEADER BLOCK
             doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 45, 'F');
             doc.setTextColor(74, 222, 128); doc.setFontSize(24); doc.setFont("helvetica", "bold");
             doc.text("CAPROCK STRATEGIC AUDIT", 20, 25);
             doc.setTextColor(255, 255, 255); doc.setFontSize(10); doc.setFont("helvetica", "normal");
             doc.text(`PREPARED FOR: ${biz.toUpperCase()}`, 20, 32);
+            doc.text(`DATE: ${new Date().toLocaleDateString()}`, 20, 37);
 
-            let scoreColor = score >= 80 ? [74, 222, 128] : score >= 60 ? [245, 158, 11] : [239, 68, 68];
-            doc.setFillColor(...scoreColor); doc.rect(140, 55, 50, 25, 'F');
+            // SCORE INDICATOR
+            let sColor = score >= 80 ? [74, 222, 128] : score >= 60 ? [245, 158, 11] : [239, 68, 68];
+            doc.setFillColor(...sColor); doc.rect(140, 55, 50, 25, 'F');
             doc.setTextColor(255, 255, 255); doc.setFontSize(32); doc.setFont("helvetica", "bold");
             doc.text(score.toString(), 165, 73, { align: "center" });
-            
+            doc.setFontSize(8); doc.text("IMMUNITY SCORE", 165, 78, { align: "center" });
+
+            // ANALYSIS TABLE
             doc.setTextColor(15, 23, 42); doc.setFontSize(14); doc.text("OPERATIONAL ANALYSIS", 20, 100);
-            doc.line(20, 103, 190, 103);
+            doc.setDrawColor(51, 65, 85); doc.setLineWidth(0.5); doc.line(20, 103, 190, 103);
+            
             doc.setFontSize(10); doc.setFont("helvetica", "normal");
-            doc.text(`IDENTITY LOCK (FRONT DOOR): ${answers.q1}/25`, 25, 115);
-            doc.text(`SURVIVAL RATE (BACKUP): ${answers.q2}/35`, 25, 125);
-            doc.text(`ACTIVE DEFENSE (GUARD DOG): ${answers.q3}/25`, 25, 135);
+            doc.text(`IDENTITY LOCK (FRONT DOOR)`, 25, 115);
+            doc.setFont("helvetica", "bold"); doc.text(`${answers.q1}/25`, 180, 115, {align:"right"});
+            
+            doc.setFont("helvetica", "normal"); doc.text(`SURVIVAL RATE (SAFETY NET)`, 25, 125);
+            doc.setFont("helvetica", "bold"); doc.text(`${answers.q2}/35`, 180, 125, {align:"right"});
+            
+            doc.setFont("helvetica", "normal"); doc.text(`ACTIVE DEFENSE (GUARD DOG)`, 25, 135);
+            doc.setFont("helvetica", "bold"); doc.text(`${answers.q3}/25`, 180, 135, {align:"right"});
 
-            doc.setFillColor(74, 222, 128); doc.rect(20, 160, 170, 35, 'F');
-            doc.setTextColor(15, 23, 42); doc.setFont("helvetica", "bold"); doc.text("STRATEGIC QUICK WIN:", 25, 172);
-            doc.setFont("helvetica", "normal"); doc.text(doc.splitTextToSize(win, 155), 25, 182);
+            // IMPACT BOX
+            doc.setFillColor(248, 250, 252); doc.rect(20, 160, 170, 40, 'F');
+            doc.setDrawColor(74, 222, 128); doc.setLineWidth(1.5); doc.line(20, 160, 20, 200);
+            
+            doc.setTextColor(21, 128, 61); doc.setFont("helvetica", "bold"); doc.setFontSize(11);
+            doc.text("STRATEGIC QUICK WIN:", 28, 172);
+            doc.setTextColor(15, 23, 42); doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+            const wText = doc.splitTextToSize(win, 150);
+            doc.text(wText, 28, 182);
 
-            doc.save(`Caprock-Risk-Audit-${biz}.pdf`);
+            // FOOTER
+            doc.setFontSize(8); doc.setTextColor(100, 116, 139);
+            doc.text("Caprock Technology Group // Amarillo, TX // (806) 316-5070", 105, 285, {align:"center"});
+
+            doc.save(`Caprock-Risk-Audit-${biz.replace(/\s+/g, '-')}.pdf`);
         }
     </script>
 </body>
