@@ -2,11 +2,12 @@ const https = require('https');
 
 /**
  * Netlify Background Function: submission-created
- * Dispatches tactical alerts to the Discord Command Center.
+ * This version uses the Netlify Environment Variable for security.
  */
 exports.handler = async function(event, context) {
     console.log("--- New Form Submission Received ---");
 
+    // 1. Parse the Netlify event body
     let payload;
     try {
         const body = JSON.parse(event.body);
@@ -19,12 +20,15 @@ exports.handler = async function(event, context) {
     const data = payload.data || {};
     const netlifyFormName = payload.form_name || data['form-name'] || "Unknown Form";
     
-    console.log(`Detected Form Name: ${netlifyFormName}`);
-    
-    // Caprock Discord Webhook URL
-    const DISCORD_URL = "https://discord.com/api/webhooks/1459433932553584703/H1hmPninZQ888hL7lFDrtIzAVo0mnMs0axjYm0i6nfsmTLqi1F7t7YHsXyqySxKyp91k";
+    // 2. Access the Discord Webhook from Netlify Environment Variables
+    const DISCORD_URL = process.env.DISCORD_WEBHOOK_URL;
 
-    // Default Branding
+    if (!DISCORD_URL) {
+        console.error("CRITICAL ERROR: DISCORD_WEBHOOK_URL environment variable is missing.");
+        return { statusCode: 500, body: "Configuration Error" };
+    }
+
+    // 3. Define Branding & Terminology
     let title = "🚨 NEW INTEL: Site Lead";
     let typeLabel = "General Site Form";
     let color = 3447003; // Default Blue
@@ -51,7 +55,7 @@ exports.handler = async function(event, context) {
         color = 4906624; // Green/Blue
     }
 
-    // Construct the Payload
+    // 4. Construct the Fields
     const fields = [
         { name: "Submission Type", value: String(typeLabel), inline: true },
         { name: "Contact Person", value: String(data.name || data['full-name'] || "Anonymous"), inline: true },
@@ -59,27 +63,35 @@ exports.handler = async function(event, context) {
         { name: "Email Address", value: String(data.email || "No Email Provided"), inline: true }
     ];
 
-    // Add Immunity Score for Risk Audit Leads
+    // Map the Immunity Score if the lead came from the /risk page
     if (data['immunity-score']) {
-        fields.push({ name: "Immunity Score", value: `${data['immunity-score']}/100`, inline: true });
+        fields.push({ 
+            name: "Immunity Score", 
+            value: `**${data['immunity-score']}/100**`, 
+            inline: true 
+        });
     }
 
-    fields.push({ name: "Lead Details / Project Scope", value: String(data.message || "Request for direct contact."), inline: false });
+    fields.push({ 
+        name: "Lead Details / Project Scope", 
+        value: String(data.message || "Request for direct contact via Risk Audit."), 
+        inline: false 
+    });
 
-    const embed = {
-        title: title,
-        color: color,
-        fields: fields,
-        footer: { text: "Caprock Command Center • Amarillo, TX" },
-        timestamp: new Date().toISOString()
-    };
-
+    // 5. Construct the Payload for Discord
     const discordPayload = JSON.stringify({
         username: "Caprock Bot",
         content: "@everyone", 
-        embeds: [embed]
+        embeds: [{
+            title: title,
+            color: color,
+            fields: fields,
+            footer: { text: "Caprock Command Center • Amarillo, TX" },
+            timestamp: new Date().toISOString()
+        }]
     });
 
+    // 6. Dispatch to Discord
     return new Promise((resolve, reject) => {
         const url = new URL(DISCORD_URL);
         const options = {
@@ -89,7 +101,7 @@ exports.handler = async function(event, context) {
             headers: {
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(discordPayload),
-                'User-Agent': 'Caprock-Lead-Bot/2.0'
+                'User-Agent': 'Caprock-Lead-Bot/3.0'
             },
         };
 
@@ -97,14 +109,20 @@ exports.handler = async function(event, context) {
             res.on('data', () => {});
             res.on('end', () => {
                 if (res.statusCode >= 200 && res.statusCode < 300) {
+                    console.log(`Success: Dispatched ${typeLabel} alert.`);
                     resolve({ statusCode: 200, body: 'Alert Dispatched' });
                 } else {
+                    console.error(`Discord API Error: ${res.statusCode}.`);
                     resolve({ statusCode: res.statusCode, body: 'Discord API Error' });
                 }
             });
         });
 
-        request.on('error', (e) => resolve({ statusCode: 500, body: 'Network Error' }));
+        request.on('error', (e) => {
+            console.error('Network Error:', e);
+            resolve({ statusCode: 500, body: 'Network Error' });
+        });
+
         request.write(discordPayload);
         request.end();
     });
