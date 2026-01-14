@@ -2,12 +2,11 @@ const https = require('https');
 
 /**
  * Netlify Background Function: submission-created
- * This version uses the Netlify Environment Variable for security.
+ * Full Briefing Version: Includes Scores, Company Intel, and Q&A Breakdown.
  */
 exports.handler = async function(event, context) {
     console.log("--- New Form Submission Received ---");
 
-    // 1. Parse the Netlify event body
     let payload;
     try {
         const body = JSON.parse(event.body);
@@ -20,7 +19,7 @@ exports.handler = async function(event, context) {
     const data = payload.data || {};
     const netlifyFormName = payload.form_name || data['form-name'] || "Unknown Form";
     
-    // 2. Access the Discord Webhook from Netlify Environment Variables
+    // Security: Access the Discord Webhook from Netlify Environment Variables
     const DISCORD_URL = process.env.DISCORD_WEBHOOK_URL;
 
     if (!DISCORD_URL) {
@@ -28,57 +27,60 @@ exports.handler = async function(event, context) {
         return { statusCode: 500, body: "Configuration Error" };
     }
 
-    // 3. Define Branding & Terminology
+    // Define Branding Based on Source
     let title = "🚨 NEW INTEL: Site Lead";
     let typeLabel = "General Site Form";
     let color = 3447003; // Default Blue
 
-    // Tactical Differentiation Logic
     if (netlifyFormName === 'risk-audit') {
-        title = "🔥 HIGH PRIORITY: Risk Audit Lead";
-        typeLabel = "Customer Risk Assessment";
+        title = "🔥 HIGH PRIORITY: Risk Audit Briefing";
+        typeLabel = "Strategic Risk Assessment";
         color = 15548997; // Tactical Red
-    } 
-    else if (netlifyFormName === 'solar-inquiry') {
-        title = "☀️ HOT LEAD: Solar Form Submission";
-        typeLabel = "Solar Form";
-        color = 16761095; // Yellow
-    } 
-    else if (netlifyFormName === 'contact-v8') {
-        title = "🛡️ MSP INTEL: MSP Information Request";
-        typeLabel = "MSP Information Request";
-        color = 4906624; // Green/Blue
-    }
-    else if (netlifyFormName === 'surveillance-inquiry') {
-        title = "👁️ SURVEILLANCE INTEL: Security Camera Inquiry";
-        typeLabel = "Security Camera Inquiry";
-        color = 4906624; // Green/Blue
+    } else if (netlifyFormName === 'solar-inquiry') {
+        title = "☀️ HOT LEAD: Solar Trailer Inquiry";
+        typeLabel = "Solar Fleet Inquiry";
+        color = 16761095; 
     }
 
-    // 4. Construct the Fields
+    [span_1](start_span)// Build the Core Contact Fields[span_1](end_span)
     const fields = [
-        { name: "Submission Type", value: String(typeLabel), inline: true },
-        { name: "Contact Person", value: String(data.name || data['full-name'] || "Anonymous"), inline: true },
-        { name: "Mobile / Phone", value: String(data.phone || "No Phone Provided"), inline: false },
-        { name: "Email Address", value: String(data.email || "No Email Provided"), inline: true }
+        { name: "Company", value: `**${data['company-name-hidden'] || data['bizName'] || "Not Provided"}**`, inline: true },
+        { name: "Contact", value: String(data.name || "Anonymous"), inline: true },
+        { name: "Phone", value: String(data.phone || "No Phone"), inline: true },
+        { name: "Email", value: String(data.email || "No Email"), inline: true }
     ];
 
-    // Map the Immunity Score if the lead came from the /risk page
+    // Map Immunity Score for Risk Audit Leads
     if (data['immunity-score']) {
         fields.push({ 
-            name: "Immunity Score", 
-            value: `**${data['immunity-score']}/100**`, 
-            inline: true 
+            name: "Final Immunity Score", 
+            value: `🚀 **${data['immunity-score']}/100**`, 
+            inline: false 
+        });
+    }
+
+    // TACTICAL Q&A BREAKDOWN
+    // These match the IDs in your risk.html form logic
+    if (netlifyFormName === 'risk-audit') {
+        const qaSummary = [
+            `**1. MFA Enforced?** ${data.q1 === '25' ? '✅ YES' : '❌ NO'}`,
+            `**2. Backup Tested?** ${data.q2 === '35' ? '✅ YES' : '❌ NO'}`,
+            `**3. Active Defense?** ${data.q3 === '25' ? '✅ YES' : '❌ NO'}`,
+        ].join('\n');
+
+        fields.push({ 
+            name: "Audit Response Data", 
+            value: qaSummary, 
+            inline: false 
         });
     }
 
     fields.push({ 
-        name: "Lead Details / Project Scope", 
-        value: String(data.message || "Request for direct contact via Risk Audit."), 
+        name: "Lead Comments", 
+        value: String(data.message || "User requested a strategic consultation."), 
         inline: false 
     });
 
-    // 5. Construct the Payload for Discord
     const discordPayload = JSON.stringify({
         username: "Caprock Bot",
         content: "@everyone", 
@@ -91,7 +93,6 @@ exports.handler = async function(event, context) {
         }]
     });
 
-    // 6. Dispatch to Discord
     return new Promise((resolve, reject) => {
         const url = new URL(DISCORD_URL);
         const options = {
@@ -109,20 +110,14 @@ exports.handler = async function(event, context) {
             res.on('data', () => {});
             res.on('end', () => {
                 if (res.statusCode >= 200 && res.statusCode < 300) {
-                    console.log(`Success: Dispatched ${typeLabel} alert.`);
                     resolve({ statusCode: 200, body: 'Alert Dispatched' });
                 } else {
-                    console.error(`Discord API Error: ${res.statusCode}.`);
                     resolve({ statusCode: res.statusCode, body: 'Discord API Error' });
                 }
             });
         });
 
-        request.on('error', (e) => {
-            console.error('Network Error:', e);
-            resolve({ statusCode: 500, body: 'Network Error' });
-        });
-
+        request.on('error', (e) => resolve({ statusCode: 500, body: 'Network Error' }));
         request.write(discordPayload);
         request.end();
     });
