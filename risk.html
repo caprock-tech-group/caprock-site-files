@@ -180,6 +180,7 @@
     <script>
         const { jsPDF } = window.jspdf;
         let currentStep = 1;
+        // Fix for NAN: All scoring components are explicitly set to integers
         let answers = { q1: 0, q2: 0, q3: 0, remote: 15 }; 
 
         function changeStep(dir) {
@@ -199,6 +200,7 @@
         function setAns(q, val) { answers[q] = val; }
 
         function renderResults() {
+            // Logic fix for calculation: parse all values as integers to prevent NAN
             const total = parseInt(answers.q1) + parseInt(answers.q2) + parseInt(answers.q3) + parseInt(answers.remote);
             
             document.getElementById('displayScore').innerText = total;
@@ -206,11 +208,24 @@
             document.getElementById('scoreSurv').innerText = `${answers.q2}/35`;
             document.getElementById('scoreDef').innerText = `${answers.q3}/25`;
 
-            // Populate hidden Netlify fields
+            // Populate hidden Netlify fields for the lead form
             document.getElementById('form-score').value = total;
             document.getElementById('form-biz').value = document.getElementById('bizName').value;
             
-            // Tailored Win Logic
+            [span_2](start_span)// Map audit answers to hidden fields so they appear in Discord alerts[span_2](end_span)
+            const form = document.querySelector('form[name="risk-audit"]');
+            ['q1', 'q2', 'q3'].forEach(q => {
+                let input = form.querySelector(`input[name="${q}"]`);
+                if (!input) {
+                    input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = q;
+                    form.appendChild(input);
+                }
+                input.value = answers[q];
+            });
+            
+            // Strategic Win Logic based on lowest score area
             let win = "Immediately enforce MFA for all business email accounts to secure your 'Front Door'.";
             if (answers.q1 === 25) win = "Schedule a monthly data restore test to ensure your 'Safety Net' is functional.";
             if (answers.q1 === 25 && answers.q2 === 35) win = "Upgrade to Managed EDR protection to provide a 'Guard Dog' for your endpoints.";
