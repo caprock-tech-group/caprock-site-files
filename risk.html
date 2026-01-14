@@ -125,7 +125,7 @@
         <div id="step-5" class="step-content text-center">
             <div class="mb-10">
                 <h2 class="text-6xl font-black text-white uppercase tracking-tighter leading-none" id="displayScore">00</h2>
-                <p class="text-brand-blue font-mono text-sm uppercase tracking-widest font-bold mt-2">Audit: Final Score</p>
+                <p class="text-brand-blue font-mono text-sm uppercase tracking-widest font-bold mt-2">Final Immunity Score</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
@@ -144,11 +144,8 @@
             </div>
 
             <div class="bg-white p-8 rounded-2xl text-dark-bg mb-8 text-left relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-4 opacity-10">
-                    <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" /></svg>
-                </div>
-                <h4 class="font-black uppercase text-xs tracking-widest mb-2">Priority Business Insight:</h4>
-                <p id="insightText" class="text-lg font-bold leading-tight"></p>
+                <h4 class="font-black uppercase text-xs tracking-widest mb-2">Recommended Strategic Action:</h4>
+                <p id="quick-win-display" class="text-lg font-bold leading-tight"></p>
             </div>
 
             <div class="flex flex-col gap-4">
@@ -162,18 +159,15 @@
     <script>
         const { jsPDF } = window.jspdf;
         let currentStep = 1;
-        let answers = { q1: 0, q2: 0, q3: 0, q4: 15 }; // q4 is base remote access score
+        let answers = { q1: 0, q2: 0, q3: 0, base: 15 };
 
         function changeStep(dir) {
             if (currentStep === 1 && !document.getElementById('bizName').value) return alert('Enter Company Name');
-            
             document.getElementById(`step-${currentStep}`).classList.remove('active');
             currentStep += dir;
             document.getElementById(`step-${currentStep}`).classList.add('active');
-            
             let progress = ((currentStep - 1) / 4) * 100;
             document.getElementById('progress-indicator').innerText = `${progress}% Complete`;
-            
             if (currentStep === 5) renderResults();
             window.scrollTo(0,0);
         }
@@ -187,44 +181,40 @@
             document.getElementById('scoreSurv').innerText = `${answers.q2}/35`;
             document.getElementById('scoreDef').innerText = `${answers.q3}/25`;
             
-            let insight = "Your business is in the Danger Zone. Critical 'Front Door' and 'Safety Net' vulnerabilities need immediate remediation.";
-            if (total > 80) insight = "Exceptional Posture. Your current systems are built for survival. Fine-tune your remote access for 100% immunity.";
-            else if (total > 60) insight = "Stable but Fragile. You have baseline defenses, but a single server failure or stolen password could stop production for days.";
-            document.getElementById('insightText').innerText = insight;
+            let win = "Immediately enforce MFA for all business email accounts to secure your 'Front Door'.";
+            if (answers.q1 === 25) win = "Schedule a monthly data restore test to ensure your 'Safety Net' is functional.";
+            if (answers.q1 === 25 && answers.q2 === 35) win = "Upgrade to Managed EDR protection to provide a 'Guard Dog' for your endpoints.";
+            
+            document.getElementById('quick-win-display').innerText = win;
         }
 
         function genFullReport() {
             const doc = new jsPDF();
             const biz = document.getElementById('bizName').value || "Client";
             const score = parseInt(document.getElementById('displayScore').innerText);
+            const win = document.getElementById('quick-win-display').innerText;
 
-            // Cover Style
-            doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 297, 'F');
-            doc.setTextColor(74, 222, 128); doc.setFontSize(26); doc.setFont("helvetica", "bold");
-            doc.text("CAPROCK STRATEGIC AUDIT", 20, 40);
+            doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 45, 'F');
+            doc.setTextColor(74, 222, 128); doc.setFontSize(24); doc.setFont("helvetica", "bold");
+            doc.text("CAPROCK STRATEGIC AUDIT", 20, 25);
+            doc.setTextColor(255, 255, 255); doc.setFontSize(10); doc.setFont("helvetica", "normal");
+            doc.text(`PREPARED FOR: ${biz.toUpperCase()}`, 20, 32);
+
+            let scoreColor = score >= 80 ? [74, 222, 128] : score >= 60 ? [245, 158, 11] : [239, 68, 68];
+            doc.setFillColor(...scoreColor); doc.rect(140, 55, 50, 25, 'F');
+            doc.setTextColor(255, 255, 255); doc.setFontSize(32); doc.setFont("helvetica", "bold");
+            doc.text(score.toString(), 165, 73, { align: "center" });
             
-            doc.setTextColor(255, 255, 255); doc.setFontSize(14);
-            doc.text(`PREPARED FOR: ${biz.toUpperCase()}`, 20, 52);
-            doc.setFontSize(10); doc.text(`DATE: ${new Date().toLocaleDateString()}`, 20, 60);
-
-            // Big Score Bar
-            doc.setDrawColor(74, 222, 128); doc.setLineWidth(2); doc.line(20, 80, 190, 80);
-            doc.setFontSize(60); doc.text(score.toString(), 20, 130);
-            doc.setFontSize(12); doc.text("OVERALL IMMUNITY SCORE", 20, 140);
-
-            // Category Breakdown
-            doc.setFontSize(14); doc.text("OPERATIONAL ANALYSIS", 20, 170);
-            doc.setFontSize(10);
-            doc.text(`IDENTITY LOCK (FRONT DOOR): ${answers.q1}/25`, 20, 185);
-            doc.text(`SURVIVAL RATE (BACKUP): ${answers.q2}/35`, 20, 195);
-            doc.text(`ACTIVE DEFENSE (GUARD DOG): ${answers.q3}/25`, 20, 205);
-
-            // Quick Win Box
-            doc.setFillColor(74, 222, 128); doc.rect(20, 230, 170, 30, 'F');
-            doc.setTextColor(15, 23, 42); doc.setFontSize(12); doc.setFont("helvetica", "bold");
-            doc.text("STRATEGIC QUICK WIN:", 25, 240);
+            doc.setTextColor(15, 23, 42); doc.setFontSize(14); doc.text("OPERATIONAL ANALYSIS", 20, 100);
+            doc.line(20, 103, 190, 103);
             doc.setFontSize(10); doc.setFont("helvetica", "normal");
-            doc.text(document.getElementById('insightText').innerText.split('.')[0] + ".", 25, 250);
+            doc.text(`IDENTITY LOCK (FRONT DOOR): ${answers.q1}/25`, 25, 115);
+            doc.text(`SURVIVAL RATE (BACKUP): ${answers.q2}/35`, 25, 125);
+            doc.text(`ACTIVE DEFENSE (GUARD DOG): ${answers.q3}/25`, 25, 135);
+
+            doc.setFillColor(74, 222, 128); doc.rect(20, 160, 170, 35, 'F');
+            doc.setTextColor(15, 23, 42); doc.setFont("helvetica", "bold"); doc.text("STRATEGIC QUICK WIN:", 25, 172);
+            doc.setFont("helvetica", "normal"); doc.text(doc.splitTextToSize(win, 155), 25, 182);
 
             doc.save(`Caprock-Risk-Audit-${biz}.pdf`);
         }
