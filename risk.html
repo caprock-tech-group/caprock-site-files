@@ -52,7 +52,7 @@
                 Is your business <br><span class="text-brand-blue">Digital-Storm Proof?</span>
             </h2>
             <p class="text-gray-400 text-lg mb-10 max-w-xl mx-auto">
-                Most Amarillo businesses operate with hidden digital vulnerabilities. Take 2 minutes to calculate your <strong>Immunity Score</strong>.
+                Amarillo businesses operate with hidden digital vulnerabilities. Calculate your <strong>Immunity Score</strong> in 2 minutes.
             </p>
             
             <div class="glass-card p-8 rounded-2xl max-w-md mx-auto">
@@ -72,7 +72,7 @@
             <div class="mb-8">
                 <span class="text-brand-blue font-mono text-xs uppercase font-bold tracking-widest">Category 01 // Identity</span>
                 <h2 class="text-4xl font-black text-white uppercase tracking-tighter mt-2">The Front Door</h2>
-                <p class="text-gray-400">Breaches happen when digital keys are stolen. How strong is your lock?</p>
+                <p class="text-gray-400">Most breaches start with stolen keys. How strong is your lock?</p>
             </div>
             <div class="space-y-6">
                 <div class="glass-card p-6 rounded-xl">
@@ -129,7 +129,7 @@
         <div id="step-5" class="step-content text-center">
             <div class="mb-10">
                 <h2 class="text-7xl font-black text-white uppercase tracking-tighter leading-none" id="displayScore">00</h2>
-                <p class="text-brand-blue font-mono text-sm uppercase tracking-widest font-bold mt-2">Final Immunity Score</p>
+                <p class="text-brand-blue font-mono text-sm uppercase tracking-widest font-bold mt-2">Immunity Score</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 text-left">
@@ -149,7 +149,7 @@
 
             <div class="glass-card p-8 rounded-2xl text-left border border-brand-blue/30 shadow-2xl mb-8">
                 <h3 class="text-xl font-black text-white uppercase tracking-tight mb-2">Strategic Remediation</h3>
-                <p id="remediation-text" class="text-gray-300 text-sm mb-6 leading-relaxed"></p>
+                <p id="remediation-text" class="text-gray-300 text-sm mb-6 leading-relaxed font-bold"></p>
                 
                 <form name="risk-audit" method="POST" data-netlify="true" action="/thank-you.html" class="space-y-4">
                     <input type="hidden" name="form-name" value="risk-audit">
@@ -170,7 +170,7 @@
             </div>
 
             <button onclick="genFullReport()" class="w-full border border-industrial-border text-gray-400 font-bold py-3 rounded uppercase tracking-widest text-[10px] hover:text-white transition-all">
-                Download Strategic Analysis
+                Download Analysis & Strategic Roadmap
             </button>
         </div>
 
@@ -206,9 +206,9 @@
             document.getElementById('form-q2').value = answers.q2;
             document.getElementById('form-q3').value = answers.q3;
 
-            let rem = "CRITICAL RISK: Your systems are currently unprotected against modern ransomware. We recommend an immediate upgrade to the **Partner Membership** for full defense and survival management.";
-            if (total >= 85) rem = "SOLID POSTURE: You have excellent standards. The **Watchtower Membership** is recommended to keep these autonomous defenses running at peak efficiency.";
-            else if (total >= 60) rem = "MODERATE RISK: You have baseline tools, but manual processes (like user-driven antivirus) create gaps. The **Partner Membership** will close these holes permanently.";
+            let rem = "CRITICAL RISK: Systems are unprotected against ransomware. Immediate upgrade to Partner Membership is recommended for full defense.";
+            if (total >= 85) rem = "STABLE POSTURE: Watchtower Membership is recommended to maintain autonomous standards.";
+            else if (total >= 60) rem = "MODERATE VULNERABILITY: Partner Membership advised to eliminate manual gaps and verify backups.";
             
             document.getElementById('remediation-text').innerText = rem;
         }
@@ -219,10 +219,11 @@
             const score = parseInt(document.getElementById('displayScore').innerText);
             const remText = document.getElementById('remediation-text').innerText;
 
+            // PAGE 1: EXECUTIVE ANALYSIS
             doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 50, 'F');
             doc.setTextColor(74, 222, 128); doc.setFontSize(26); doc.setFont("helvetica", "bold");
             doc.text("CAPROCK STRATEGIC AUDIT", 20, 28);
-            doc.setTextColor(255, 255, 255); doc.setFontSize(10);
+            doc.setTextColor(255, 255, 255); doc.setFontSize(10); doc.setFont("helvetica", "normal");
             doc.text(`BUSINESS: ${biz.toUpperCase()}`, 20, 36);
             doc.text(`DATE: ${new Date().toLocaleDateString()}`, 20, 41);
 
@@ -232,26 +233,26 @@
             doc.text(score.toString(), 167, 83, { align: "center" });
             doc.setFontSize(8); doc.text("IMMUNITY SCORE", 167, 88, { align: "center" });
 
-            doc.setTextColor(15, 23, 42); doc.setFontSize(16); doc.text("1.0 STRATEGIC FINDINGS", 20, 75);
+            doc.setTextColor(15, 23, 42); doc.setFontSize(16); doc.text("1.0 OPERATIONAL ANALYSIS", 20, 75);
             doc.setDrawColor(51, 65, 85); doc.setLineWidth(0.5); doc.line(20, 78, 130, 78);
 
             doc.setFontSize(11); doc.setFont("helvetica", "bold");
-            doc.text("IDENTITY (FRONT DOOR)", 25, 95);
+            doc.text("IDENTITY & ACCESS (THE DOOR)", 25, 95);
             doc.setFont("helvetica", "normal"); doc.text(`SCORE: ${answers.q1}/25`, 180, 95, {align:"right"});
             doc.setFontSize(9); doc.setTextColor(100, 116, 139);
-            doc.text(doc.splitTextToSize("Analysis of account locks. MFA is your first line of defense against 80% of current cyberattacks.", 155), 25, 101);
+            doc.text(doc.splitTextToSize("Analysis of account locks. MFA is the first line of defense against 80% of regional breaches.", 155), 25, 101);
 
             doc.setTextColor(15, 23, 42); doc.setFontSize(11); doc.setFont("helvetica", "bold");
-            doc.text("SURVIVAL (SAFETY NET)", 25, 120);
+            doc.text("DATA SURVIVABILITY (SAFETY NET)", 25, 120);
             doc.setFont("helvetica", "normal"); doc.text(`SCORE: ${answers.q2}/35`, 180, 120, {align:"right"});
             doc.setFontSize(9); doc.setTextColor(100, 116, 139);
-            doc.text(doc.splitTextToSize("Data integrity check. Backups without a quarterly restore test are a critical operational liability.", 155), 25, 126);
+            doc.text(doc.splitTextToSize("Backups without a quarterly restore test are a critical operational liability.", 155), 25, 126);
 
             doc.setTextColor(15, 23, 42); doc.setFontSize(11); doc.setFont("helvetica", "bold");
-            doc.text("DEFENSE (GUARD DOG)", 25, 145);
+            doc.text("ACTIVE DEFENSE (GUARD DOG)", 25, 145);
             doc.setFont("helvetica", "normal"); doc.text(`SCORE: ${answers.q3}/25`, 180, 145, {align:"right"});
             doc.setFontSize(9); doc.setTextColor(100, 116, 139);
-            doc.text(doc.splitTextToSize("Endpoint detection analysis. Managed AI-EDR is required to detect behavior-based ransomware.", 155), 25, 151);
+            doc.text(doc.splitTextToSize("Managed AI-EDR is required to detect modern behavior-based ransomware.", 155), 25, 151);
 
             doc.setFillColor(248, 250, 252); doc.rect(20, 175, 170, 45, 'F');
             doc.setDrawColor(74, 222, 128); doc.setLineWidth(1.5); doc.line(20, 175, 20, 220);
@@ -260,7 +261,14 @@
             doc.setTextColor(15, 23, 42); doc.setFont("helvetica", "normal"); doc.setFontSize(10);
             doc.text(doc.splitTextToSize(remText, 155), 28, 200);
 
-            doc.save(`Strategic-Audit-${biz.replace(/\s+/g, '-')}.pdf`);
+            // PAGE FOOTER (BRANDING)
+            doc.setDrawColor(200, 200, 200); doc.line(20, 265, 190, 265);
+            doc.setTextColor(15, 23, 42); doc.setFont("helvetica", "bold"); doc.setFontSize(10);
+            doc.text("CAPROCK TECHNOLOGY GROUP // AMARILLO, TX // (806) 316-5070", 105, 275, {align:"center"});
+            doc.setFontSize(8); doc.setFont("helvetica", "normal"); doc.setTextColor(100, 116, 139);
+            doc.text("STRATEGIC IT PARTNERSHIP // WWW.CAPROCKTECH.COM // INFO@CAPROCKTECH.COM", 105, 282, {align:"center"});
+
+            doc.save(`Caprock-Strategic-Audit-${biz.replace(/\s+/g, '-')}.pdf`);
         }
     </script>
 </body>
