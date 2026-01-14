@@ -52,7 +52,7 @@
                 Is your business <br><span class="text-brand-blue">Digital-Storm Proof?</span>
             </h2>
             <p class="text-gray-400 text-lg mb-10 max-w-xl mx-auto">
-                Calculate your <strong>Immunity Score</strong> in 2 minutes. No technical knowledge required.
+                Most Amarillo businesses operate with hidden digital vulnerabilities. Take 2 minutes to calculate your <strong>Immunity Score</strong>.
             </p>
             
             <div class="glass-card p-8 rounded-2xl max-w-md mx-auto">
@@ -61,7 +61,7 @@
                         <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Company Name</label>
                         <input type="text" id="bizName" class="w-full bg-dark-bg border border-industrial-border rounded p-4 text-white focus:border-brand-blue outline-none font-bold" placeholder="e.g. Smith & Sons Trading">
                     </div>
-                    <button onclick="changeStep(1)" class="w-full bg-brand-blue text-dark-bg font-black py-4 rounded uppercase tracking-widest text-sm shadow-[0_0_30px_rgba(74,222,128,0.3)]">
+                    <button onclick="changeStep(1)" class="w-full bg-brand-blue text-dark-bg font-black py-4 rounded uppercase tracking-widest text-sm shadow-[0_0_30px_rgba(74,222,128,0.3)] hover:scale-[1.02] transition-all">
                         Begin Audit &rarr;
                     </button>
                 </div>
@@ -72,7 +72,7 @@
             <div class="mb-8">
                 <span class="text-brand-blue font-mono text-xs uppercase font-bold tracking-widest">Category 01 // Identity</span>
                 <h2 class="text-4xl font-black text-white uppercase tracking-tighter mt-2">The Front Door</h2>
-                <p class="text-gray-400">Most breaches start with stolen keys. How strong are your locks?</p>
+                <p class="text-gray-400">Breaches happen when digital keys are stolen. How strong is your lock?</p>
             </div>
             <div class="space-y-6">
                 <div class="glass-card p-6 rounded-xl">
@@ -89,7 +89,7 @@
             <div class="mb-8">
                 <span class="text-brand-blue font-mono text-xs uppercase font-bold tracking-widest">Category 02 // Survival</span>
                 <h2 class="text-4xl font-black text-white uppercase tracking-tighter mt-2">The Safety Net</h2>
-                <p class="text-gray-400">If your systems died today, how long until you're back making money?</p>
+                <p class="text-gray-400">If your computers died today, how long until you're back making money?</p>
             </div>
             <div class="space-y-6">
                 <div class="glass-card p-6 rounded-xl">
@@ -110,10 +110,17 @@
             </div>
             <div class="space-y-6">
                 <div class="glass-card p-6 rounded-xl">
-                    <p class="text-white font-bold text-lg mb-4">Do you use 'Active Defense' (AI-EDR) that kills viruses automatically?</p>
-                    <div class="grid grid-cols-2 gap-4">
-                        <button onclick="setAns('q3', 25); changeStep(1)" class="bg-industrial-border hover:bg-brand-blue hover:text-dark-bg py-4 rounded font-black text-xs uppercase transition-all">Yes, High-Grade</button>
-                        <button onclick="setAns('q3', 0); changeStep(1)" class="bg-industrial-border hover:bg-red-500 py-4 rounded font-black text-xs uppercase transition-all">Standard / None</button>
+                    <p class="text-white font-bold text-lg mb-4">What type of protection is installed on your computers?</p>
+                    <div class="flex flex-col gap-4">
+                        <button onclick="setAns('q3', 25); changeStep(1)" class="bg-industrial-border hover:bg-brand-blue hover:text-dark-bg py-4 px-6 rounded font-black text-left flex justify-between items-center transition-all group">
+                            <span class="text-xs uppercase">Autonomous AI (SentinelOne / Crowdstrike)</span>
+                            <span class="text-brand-blue font-mono text-[10px] opacity-0 group-hover:opacity-100">+25 pts</span>
+                        </button>
+                        <button onclick="setAns('q3', 7); changeStep(1)" class="bg-industrial-border hover:bg-amber-500 hover:text-dark-bg py-4 px-6 rounded font-black text-left flex justify-between items-center transition-all group">
+                            <span class="text-xs uppercase">Basic Antivirus (McAfee / Norton / Defender)</span>
+                            <span class="text-amber-200 font-mono text-[10px] opacity-0 group-hover:opacity-100">+7 pts</span>
+                        </button>
+                        <button onclick="setAns('q3', 0); changeStep(1)" class="bg-industrial-border hover:bg-red-500 py-4 px-6 rounded font-black text-xs uppercase transition-all">None / Unknown</button>
                     </div>
                 </div>
             </div>
@@ -122,25 +129,25 @@
         <div id="step-5" class="step-content text-center">
             <div class="mb-10">
                 <h2 class="text-7xl font-black text-white uppercase tracking-tighter leading-none" id="displayScore">00</h2>
-                <p class="text-brand-blue font-mono text-sm uppercase tracking-widest font-bold mt-2">Immunity Score</p>
+                <p class="text-brand-blue font-mono text-sm uppercase tracking-widest font-bold mt-2">Final Immunity Score</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 text-left">
                 <div class="glass-card p-6 rounded-xl border-t-4 border-brand-blue">
-                    <p class="text-[10px] uppercase font-bold text-gray-500">Identity</p>
+                    <p class="text-[10px] uppercase font-bold text-gray-500">Identity Lock</p>
                     <p class="text-white font-black text-xl" id="scoreId">--</p>
                 </div>
                 <div class="glass-card p-6 rounded-xl border-t-4 border-brand-blue">
-                    <p class="text-[10px] uppercase font-bold text-gray-500">Survival</p>
+                    <p class="text-[10px] uppercase font-bold text-gray-500">Survival Rate</p>
                     <p class="text-white font-black text-xl" id="scoreSurv">--</p>
                 </div>
                 <div class="glass-card p-6 rounded-xl border-t-4 border-brand-blue">
-                    <p class="text-[10px] uppercase font-bold text-gray-500">Defense</p>
+                    <p class="text-[10px] uppercase font-bold text-gray-500">Defense Active</p>
                     <p class="text-white font-black text-xl" id="scoreDef">--</p>
                 </div>
             </div>
 
-            <div class="glass-card p-8 rounded-2xl text-left border border-brand-blue/30 mb-8">
+            <div class="glass-card p-8 rounded-2xl text-left border border-brand-blue/30 shadow-2xl mb-8">
                 <h3 class="text-xl font-black text-white uppercase tracking-tight mb-2">Strategic Remediation</h3>
                 <p id="remediation-text" class="text-gray-300 text-sm mb-6 leading-relaxed"></p>
                 
@@ -163,7 +170,7 @@
             </div>
 
             <button onclick="genFullReport()" class="w-full border border-industrial-border text-gray-400 font-bold py-3 rounded uppercase tracking-widest text-[10px] hover:text-white transition-all">
-                Download PDF Analysis
+                Download Strategic Analysis
             </button>
         </div>
 
@@ -199,9 +206,9 @@
             document.getElementById('form-q2').value = answers.q2;
             document.getElementById('form-q3').value = answers.q3;
 
-            let rem = "CRITICAL RISK: Your infrastructure lacks basic 'Front Door' and 'Safety Net' protocols. We recommend immediate onboarding to the **Partner Membership** for full remote remediation.";
-            if (total >= 85) rem = "STABLE POSTURE: You have hardened core systems. We suggest the **Watchtower Membership** to maintain these standards with 24/7 autonomous monitoring.";
-            else if (total >= 60) rem = "MODERATE VULNERABILITY: Baseline defenses are present but fragile. The **Partner Membership** is advised to eliminate manual patching and verify backup integrity.";
+            let rem = "CRITICAL RISK: Your systems are currently unprotected against modern ransomware. We recommend an immediate upgrade to the **Partner Membership** for full defense and survival management.";
+            if (total >= 85) rem = "SOLID POSTURE: You have excellent standards. The **Watchtower Membership** is recommended to keep these autonomous defenses running at peak efficiency.";
+            else if (total >= 60) rem = "MODERATE RISK: You have baseline tools, but manual processes (like user-driven antivirus) create gaps. The **Partner Membership** will close these holes permanently.";
             
             document.getElementById('remediation-text').innerText = rem;
         }
@@ -212,13 +219,12 @@
             const score = parseInt(document.getElementById('displayScore').innerText);
             const remText = document.getElementById('remediation-text').innerText;
 
-            // PAGE 1: EXECUTIVE OVERVIEW
             doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 50, 'F');
             doc.setTextColor(74, 222, 128); doc.setFontSize(26); doc.setFont("helvetica", "bold");
             doc.text("CAPROCK STRATEGIC AUDIT", 20, 28);
-            doc.setTextColor(255, 255, 255); doc.setFontSize(10); doc.setFont("helvetica", "normal");
+            doc.setTextColor(255, 255, 255); doc.setFontSize(10);
             doc.text(`BUSINESS: ${biz.toUpperCase()}`, 20, 36);
-            doc.text(`AUDIT DATE: ${new Date().toLocaleDateString()}`, 20, 41);
+            doc.text(`DATE: ${new Date().toLocaleDateString()}`, 20, 41);
 
             let sColor = score >= 85 ? [74, 222, 128] : score >= 60 ? [245, 158, 11] : [239, 68, 68];
             doc.setFillColor(...sColor); doc.rect(145, 65, 45, 25, 'F');
@@ -226,38 +232,35 @@
             doc.text(score.toString(), 167, 83, { align: "center" });
             doc.setFontSize(8); doc.text("IMMUNITY SCORE", 167, 88, { align: "center" });
 
-            doc.setTextColor(15, 23, 42); doc.setFontSize(16); doc.text("1.0 OPERATIONAL ANALYSIS", 20, 75);
+            doc.setTextColor(15, 23, 42); doc.setFontSize(16); doc.text("1.0 STRATEGIC FINDINGS", 20, 75);
             doc.setDrawColor(51, 65, 85); doc.setLineWidth(0.5); doc.line(20, 78, 130, 78);
 
             doc.setFontSize(11); doc.setFont("helvetica", "bold");
-            doc.text("IDENTITY & ACCESS (THE DOOR)", 25, 95);
+            doc.text("IDENTITY (FRONT DOOR)", 25, 95);
             doc.setFont("helvetica", "normal"); doc.text(`SCORE: ${answers.q1}/25`, 180, 95, {align:"right"});
             doc.setFontSize(9); doc.setTextColor(100, 116, 139);
-            doc.text(doc.splitTextToSize("Analysis of Multi-Factor Authentication and credential isolation. Stolen credentials account for over 80% of regional breaches.", 155), 25, 101);
+            doc.text(doc.splitTextToSize("Analysis of account locks. MFA is your first line of defense against 80% of current cyberattacks.", 155), 25, 101);
 
             doc.setTextColor(15, 23, 42); doc.setFontSize(11); doc.setFont("helvetica", "bold");
-            doc.text("DATA SURVIVABILITY (SAFETY NET)", 25, 115);
-            doc.setFont("helvetica", "normal"); doc.text(`SCORE: ${answers.q2}/35`, 180, 115, {align:"right"});
+            doc.text("SURVIVAL (SAFETY NET)", 25, 120);
+            doc.setFont("helvetica", "normal"); doc.text(`SCORE: ${answers.q2}/35`, 180, 120, {align:"right"});
             doc.setFontSize(9); doc.setTextColor(100, 116, 139);
-            doc.text(doc.splitTextToSize("Verification of recent restore tests and Recovery Time Objectives. Data without a verified restore plan is a liability.", 155), 25, 121);
+            doc.text(doc.splitTextToSize("Data integrity check. Backups without a quarterly restore test are a critical operational liability.", 155), 25, 126);
 
             doc.setTextColor(15, 23, 42); doc.setFontSize(11); doc.setFont("helvetica", "bold");
-            doc.text("ACTIVE DEFENSE (GUARD DOG)", 25, 135);
-            doc.setFont("helvetica", "normal"); doc.text(`SCORE: ${answers.q3}/25`, 180, 135, {align:"right"});
+            doc.text("DEFENSE (GUARD DOG)", 25, 145);
+            doc.setFont("helvetica", "normal"); doc.text(`SCORE: ${answers.q3}/25`, 180, 145, {align:"right"});
             doc.setFontSize(9); doc.setTextColor(100, 116, 139);
-            doc.text(doc.splitTextToSize("Detection efficacy using Managed AI-EDR vs legacy behavior-blind antivirus solutions.", 155), 25, 141);
+            doc.text(doc.splitTextToSize("Endpoint detection analysis. Managed AI-EDR is required to detect behavior-based ransomware.", 155), 25, 151);
 
-            doc.setFillColor(248, 250, 252); doc.rect(20, 165, 170, 45, 'F');
-            doc.setDrawColor(74, 222, 128); doc.setLineWidth(1.5); doc.line(20, 165, 20, 210);
+            doc.setFillColor(248, 250, 252); doc.rect(20, 175, 170, 45, 'F');
+            doc.setDrawColor(74, 222, 128); doc.setLineWidth(1.5); doc.line(20, 175, 20, 220);
             doc.setTextColor(21, 128, 61); doc.setFont("helvetica", "bold"); doc.setFontSize(13);
-            doc.text("2.0 STRATEGIC REMEDIATION", 28, 180);
+            doc.text("2.0 SUGGESTED FIXES & MEMBERSHIP TIER", 28, 190);
             doc.setTextColor(15, 23, 42); doc.setFont("helvetica", "normal"); doc.setFontSize(10);
-            doc.text(doc.splitTextToSize(remText, 155), 28, 190);
+            doc.text(doc.splitTextToSize(remText, 155), 28, 200);
 
-            doc.setFontSize(8); doc.setTextColor(100, 116, 139);
-            doc.text("Caprock Technology Group | Strategic IT & Surveillance | Amarillo, TX", 105, 285, {align:"center"});
-
-            doc.save(`Caprock-Strategic-Audit-${biz.replace(/\s+/g, '-')}.pdf`);
+            doc.save(`Strategic-Audit-${biz.replace(/\s+/g, '-')}.pdf`);
         }
     </script>
 </body>
