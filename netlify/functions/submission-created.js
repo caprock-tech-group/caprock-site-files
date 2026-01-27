@@ -2,79 +2,143 @@ const https = require('https');
 
 /**
  * Netlify Background Function: submission-created
- * Hardened version to ensure Phone and Company data are captured.
+ * This runs automatically every time a form is submitted on your site.
+ * It dispatches a tactical alert to your Discord Command Center.
  */
 exports.handler = async function(event, context) {
-    const DISCORD_URL = process.env.DISCORD_WEBHOOK_URL;
-    if (!DISCORD_URL) return { statusCode: 500, body: "Webhook missing" };
+    console.log("--- New Form Submission Received ---");
 
+    // 1. Parse the Netlify event body
     let payload;
     try {
-        payload = JSON.parse(event.body).payload;
+        const body = JSON.parse(event.body);
+        payload = body.payload;
     } catch (e) {
-        return { statusCode: 400, body: "Invalid Body" };
+        console.error("Critical Error: Could not parse event body.", e);
+        return { statusCode: 400, body: "Invalid Request Body" };
     }
     
+    // Extract form identity - checking both possible Netlify locations
     const data = payload.data || {};
-    const formName = payload.form_name || data['form-name'] || "Unknown";
+    const netlifyFormName = payload.form_name || data['form-name'] || "Unknown Form";
+    
+    console.log(`Detected Form Name: ${netlifyFormName}`);
+    
+    // 2. Caprock Discord Webhook URL
+    const DISCORD_URL = "https://discord.com/api/webhooks/1459433932553584703/H1hmPninZQ888hL7lFDrtIzAVo0mnMs0axjYm0i6nfsmTLqi1F7t7YHsXyqySxKyp91k";
 
-    // Branding logic
-    let title = "🚨 NEW LEAD";
-    let color = 3447003;
-    if (formName === 'risk-audit') {
-        title = "🔥 RISK AUDIT BRIEFING";
-        color = 15548997;
+    // 3. Define Branding & Terminology
+    let title = "🚨 NEW INTEL: Site Lead";
+    let typeLabel = "General Site Form";
+    let color = 3447003; // Default Blue
+    let detailsField = data.message || "Request for direct contact.";
+
+    // Differentiation logic
+    if (netlifyFormName === 'solar-inquiry') {
+        title = "☀️ HOT LEAD: Solar Form Submission";
+        typeLabel = "Solar Form";
+        color = 16761095; // Yellow
+    } 
+    else if (netlifyFormName === 'contact-v8') {
+        title = "🛡️ MSP INTEL: MSP Information Request";
+        typeLabel = "MSP Information Request";
+        color = 4906624; // Green/Blue
+    }
+    else if (netlifyFormName === 'surveillance-inquiry') {
+        title = "👁️ SURVEILLANCE INTEL: Security Camera Inquiry";
+        typeLabel = "Security Camera Inquiry";
+        color = 4906624; // Green/Blue
+    }
+    else if (netlifyFormName === 'recovery-lead') {
+        title = "📞 RECOVERY OP: Missed-Call Scan";
+        typeLabel = "Missed-Call Recovery Scan";
+        color = 16753920; // Safety Orange (Urgency)
+        // This form asks for Company, not a message
+        detailsField = `Target Company: ${data.company || "Not Specified"}`;
+    }
+    else if (netlifyFormName === 'sentry-lead') {
+         title = "🛡️ SENTRY INTEL: Solar Trailer Inquiry";
+         typeLabel = "Tactical Assessment Request";
+         color = 15158332; // Red (High Priority)
     }
 
-    // Hardened data extraction to prevent missing fields
-    const company = data['company-name-hidden'] || data['bizName'] || "Not Provided";
-    const contact = data.name || data['full-name'] || "Anonymous";
-    const phone = data.phone || data['Phone Number'] || "No Phone Provided";
-    const email = data.email || "No Email Provided";
-    const score = data['immunity-score'] ? `**${data['immunity-score']}/100**` : "N/A";
-
-    const fields = [
-        { name: "Company", value: company, inline: true },
-        { name: "Contact", value: contact, inline: true },
-        { name: "Phone", value: phone, inline: true },
-        { name: "Email", value: email, inline: true },
-        { name: "Score", value: score, inline: true }
-    ];
-
-    if (formName === 'risk-audit') {
-        // Detailed breakdown based on actual answer values
-        const mfa = data.q1 == '25' ? '✅ Enforced' : '❌ Not Enforced';
-        const backup = data.q2 == '35' ? '✅ Tested' : '❌ Unverified';
-        const defense = data.q3 == '25' ? '✅ Managed EDR' : '❌ Basic/None';
-        
-        fields.push({ 
-            name: "Audit Breakdown", 
-            value: `**Identity:** ${mfa}\n**Survival:** ${backup}\n**Defense:** ${defense}`, 
-            inline: false 
-        });
-    }
+    // 4. Construct the Payload for Discord
+    const embed = {
+        title: title,
+        color: color,
+        fields: [
+            {
+                name: "Submission Type",
+                value: String(typeLabel),
+                inline: true
+            },
+            {
+                name: "Contact Person",
+                value: String(data.name || data['full-name'] || "Anonymous"),
+                inline: true
+            },
+            {
+                name: "Mobile / Phone",
+                value: String(data.phone || "No Phone Provided"), 
+                inline: false 
+            },
+            {
+                name: "Email Address",
+                value: String(data.email || "No Email Provided (Phone Only)"),
+                inline: true
+            },
+            {
+                name: "Lead Details / Scope",
+                value: String(detailsField),
+                inline: false
+            }
+        ],
+        footer: {
+            text: "Caprock Command Center • Amarillo, TX",
+        },
+        timestamp: new Date().toISOString()
+    };
 
     const discordPayload = JSON.stringify({
         username: "Caprock Bot",
         content: "@everyone", 
-        embeds: [{ 
-            title, 
-            color, 
-            fields, 
-            footer: { text: "Caprock Command Center • Amarillo, TX" },
-            timestamp: new Date().toISOString() 
-        }]
+        embeds: [embed]
     });
 
-    return new Promise((resolve) => {
+    // 5. Dispatch to Discord
+    return new Promise((resolve, reject) => {
         const url = new URL(DISCORD_URL);
-        const req = https.request({
+        const options = {
             hostname: url.hostname,
             path: url.pathname + url.search,
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
-        }, (res) => resolve({ statusCode: res.statusCode }));
-        req.write(discordPayload);
-        req.end();
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(discordPayload),
+                'User-Agent': 'Caprock-Lead-Bot/2.0'
+            },
+        };
+
+        const request = https.request(options, (res) => {
+            let responseBody = '';
+            res.on('data', (chunk) => { responseBody += chunk; });
+            res.on('end', () => {
+                if (res.statusCode >= 200 && res.statusCode < 300) {
+                    console.log(`Success: Dispatched ${typeLabel} alert.`);
+                    resolve({ statusCode: 200, body: 'Alert Dispatched' });
+                } else {
+                    console.error(`Discord API Error: ${res.statusCode}.`);
+                    resolve({ statusCode: res.statusCode, body: 'Discord API Error' });
+                }
+            });
+        });
+
+        request.on('error', (e) => {
+            console.error('Network Error:', e);
+            resolve({ statusCode: 500, body: 'Network Error' });
+        });
+
+        request.write(discordPayload);
+        request.end();
     });
 };
