@@ -4,6 +4,7 @@ const https = require('https');
  * Netlify Background Function: submission-created
  * This runs automatically every time a form is submitted on your site.
  * It dispatches a tactical alert to your Discord Command Center.
+ * * SECURITY NOTE: Ensure 'DISCORD_WEBHOOK_URL' is set in Netlify Site Settings > Build & Deploy > Environment
  */
 exports.handler = async function(event, context) {
     console.log("--- New Form Submission Received ---");
@@ -24,8 +25,13 @@ exports.handler = async function(event, context) {
     
     console.log(`Detected Form Name: ${netlifyFormName}`);
     
-    // 2. Caprock Discord Webhook URL
-    const DISCORD_URL = "https://discord.com/api/webhooks/1459433932553584703/H1hmPninZQ888hL7lFDrtIzAVo0mnMs0axjYm0i6nfsmTLqi1F7t7YHsXyqySxKyp91k";
+    // 2. Caprock Discord Webhook URL (Loaded from Environment)
+    const DISCORD_URL = process.env.DISCORD_WEBHOOK_URL;
+
+    if (!DISCORD_URL) {
+        console.error("Security Alert: DISCORD_WEBHOOK_URL environment variable is missing.");
+        return { statusCode: 500, body: "Server Configuration Error" };
+    }
 
     // 3. Define Branding & Terminology
     let title = "🚨 NEW INTEL: Site Lead";
