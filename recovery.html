@@ -288,8 +288,14 @@
                             <!-- The Punch -->
                             <div class="bg-dark-bg/50 rounded p-6 text-center mb-8 border border-industrial-border">
                                 <p id="result-daily-loss" class="text-white font-bold text-sm mb-2">This is ~$0/day in missed revenue.</p>
-                                <p id="result-comparison" class="text-brand-blue font-black uppercase tracking-wide text-xs">If this is even close, Pro pays for itself.</p>
-                                <p class="text-[10px] text-gray-500 mt-2 italic">"Most owners don’t have a lead problem. They have a missed call problem."</p>
+                                <p id="result-comparison" class="text-brand-blue font-black uppercase tracking-wide text-xs mb-4">If this is even close, Pro pays for itself.</p>
+                                
+                                <!-- Dynamic Breakdown -->
+                                <div id="result-math-breakdown" class="text-xs font-mono text-gray-400 border-t border-industrial-border pt-3 mt-3">
+                                    <!-- Populated by JS -->
+                                </div>
+
+                                <p class="text-[10px] text-gray-500 mt-4 italic">"Most owners don’t have a lead problem. They have a missed call problem."</p>
                             </div>
 
                             <!-- CTAs -->
@@ -653,16 +659,42 @@
             const roundedDaily = Math.round(dailyLoss / 5) * 5;
             resDailyLoss.textContent = `This is ~${formatCurrency(roundedDaily)}/day in missed revenue.`;
 
-            if (recRevenueMonth > 799) {
-                resComparison.textContent = "If this is even close, Max is a rounding error.";
-                resComparison.className = "text-brand-blue font-black uppercase tracking-wide text-xs";
-            } else if (recRevenueMonth > 499) {
-                resComparison.textContent = "If this is even close, Pro pays for itself.";
-                resComparison.className = "text-brand-blue font-black uppercase tracking-wide text-xs";
+            let msg = "";
+            let msgClass = "text-brand-blue font-black uppercase tracking-wide text-xs mb-4"; // Default style
+
+            if (recRevenueMonth < 299) {
+                msg = "Based on these numbers, this may not be worth paying for — the scan will confirm in 10 minutes.";
+                msgClass = "text-gray-400 font-bold uppercase tracking-wide text-xs mb-4";
+            } else if (recRevenueMonth < 499) {
+                msg = "If this is even close, you’re losing more than the Starter plan costs every month.";
+            } else if (recRevenueMonth < 799) {
+                msg = "If this is even close, one recovered job covers Pro — everything after that is upside.";
+            } else if (recRevenueMonth < 2500) {
+                msg = "If this is even close, Max pays for itself quickly — and keeps missed calls from leaking to competitors.";
             } else {
-                resComparison.textContent = "If your missed calls are this low, we’ll tell you up front.";
-                resComparison.className = "text-gray-400 font-black uppercase tracking-wide text-xs";
+                msg = "If this is even close, you’re losing thousands per month from missed calls. This system is designed to stop that.";
             }
+            
+            resComparison.textContent = msg;
+            resComparison.className = msgClass;
+
+            // Math Breakdown
+            const difference = recRevenueMonth - 799;
+            const mathHtml = `
+                <div class="flex justify-between items-center mb-1">
+                    <span>Estimated recovered:</span>
+                    <span class="text-white">${formatCurrency(Math.round(recRevenueMonth))} /mo</span>
+                </div>
+                <div class="flex justify-between items-center mb-1">
+                    <span>Max plan cost:</span>
+                    <span class="text-white">$799 /mo</span>
+                </div>
+                <div class="flex justify-between items-center border-t border-industrial-border mt-2 pt-2">
+                    <span class="text-brand-blue font-bold uppercase">Net Difference:</span>
+                    <span class="text-brand-blue font-black text-sm">${difference > 0 ? '+' : ''}${formatCurrency(Math.round(difference))} /mo</span>
+                </div>
+            `;
+            document.getElementById('result-math-breakdown').innerHTML = mathHtml;
         }
 
         // Event Listeners
