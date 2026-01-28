@@ -49,6 +49,28 @@
         }
         .animated-section { opacity: 0; }
         .is-visible { animation: fadeInUp 0.8s ease-out forwards; }
+        /* Custom Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #4ade80;
+            cursor: pointer;
+            margin-top: -8px; 
+            box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #334155;
+            border-radius: 2px;
+        }
     </style>
 </head>
 <body class="bg-dark-bg text-gray-300">
@@ -130,7 +152,7 @@
         </section>
 
         <!-- The Problem -->
-        <section class="py-24 border-y border-industrial-border">
+        <section class="py-24 border-b border-industrial-border">
             <div class="container mx-auto px-6">
                 <div class="grid lg:grid-cols-2 gap-16 items-center animated-section">
                     <div>
@@ -176,6 +198,115 @@
                                 <span class="text-brand-blue mr-3">✓</span> You only pay for real results
                             </li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Missed Call Loss Calculator -->
+        <section id="calculator" class="py-24 bg-dark-bg border-b border-industrial-border relative overflow-hidden">
+            <!-- Background element -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-blue/5 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter">Missed Call Loss Calculator</h2>
+                    <p class="text-gray-400 mt-4">Plug in your numbers. See what you're leaving on the table.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-12 gap-12 max-w-6xl mx-auto items-start">
+                    <!-- Inputs (Left) -->
+                    <div class="lg:col-span-5 space-y-10">
+                        <!-- Input 1: Missed Calls -->
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-xs font-black text-gray-400 uppercase tracking-widest">Missed Calls / Week</label>
+                                <span id="display-calls" class="text-brand-blue font-mono font-bold text-lg">10</span>
+                            </div>
+                            <input type="range" id="input-calls" min="0" max="60" value="10" step="1" class="w-full">
+                        </div>
+
+                        <!-- Input 2: Recovery Rate -->
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-xs font-black text-gray-400 uppercase tracking-widest">Recovery Rate</label>
+                                <span id="display-rate" class="text-brand-blue font-mono font-bold text-lg">30%</span>
+                            </div>
+                            <input type="range" id="input-rate" min="10" max="60" value="30" step="5" class="w-full">
+                            <p class="text-[10px] text-gray-500 mt-2 font-medium">Most service companies recover 20–40% quickly.</p>
+                        </div>
+
+                        <!-- Input 3: Job Value -->
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-xs font-black text-gray-400 uppercase tracking-widest">Avg. First Job Value</label>
+                                <span id="display-value" class="text-brand-blue font-mono font-bold text-lg">$600</span>
+                            </div>
+                            <input type="range" id="input-value" min="100" max="5000" value="600" step="50" class="w-full mb-4">
+                            
+                            <!-- Presets -->
+                            <div class="grid grid-cols-4 gap-2">
+                                <button class="preset-btn bg-dark-card border border-industrial-border text-[10px] text-gray-400 py-2 rounded hover:border-brand-blue hover:text-white transition-all font-bold" data-value="2500">Restoration</button>
+                                <button class="preset-btn bg-dark-card border border-industrial-border text-[10px] text-gray-400 py-2 rounded hover:border-brand-blue hover:text-white transition-all font-bold" data-value="600">HVAC</button>
+                                <button class="preset-btn bg-dark-card border border-industrial-border text-[10px] text-gray-400 py-2 rounded hover:border-brand-blue hover:text-white transition-all font-bold" data-value="500">Plumbing</button>
+                                <button class="preset-btn bg-dark-card border border-industrial-border text-[10px] text-gray-400 py-2 rounded hover:border-brand-blue hover:text-white transition-all font-bold" data-value="450">Electric</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results (Right) -->
+                    <div class="lg:col-span-7">
+                        <div class="glass-card p-8 md:p-12 border border-brand-blue/30 relative rounded-xl">
+                            <!-- Report Card Header -->
+                            <div class="flex items-center justify-between border-b border-industrial-border pb-6 mb-6">
+                                <h4 class="text-white font-black uppercase tracking-tighter text-lg">Potential Recovery</h4>
+                                <div class="bg-brand-blue/10 text-brand-blue px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest">Monthly Impact</div>
+                            </div>
+
+                            <!-- Main Number -->
+                            <div class="text-center mb-8">
+                                <div id="result-monthly" class="text-6xl md:text-7xl font-black text-white tracking-tighter mb-2">$0</div>
+                                <p class="text-gray-400 text-sm uppercase tracking-widest font-bold">Recovered / Month</p>
+                            </div>
+
+                            <!-- Breakdown Grid -->
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8 text-center">
+                                <div>
+                                    <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Bookings / Wk</p>
+                                    <p id="result-bookings-week" class="text-xl font-bold text-white font-mono">0</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Revenue / Wk</p>
+                                    <p id="result-revenue-week" class="text-xl font-bold text-white font-mono">$0</p>
+                                </div>
+                                <div class="col-span-2 md:col-span-1 border-t md:border-t-0 md:border-l border-industrial-border pt-4 md:pt-0">
+                                    <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Revenue / Yr</p>
+                                    <p id="result-revenue-year" class="text-xl font-bold text-brand-blue font-mono">$0</p>
+                                </div>
+                            </div>
+
+                            <!-- The Punch -->
+                            <div class="bg-dark-bg/50 rounded p-6 text-center mb-8 border border-industrial-border">
+                                <p id="result-daily-loss" class="text-white font-bold text-sm mb-2">This is ~$0/day in missed revenue.</p>
+                                <p id="result-comparison" class="text-brand-blue font-black uppercase tracking-wide text-xs">If this is even close, Pro pays for itself.</p>
+                                <p class="text-[10px] text-gray-500 mt-2 italic">"Most owners don’t have a lead problem. They have a missed call problem."</p>
+                            </div>
+
+                            <!-- CTAs -->
+                            <div class="text-center space-y-4">
+                                <a href="#assessment" class="block w-full bg-brand-blue text-dark-bg font-black py-4 uppercase tracking-[0.2em] text-xs hover:brightness-110 transition-all shadow-lg rounded-sm">
+                                    Book My Free 10-Minute Missed-Call Scan
+                                </a>
+                                <p class="text-[10px] text-gray-500 font-medium">No obligation. We’ll tell you if this won’t pencil.</p>
+                                
+                                <a href="#assessment" class="inline-block text-gray-400 font-bold uppercase tracking-widest text-[10px] hover:text-white border-b border-transparent hover:border-white transition-all pb-1">
+                                    Start the 7-Day Recovery Sprint
+                                </a>
+                            </div>
+                        </div>
+                        <p class="text-center text-[10px] text-gray-600 mt-6 max-w-lg mx-auto">
+                            Estimates only. Results depend on call volume, service area, and how quickly your team confirms jobs.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -472,6 +603,82 @@
             });
         }, { threshold: 0.1 });
         document.querySelectorAll('.animated-section').forEach(section => { observer.observe(section); });
+
+        // Calculator Logic
+        const inputCalls = document.getElementById('input-calls');
+        const inputRate = document.getElementById('input-rate');
+        const inputValue = document.getElementById('input-value');
+        
+        const displayCalls = document.getElementById('display-calls');
+        const displayRate = document.getElementById('display-rate');
+        const displayValue = document.getElementById('display-value');
+        
+        const resMonthly = document.getElementById('result-monthly');
+        const resBookingsWk = document.getElementById('result-bookings-week');
+        const resRevWk = document.getElementById('result-revenue-week');
+        const resRevYr = document.getElementById('result-revenue-year');
+        const resDailyLoss = document.getElementById('result-daily-loss');
+        const resComparison = document.getElementById('result-comparison');
+        
+        const presets = document.querySelectorAll('.preset-btn');
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
+        }
+
+        function calculate() {
+            const missed = parseInt(inputCalls.value);
+            const rate = parseInt(inputRate.value) / 100;
+            const avg = parseInt(inputValue.value);
+
+            // Update displays
+            displayCalls.textContent = missed;
+            displayRate.textContent = (rate * 100) + '%';
+            displayValue.textContent = formatCurrency(avg);
+
+            // Calculations
+            const recBookingsWeek = missed * rate;
+            const recRevenueWeek = recBookingsWeek * avg;
+            const recRevenueMonth = recRevenueWeek * 4.33;
+            const recRevenueYear = recRevenueMonth * 12;
+            const dailyLoss = recRevenueMonth / 30;
+
+            // Rounding
+            resBookingsWk.textContent = recBookingsWeek.toFixed(1);
+            resRevWk.textContent = formatCurrency(Math.round(recRevenueWeek / 10) * 10);
+            resMonthly.textContent = formatCurrency(Math.round(recRevenueMonth / 10) * 10);
+            resRevYr.textContent = formatCurrency(Math.round(recRevenueYear / 10) * 10);
+            
+            // Comparison Logic
+            const roundedDaily = Math.round(dailyLoss / 5) * 5;
+            resDailyLoss.textContent = `This is ~${formatCurrency(roundedDaily)}/day in missed revenue.`;
+
+            if (recRevenueMonth > 799) {
+                resComparison.textContent = "If this is even close, Max is a rounding error.";
+                resComparison.className = "text-brand-blue font-black uppercase tracking-wide text-xs";
+            } else if (recRevenueMonth > 499) {
+                resComparison.textContent = "If this is even close, Pro pays for itself.";
+                resComparison.className = "text-brand-blue font-black uppercase tracking-wide text-xs";
+            } else {
+                resComparison.textContent = "If your missed calls are this low, we’ll tell you up front.";
+                resComparison.className = "text-gray-400 font-black uppercase tracking-wide text-xs";
+            }
+        }
+
+        // Event Listeners
+        if(inputCalls) {
+            [inputCalls, inputRate, inputValue].forEach(el => {
+                el.addEventListener('input', calculate);
+            });
+            presets.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    inputValue.value = e.target.dataset.value;
+                    calculate();
+                });
+            });
+            // Init
+            calculate();
+        }
     </script>
 </body>
 </html>
