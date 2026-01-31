@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Car Soccer (Browser)</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div id="hud">
+    <div class="row">
+      <div id="score">0 : 0</div>
+      <div id="time">03:00</div>
+    </div>
+    <div class="row">
+      <div class="pill">Controls: WASD steer/drive · SPACE jump · SHIFT boost · R reset</div>
+    </div>
+    <div class="row">
+      <div class="meter">
+        <div class="meterLabel">BOOST</div>
+        <div class="meterBar"><div id="boostFill"></div></div>
+        <div id="boostText">100</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="overlay">
+    <div class="panel">
+      <div class="title">Car Soccer</div>
+      <div class="subtitle">Press <b>ENTER</b> to start / pause</div>
+      <div class="small">
+        Tip: Hold SHIFT to boost. Jump + boost + tilt for basic aerials (limited).
+      </div>
+    </div>
+  </div>
+
+  <canvas id="c"></canvas>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
