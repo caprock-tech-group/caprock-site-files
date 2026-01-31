@@ -34,10 +34,6 @@ scene.fog = new THREE.Fog(0x0b0f1a, 80, 220);
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 600);
 camera.position.set(0, 42, 72);
 
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enablePan = false;
-controls.enableRotate = false;
-controls.enableZoom = false;
 
 const hemi = new THREE.HemisphereLight(0xaab7ff, 0x101629, 0.9);
 scene.add(hemi);
