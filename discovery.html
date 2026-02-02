@@ -3,48 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caprock Missed-Call Recovery Funnel</title>
+    <title>Caprock Revenue Recovery Funnel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { background-color: #0f172a; color: #f1f5f9; font-family: 'Inter', sans-serif; }
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .accent-text { color: #4ade80; }
-        .btn-primary { background-color: #4ade80; color: #0f172a; font-weight: 900; transition: all 0.3s; }
-        .btn-primary:hover { filter: brightness(1.1); transform: scale(1.02); }
+        .btn-primary { background-color: #4ade80; color: #0f172a; font-weight: 900; }
     </style>
 </head>
 <body class="p-4 md:p-8">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-5xl mx-auto">
         <div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4">
-            <div class="text-2xl font-black uppercase tracking-tighter">
-                CAPROCK <span class="accent-text">COMMAND CENTER</span>
-            </div>
-            <div class="text-xs font-mono text-slate-500 uppercase tracking-widest">Revenue Recovery v1.0</div>
+            <div class="text-2xl font-black uppercase tracking-tighter">CAPROCK <span class="accent-text">COMMAND CENTER</span></div>
+            <div class="text-xs font-mono text-slate-500 uppercase tracking-widest">Revenue Recovery v2.0</div>
         </div>
 
         <div class="glass-card p-8 rounded-2xl mb-8">
-            <h2 class="text-xl font-bold mb-6 uppercase tracking-tight">Step 1: The Diagnostic Scan</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
+            <h2 class="text-xl font-bold mb-6 uppercase tracking-tight">Step 1: Diagnostic Input</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="md:col-span-2">
                     <label class="block text-xs font-black text-slate-500 uppercase mb-2">Business Name</label>
-                    <input type="text" id="bizName" placeholder="e.g. Amarillo Restoration" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white">
+                    <input type="text" id="bizName" placeholder="e.g. Amarillo Plumbing Co." class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white">
                 </div>
                 <div>
                     <label class="block text-xs font-black text-slate-500 uppercase mb-2">Avg. Job Value ($)</label>
-                    <input type="number" id="jobValue" value="1000" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white">
+                    <input type="number" id="jobValue" value="1200" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white">
                 </div>
                 <div>
                     <label class="block text-xs font-black text-slate-500 uppercase mb-2">Weekly Missed Calls</label>
-                    <input type="number" id="missedCalls" value="5" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white">
+                    <input type="number" id="missedCalls" value="4" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white">
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div class="glass-card p-8 rounded-2xl border-l-4 border-red-500">
-                <p class="text-xs font-black text-slate-500 uppercase mb-1">Weekly Revenue Leakage</p>
-                <div id="weeklyLoss" class="text-4xl font-black text-white">$0</div>
+                <p class="text-xs font-black text-slate-500 uppercase mb-1">Monthly Revenue Leakage</p>
+                <div id="monthlyLoss" class="text-4xl font-black text-white">$0</div>
             </div>
             <div class="glass-card p-8 rounded-2xl border-l-4 border-red-600 bg-red-500/5">
                 <p class="text-xs font-black text-red-400 uppercase mb-1">Annual Revenue Leakage</p>
@@ -52,83 +49,104 @@
             </div>
         </div>
 
-        <button onclick="exportProposal()" class="w-full btn-primary py-5 rounded-xl text-lg uppercase tracking-widest shadow-2xl mb-12">
-            Generate High-Value Proposal
+        <button onclick="exportProposal()" class="w-full btn-primary py-5 rounded-xl text-lg uppercase tracking-widest shadow-2xl mb-12 hover:scale-[1.01] transition-all">
+            Generate High-Impact PDF Proposal
         </button>
 
         <div id="proposal-template" class="hidden">
-            <div style="padding: 50px; font-family: sans-serif; color: #1e293b; background: white;">
-                <div style="border-bottom: 4px solid #4ade80; padding-bottom: 20px; margin-bottom: 40px;">
-                    <h2 style="margin:0; font-size: 28px;">CAPROCK TECHNOLOGY GROUP</h2>
-                    <h3 style="margin:0; color: #64748b; text-transform: uppercase; font-size: 14px;">Missed-Call Recovery Analysis</h3>
+            <div style="padding: 50px; font-family: 'Helvetica', 'Arial', sans-serif; color: #1e293b; background: white; min-height: 10.5in;">
+                <div style="border-bottom: 5px solid #10b981; padding-bottom: 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h2 style="margin:0; font-size: 32px; font-weight: 900; color: #0f172a;">CAPROCK TECHNOLOGY GROUP</h2>
+                        <h3 style="margin:0; color: #64748b; text-transform: uppercase; font-size: 14px; letter-spacing: 2px;">Strategic Revenue Recovery Proposal</h3>
+                    </div>
                 </div>
                 
-                <p><strong>Prepared For:</strong> <span id="pdf-bizName"></span></p>
-                <p><strong>Analysis Date:</strong> <span id="currentDate"></span></p>
+                <p style="font-size: 14px;"><strong>Client:</strong> <span id="pdf-bizName"></span></p>
+                <p style="font-size: 14px;"><strong>Diagnostic Date:</strong> <span id="currentDate"></span></p>
 
-                <div style="background: #f1f5f9; padding: 30px; border-radius: 10px; margin: 40px 0;">
-                    <h4 style="margin:0 0 15px 0; text-transform: uppercase; color: #ef4444;">Revenue Leakage Detected</h4>
-                    <p style="font-size: 14px;">Based on your current missed call volume and average job value, your business is currently forfeiting:</p>
-                    <div style="font-size: 48px; font-weight: 900; color: #ef4444;" id="pdf-annualLoss">$0</div>
-                    <p style="font-size: 12px; color: #64748b;">*Estimated annual gross revenue lost to competitors due to unanswered leads.</p>
+                <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 30px; border-radius: 12px; margin: 30px 0;">
+                    <h4 style="margin:0 0 10px 0; text-transform: uppercase; color: #dc2626; font-size: 16px;">Verified Revenue Leakage</h4>
+                    <p style="font-size: 15px; margin-bottom: 20px;">Based on your current missed-call volume, your business is forfeiting revenue at the following rates:</p>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>
+                            <span style="font-size: 10px; text-transform: uppercase; color: #991b1b; font-weight: bold;">Monthly Loss</span>
+                            <div style="font-size: 28px; font-weight: 900; color: #dc2626;" id="pdf-monthlyLoss">$0</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 10px; text-transform: uppercase; color: #991b1b; font-weight: bold;">Annual Impact</span>
+                            <div style="font-size: 36px; font-weight: 900; color: #dc2626;" id="pdf-annualLoss">$0</div>
+                        </div>
+                    </div>
                 </div>
 
-                <h4 style="text-transform: uppercase; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">The Caprock Solution</h4>
-                <p style="font-size: 15px;">We don't answer phones; we recover callers. Our system instantly engages missed leads via text-back, qualifies the request, and secures a <strong>Service Window</strong> before the caller moves to the next provider.</p>
+                <h4 style="text-transform: uppercase; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; font-size: 18px;">The Recovery Tier Stack</h4>
+                <p style="font-size: 14px; color: #475569;">Select the plan that aligns with your operational capacity:</p>
 
-                <table style="width: 100%; margin-top: 30px; border-collapse: collapse;">
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
                     <tr style="background: #1e293b; color: white;">
-                        <th style="padding: 15px; text-align: left;">Plan</th>
-                        <th style="padding: 15px; text-align: center;">Investment</th>
+                        <th style="padding: 15px; text-align: left; font-size: 12px;">PLAN</th>
+                        <th style="padding: 15px; text-align: left; font-size: 12px;">FEATURES</th>
+                        <th style="padding: 15px; text-align: center; font-size: 12px;">MONTHLY COST</th>
                     </tr>
                     <tr>
-                        <td style="padding: 15px; border-bottom: 1px solid #e2e8f0;"><strong>The Recovery Pro</strong><br><small>Instant response + Automated Booking</small></td>
-                        <td style="padding: 15px; border-bottom: 1px solid #e2e8f0; text-align: center;">$499/mo</td>
+                        <td style="padding: 15px; border-bottom: 1px solid #e2e8f0;"><strong>Starter</strong></td>
+                        <td style="padding: 15px; border-bottom: 1px solid #e2e8f0; font-size: 12px;">Text-Back, Qualification, Internal Notify</td>
+                        <td style="padding: 15px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: bold;">$299</td>
+                    </tr>
+                    <tr style="background: #f0fdf4;">
+                        <td style="padding: 15px; border-bottom: 1px solid #e2e8f0;"><strong>Pro (Most Popular)</strong></td>
+                        <td style="padding: 15px; border-bottom: 1px solid #e2e8f0; font-size: 12px;">Starter + <strong>Automated Service Window Booking</strong></td>
+                        <td style="padding: 15px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: bold; color: #16a34a;">$499</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px; border-bottom: 1px solid #e2e8f0;"><strong>Max</strong></td>
+                        <td style="padding: 15px; border-bottom: 1px solid #e2e8f0; font-size: 12px;">Pro + After-Hours Logic & Emergency Routing</td>
+                        <td style="padding: 15px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: bold;">$799</td>
                     </tr>
                 </table>
 
-                <div style="margin-top: 50px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px; font-size: 12px; color: #94a3b8;">
-                    (806) 316-5070 | info@caprocktech.com | Amarillo, Texas
+                <div style="margin-top: 30px; padding: 20px; border: 1px solid #10b981; border-radius: 8px; background: #f0fdf4;">
+                    <p style="margin:0; font-size: 14px; font-weight: bold; color: #065f46;">Performance Reclaiming Factor (Monthly):</p>
+                    <p style="margin:5px 0 0 0; font-size: 13px;">By investing <span id="pdf-reclaimCost">$499</span> in the <strong>Pro</strong> plan, you are protecting approximately <span id="pdf-reclaimBenefit">$0</span> in monthly revenue that is currently being lost to competition.</p>
+                </div>
+
+                <div style="margin-top: 60px; text-align: center; color: #94a3b8; font-size: 11px;">
+                    Amarillo, Texas | (806) 316-5070 | info@caprocktech.com | Standard Setup Fee: $499
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const inputs = ['jobValue', 'missedCalls', 'bizName'];
-        inputs.forEach(id => {
-            document.getElementById(id).addEventListener('input', calculate);
-        });
+        const ids = ['jobValue', 'missedCalls', 'bizName'];
+        ids.forEach(id => document.getElementById(id).addEventListener('input', calculate));
 
         function calculate() {
-            const val = parseFloat(document.getElementById('jobValue').value) || 0;
-            const calls = parseFloat(document.getElementById('missedCalls').value) || 0;
-            const weekly = val * calls;
-            const annual = weekly * 52;
+            const v = parseFloat(document.getElementById('jobValue').value) || 0;
+            const c = parseFloat(document.getElementById('missedCalls').value) || 0;
+            const month = v * c * 4.33; // Average weeks per month
+            const year = month * 12;
 
-            document.getElementById('weeklyLoss').innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(weekly);
-            document.getElementById('annualLoss').innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(annual);
+            document.getElementById('monthlyLoss').innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(month);
+            document.getElementById('annualLoss').innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(year);
         }
 
         function exportProposal() {
-            document.getElementById('pdf-bizName').innerText = document.getElementById('bizName').value || "Valued Partner";
+            document.getElementById('pdf-bizName').innerText = document.getElementById('bizName').value || "Strategic Partner";
+            document.getElementById('pdf-monthlyLoss').innerText = document.getElementById('monthlyLoss').innerText;
             document.getElementById('pdf-annualLoss').innerText = document.getElementById('annualLoss').innerText;
+            document.getElementById('pdf-reclaimBenefit').innerText = document.getElementById('monthlyLoss').innerText;
             document.getElementById('currentDate').innerText = new Date().toLocaleDateString();
-            
+
             const element = document.getElementById('proposal-template');
             element.classList.remove('hidden');
-            
-            const opt = {
+            html2pdf().from(element).set({
                 margin: 0,
-                filename: 'Caprock-Recovery-Proposal.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
+                filename: 'Caprock-Recovery-Analysis.pdf',
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-
-            html2pdf().set(opt).from(element).save().then(() => {
-                element.classList.add('hidden');
-            });
+            }).save().then(() => element.classList.add('hidden'));
         }
         calculate();
     </script>
