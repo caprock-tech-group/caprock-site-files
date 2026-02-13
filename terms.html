@@ -39,6 +39,13 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        /* Sticky TOC for desktop */
+        @media (min-width: 1024px) {
+            .sticky-toc {
+                position: sticky;
+                top: 100px;
+            }
+        }
     </style>
 </head>
 <body class="bg-dark-bg text-gray-300">
@@ -58,97 +65,214 @@
     </header>
 
     <main class="pt-32 pb-20">
-        <div class="container mx-auto px-6">
-            <div class="max-w-4xl mx-auto">
-                <div class="text-center mb-16">
-                    <h1 class="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">Terms of Service</h1>
-                    <p class="mt-4 text-lg text-gray-400 font-mono">Effective Date: February 12, 2026</p>
-                </div>
+        <div class="container mx-auto px-6 max-w-7xl">
+            
+            <!-- Page Header -->
+            <div class="mb-16 border-b border-industrial-border pb-8">
+                <h1 class="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter">Terms of Service</h1>
+                <p class="mt-4 text-lg text-gray-400 font-mono">Last updated: February 12, 2026</p>
+                <p class="mt-6 text-gray-300 max-w-3xl">
+                    Welcome to Caprock Technology Group. These Terms of Service ("Terms") govern your access to and use of our services, including Managed IT Services (MSP), Sentry Active Deterrence, and our Messaging Services. By engaging with us, you agree to these terms.
+                </p>
+            </div>
 
-                <div class="space-y-12">
-                    
-                    <!-- Section 1: General -->
-                    <section class="glass-card p-8 rounded-sm border border-industrial-border">
-                        <h2 class="text-2xl font-bold text-white mb-6 uppercase tracking-tight border-b border-industrial-border pb-2">1. General Terms</h2>
+            <div class="lg:grid lg:grid-cols-12 lg:gap-12">
+                
+                <!-- Table of Contents (Sticky Sidebar) -->
+                <aside class="hidden lg:block lg:col-span-3">
+                    <div class="sticky-toc glass-card p-6 rounded-sm border border-industrial-border">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-widest mb-4">On this page</h3>
+                        <nav class="space-y-2 text-sm">
+                            <a href="#definitions" class="block text-gray-400 hover:text-brand-blue transition-colors">1. Definitions</a>
+                            <a href="#services-overview" class="block text-gray-400 hover:text-brand-blue transition-colors">2. Services Overview</a>
+                            <a href="#billing" class="block text-gray-400 hover:text-brand-blue transition-colors">3. Billing & Fees</a>
+                            <a href="#messaging-compliance" class="block text-gray-400 hover:text-brand-blue transition-colors font-bold">4. Messaging (MCTB) Compliance</a>
+                            <a href="#acceptable-use" class="block text-gray-400 hover:text-brand-blue transition-colors">5. Acceptable Use</a>
+                            <a href="#deliverability" class="block text-gray-400 hover:text-brand-blue transition-colors">6. Deliverability</a>
+                            <a href="#data-security" class="block text-gray-400 hover:text-brand-blue transition-colors">7. Data & Security</a>
+                            <a href="#support" class="block text-gray-400 hover:text-brand-blue transition-colors">8. Support</a>
+                            <a href="#legal" class="block text-gray-400 hover:text-brand-blue transition-colors">9-13. Legal Terms</a>
+                        </nav>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="lg:col-span-9 space-y-16">
+
+                    <!-- 1. Definitions -->
+                    <section id="definitions" class="scroll-mt-32">
+                        <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                            <span class="text-brand-blue mr-3 font-mono">01.</span> Definitions
+                        </h2>
                         <div class="prose prose-invert prose-sm max-w-none text-gray-300">
-                            <p>These Terms of Service ("Terms") govern your use of the services provided by Caprock Technology Group, LLC ("Caprock," "we," "us"). By engaging our services, you agree to be bound by these Terms.</p>
-                            <p>We reserve the right to update these Terms at any time. Continued use of our services constitutes acceptance of any changes.</p>
+                            <p>"Client" refers to the entity or individual engaging Caprock Technology Group for services.</p>
+                            <p>"Services" refers to any product or service provided by Caprock, including Managed IT, Sentry, and Messaging capabilities.</p>
+                            <p>"MCTB" refers to Missed Call Text Back and associated automated messaging services.</p>
                         </div>
                     </section>
 
-                    <!-- Section 2: Managed Services (MSP) -->
-                    <section class="glass-card p-8 rounded-sm border border-industrial-border">
-                        <h2 class="text-2xl font-bold text-white mb-6 uppercase tracking-tight border-b border-industrial-border pb-2">2. Managed IT Services (MSP)</h2>
-                        <div class="prose prose-invert prose-sm max-w-none text-gray-300 space-y-4">
-                            <h3 class="text-brand-blue font-bold text-lg">2.1 Service Scope</h3>
-                            <p>Services are provided as detailed in your specific Membership Agreement (Watchtower, Partner, or VIP). Any services outside this scope are billable at our standard hourly rates.</p>
-                            
-                            <h3 class="text-brand-blue font-bold text-lg">2.2 Fair Use Policy</h3>
-                            <p>Plans including "Unlimited Support" are subject to our Fair Use Policy. Support is intended for the maintenance and remediation of covered systems. It does not cover:</p>
-                            <ul class="list-disc list-inside ml-4">
-                                <li>Major projects (e.g., server migrations, office moves).</li>
-                                <li>Support for unauthorized software or hardware.</li>
-                                <li>Training of new employees on basic software usage.</li>
+                    <!-- 2. Services Overview -->
+                    <section id="services-overview" class="scroll-mt-32">
+                        <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                            <span class="text-brand-blue mr-3 font-mono">02.</span> Services Overview
+                        </h2>
+                        <div class="space-y-6">
+                            <div class="glass-card p-6 rounded-sm border-l-2 border-brand-blue">
+                                <h3 class="text-lg font-bold text-white mb-2">Managed IT Services (MSP)</h3>
+                                <p class="text-sm text-gray-300">Services are provided per your specific Membership Agreement (Watchtower, Partner, or VIP). Unlimited support plans are subject to our Fair Use Policy, covering maintenance and remediation of existing systems. Major projects (migrations, moves) are billable.</p>
+                            </div>
+                            <div class="glass-card p-6 rounded-sm border-l-2 border-brand-green">
+                                <h3 class="text-lg font-bold text-white mb-2">Sentry Active Deterrence</h3>
+                                <p class="text-sm text-gray-300">Hardware remains the property of Caprock Technology Group unless purchased. Service relies on cellular/Wi-Fi connectivity; Caprock is not liable for ISP or carrier outages. Systems are deterrents and do not guarantee prevention of all criminal activity.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 3. Billing & Fees -->
+                    <section id="billing" class="scroll-mt-32">
+                        <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                            <span class="text-brand-blue mr-3 font-mono">03.</span> Billing, Fees & Cancellation
+                        </h2>
+                        <div class="prose prose-invert prose-sm max-w-none text-gray-300">
+                            <p><strong>Payment Terms:</strong> Services are billed monthly in advance. Invoices are due upon receipt.</p>
+                            <p><strong>Suspension for Non-Payment:</strong> If payment fails or a chargeback occurs, services—including messaging and monitoring—may be suspended immediately to protect our compliance standing and costs.</p>
+                            <p><strong>Cancellation:</strong> You may cancel services according to the terms in your Master Service Agreement. Upon cancellation, access to platforms and numbers will be terminated, and data retention windows will apply.</p>
+                        </div>
+                    </section>
+
+                    <!-- 4. Messaging Compliance (The Core MCTB Section) -->
+                    <section id="messaging-compliance" class="scroll-mt-32">
+                        <h2 class="text-2xl font-bold text-white mb-6 flex items-center border-b border-industrial-border pb-4">
+                            <span class="text-brand-blue mr-3 font-mono">04.</span> Messaging (MCTB) Compliance & A2P 10DLC
+                        </h2>
+                        
+                        <div class="space-y-8">
+                            <div>
+                                <h3 class="text-lg font-bold text-white mb-2">SMS Activation & Carrier Registration</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">
+                                    Some services require carrier registration (A2P 10DLC) to ensure message delivery. Approval timelines and outcomes are strictly controlled by mobile carriers and their third-party vetting partners (The Campaign Registry). Caprock Technology Group cannot guarantee approval or specific activation dates. We submit registration using the exact legal business information provided by the Client. Any discrepancies may result in delays or rejection.
+                                </p>
+                            </div>
+
+                            <div class="bg-dark-card border border-industrial-border p-6 rounded-sm">
+                                <h3 class="text-base font-bold text-brand-blue uppercase tracking-wide mb-3">Consent & Compliance Responsibility</h3>
+                                <p class="text-sm text-gray-300 mb-4">
+                                    Client is the "Sender" of all messages. You are solely responsible for obtaining and maintaining lawful consent from message recipients before contacting them.
+                                </p>
+                                <ul class="list-disc list-inside text-sm text-gray-400 space-y-1">
+                                    <li>You must honor all opt-out requests (e.g., "STOP") immediately.</li>
+                                    <li>You must honor all help requests (e.g., "HELP") immediately.</li>
+                                    <li>The use of purchased lists or non-consensual cold outreach is strictly prohibited.</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3 class="text-lg font-bold text-white mb-2">Brand Identity Accuracy</h3>
+                                <p class="text-sm text-gray-300">
+                                    Clients must provide accurate legal business names, EINs, physical addresses, and website URLs for registration. Incorrect information can lead to carrier fines or service blocks, for which the Client is liable.
+                                </p>
+                            </div>
+
+                             <div>
+                                <h3 class="text-lg font-bold text-white mb-2">Number Provisioning & Porting</h3>
+                                <p class="text-sm text-gray-300">
+                                    Phone numbers provided by Caprock for MCTB services are leased. We do not guarantee the ability to port these numbers out upon cancellation, though we will make reasonable efforts to assist if requested. Number provisioning is subject to availability.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 5. Acceptable Use -->
+                    <section id="acceptable-use" class="scroll-mt-32">
+                        <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                            <span class="text-brand-blue mr-3 font-mono">05.</span> Acceptable Use Policy
+                        </h2>
+                        <div class="prose prose-invert prose-sm max-w-none text-gray-300">
+                            <p>You agree not to use our services for any unlawful or prohibited purpose. Specific restrictions for messaging include:</p>
+                            <ul class="list-disc list-inside text-gray-400">
+                                <li><strong>Illegal Content:</strong> Anything that violates state or federal laws (SHAFT: Sex, Hate, Alcohol, Firearms, Tobacco).</li>
+                                <li><strong>Harassment:</strong> Threatening, abusive, or unwanted messages.</li>
+                                <li><strong>Deception:</strong> Impersonating other businesses, phishing, or misleading financial claims (get-rich-quick schemes).</li>
                             </ul>
-                            
-                            <h3 class="text-brand-blue font-bold text-lg">2.3 Response Times</h3>
-                            <p>We adhere to the Service Level Agreement (SLA) defined in your contract. While we strive for immediate response, priority is given based on the severity of the issue and your membership tier.</p>
+                            <p class="mt-4">We reserve the right to immediately suspend any account flagged by carriers for spam or policy violations.</p>
                         </div>
                     </section>
 
-                    <!-- Section 3: Sentry Active Deterrence -->
-                    <section class="glass-card p-8 rounded-sm border border-industrial-border">
-                        <h2 class="text-2xl font-bold text-white mb-6 uppercase tracking-tight border-b border-industrial-border pb-2">3. Sentry Active Deterrence</h2>
-                        <div class="prose prose-invert prose-sm max-w-none text-gray-300 space-y-4">
-                            <h3 class="text-brand-blue font-bold text-lg">3.1 Hardware Ownership</h3>
-                            <p>Unless purchased outright, all Sentry hardware (cameras, solar units, sentry boxes) remains the property of Caprock Technology Group. You are leasing the equipment and the monitoring service.</p>
-                            
-                            <h3 class="text-brand-blue font-bold text-lg">3.2 Connectivity</h3>
-                            <p>Sentry units rely on cellular (LTE/5G) or Wi-Fi connectivity. Caprock is not liable for service interruptions caused by ISP outages, cellular tower failures, or extreme weather events that degrade signal quality.</p>
-                            
-                            <h3 class="text-brand-blue font-bold text-lg">3.3 Liability Limitation</h3>
-                            <p>Our Active Deterrence systems are designed to deter theft and vandalism. However, Caprock Technology Group does not guarantee the prevention of all criminal activity and is not liable for any losses incurred while the system is active.</p>
-                        </div>
-                    </section>
-                    
-                    <!-- Section 4: Resold Communications Services (Missed Call Text Back) -->
-                    <section class="glass-card p-8 rounded-sm border border-industrial-border">
-                        <h2 class="text-2xl font-bold text-white mb-6 uppercase tracking-tight border-b border-industrial-border pb-2">4. Resold Communications Services</h2>
-                        <div class="prose prose-invert prose-sm max-w-none text-gray-300 space-y-4">
-                            <p>For clients utilizing our "Missed Call Text Back" or other automated messaging services:</p>
-
-                            <h3 class="text-brand-blue font-bold text-lg">4.1 Platform Provider Role</h3>
-                            <p>Caprock Technology Group provides the technical platform and configuration for automated messaging. You, the Client, are the sender of these messages. You are solely responsible for ensuring your use of the service complies with all applicable laws, including A2P 10DLC regulations and the TCPA.</p>
-                            
-                            <h3 class="text-brand-blue font-bold text-lg">4.2 Client Responsibilities</h3>
-                            <p>You agree to obtain all necessary consent from your own customers before sending them automated messages. You must honor all opt-out requests (e.g., "STOP") immediately.</p>
-                            
-                            <h3 class="text-brand-blue font-bold text-lg">4.3 Indemnification</h3>
-                            <p>You agree to indemnify and hold harmless Caprock Technology Group from any claims, damages, or fines arising from your use of the messaging service, including but not limited to violations of telecommunications laws.</p>
+                    <!-- 6. Deliverability -->
+                    <section id="deliverability" class="scroll-mt-32">
+                        <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                            <span class="text-brand-blue mr-3 font-mono">06.</span> Deliverability & Disclaimers
+                        </h2>
+                        <div class="glass-card p-6 rounded-sm">
+                            <p class="text-sm text-gray-300 leading-relaxed">
+                                SMS and email delivery is "best-effort." Delivery rates may be impacted by carrier filtering, recipient device settings, network conditions, and evolving compliance rules. Caprock Technology Group <strong>does not guarantee</strong> message delivery, open rates, response rates, or specific business results from the use of our communication tools.
+                            </p>
                         </div>
                     </section>
 
-                    <!-- Section 5: Messaging & SMS Disclosure (Our Own Usage) -->
-                    <section class="glass-card p-8 rounded-sm border border-industrial-border">
-                        <h2 class="text-2xl font-bold text-white mb-6 uppercase tracking-tight border-b border-industrial-border pb-2">5. Caprock Tech Messaging Policy</h2>
-                        <div class="prose prose-invert prose-sm max-w-none text-gray-300 space-y-4">
-                            <p class="italic text-gray-400 mb-4">The following applies to communications initiated by Caprock Technology Group to our own clients and prospects.</p>
-                            
-                            <p><strong>Business Name:</strong> Caprock Technology Group LLC<br>
-                            <strong>Contact:</strong> info@caprocktech.com | (806) 316-5070</p>
-                            
-                            <h3 class="text-brand-blue font-bold text-lg">5.1 Messaging Purpose</h3>
-                            <p>By calling or texting our number, you agree to receive a follow-up text message if we are unable to answer your call. This automated message is intended solely to assist you in scheduling a callback or service appointment.</p>
-                            
-                            <h3 class="text-brand-blue font-bold text-lg">5.2 Consent & Frequency</h3>
-                            <p>By initiating contact with us, you consent to receive transactional SMS messages related to your inquiry. Message frequency varies based on your interaction with us.</p>
-                            
-                            <h3 class="text-brand-blue font-bold text-lg">5.3 Opt-Out</h3>
-                            <p>You may opt out of receiving messages at any time by replying <strong>STOP</strong>. For help, reply <strong>HELP</strong>.</p>
-                            
-                            <h3 class="text-brand-blue font-bold text-lg">5.4 Privacy</h3>
-                            <p>We value your privacy. We do not sell, rent, or share your personal information or phone number with third parties for marketing purposes. Data is used strictly to communicate with you regarding your service inquiries.</p>
+                    <!-- 7. Data & Security -->
+                    <section id="data-security" class="scroll-mt-32">
+                        <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                            <span class="text-brand-blue mr-3 font-mono">07.</span> Data & Security
+                        </h2>
+                        <div class="prose prose-invert prose-sm max-w-none text-gray-300">
+                            <p>We take the security of your data seriously. Client data collected during onboarding is stored in our secure CRM and is used solely for service provisioning and support. We do not sell client data. Access to your data is limited to authorized staff and contractors who require it to perform their duties.</p>
+                            <p>For more details, please refer to our <a href="#" class="text-brand-blue hover:underline">Privacy Policy</a>.</p>
                         </div>
+                    </section>
+
+                    <!-- 8. Support -->
+                    <section id="support" class="scroll-mt-32">
+                        <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                            <span class="text-brand-blue mr-3 font-mono">08.</span> Support
+                        </h2>
+                        <div class="prose prose-invert prose-sm max-w-none text-gray-300">
+                            <p>Support for MCTB and other ancillary services is provided during our standard business hours. While we will assist with carrier registration issues, please note that carrier delays are outside of our control and do not constitute a failure of our support obligations.</p>
+                        </div>
+                    </section>
+
+                    <!-- 9-13. Legal Terms -->
+                    <section id="legal" class="scroll-mt-32 space-y-12">
+                        
+                        <div>
+                            <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                                <span class="text-brand-blue mr-3 font-mono">09.</span> Third-Party Dependencies
+                            </h2>
+                            <p class="text-sm text-gray-300">Our services rely on third-party providers (mobile carriers, messaging gateways, upstream software vendors). We are not liable for service interruptions or feature changes caused by these third parties.</p>
+                        </div>
+
+                        <div>
+                            <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                                <span class="text-brand-blue mr-3 font-mono">10.</span> Limitation of Liability
+                            </h2>
+                            <p class="text-sm text-gray-300">To the maximum extent permitted by law, Caprock Technology Group shall not be liable for any indirect, incidental, special, or consequential damages, including lost profits or data, arising from the use of our services.</p>
+                        </div>
+
+                        <div>
+                            <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                                <span class="text-brand-blue mr-3 font-mono">11.</span> Indemnification
+                            </h2>
+                            <p class="text-sm text-gray-300">You agree to indemnify and hold harmless Caprock Technology Group from any claims, damages, or fines arising from your use of the services, specifically including violations of the TCPA, CAN-SPAM Act, or other telecommunications regulations caused by your messaging practices.</p>
+                        </div>
+
+                         <div>
+                            <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                                <span class="text-brand-blue mr-3 font-mono">12.</span> Changes to Terms
+                            </h2>
+                            <p class="text-sm text-gray-300">We reserve the right to modify these Terms at any time. We will provide notice of material changes. Continued use of the service constitutes acceptance of the new Terms.</p>
+                        </div>
+
+                         <div>
+                            <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                                <span class="text-brand-blue mr-3 font-mono">13.</span> Contact Information
+                            </h2>
+                            <p class="text-sm text-gray-300">
+                                <strong>Caprock Technology Group LLC</strong><br>
+                                Support: <a href="mailto:support@caprocktech.com" class="text-brand-blue hover:underline">support@caprocktech.com</a><br>
+                                Phone: (806) 316-5070
+                            </p>
+                        </div>
+
                     </section>
 
                 </div>
@@ -160,6 +284,10 @@
     <footer class="bg-dark-bg border-t border-industrial-border text-gray-500 py-12">
         <div class="container mx-auto px-6 text-center">
             <p class="text-[10px] uppercase tracking-[0.4em] font-mono">&copy; 2025 Caprock Technology Group, LLC.</p>
+            <div class="mt-4 flex justify-center space-x-6 text-xs font-mono">
+                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition-colors">SMS Policy</a>
+            </div>
         </div>
     </footer>
 
