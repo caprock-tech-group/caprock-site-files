@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caprock Operations - Client Onboarding</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- HTML2PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#0f172a',
+                            card: '#1e293b',
+                            border: '#334155',
+                            accent: '#4ade80', /* Industrial Green */
+                            text: '#cbd5e1',
+                            muted: '#94a3b8'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0f172a; color: #cbd5e1; }
+        .step-container { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .step-container.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Custom Inputs */
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"] {
+            background-color: #0f172a; border: 1px solid #334155; color: white; padding: 12px 16px; border-radius: 6px; width: 100%; font-family: 'JetBrains Mono', monospace; font-size: 14px;
+        }
+        input:focus { outline: none; border-color: #4ade80; box-shadow: 0 0 0 1px #4ade80; }
+        
+        /* Plan Cards */
+        .plan-card { border: 2px solid #334155; border-radius: 8px; padding: 20px; cursor: pointer; transition: all 0.2s; background: #1e293b; }
+        .plan-card:hover { border-color: #64748b; }
+        .plan-card.selected { border-color: #4ade80; background: rgba(74, 222, 128, 0.05); }
+        .plan-card.selected .plan-radio { border-color: #4ade80; background: #4ade80; }
+        .plan-card.selected .plan-radio::after { content: ''; width: 8px; height: 8px; background: #0f172a; border-radius: 50%; display: block; margin: 4px auto; }
+        .plan-radio { width: 20px; height: 20px; border: 2px solid #64748b; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 12px; transition: all 0.2s; }
+
+        /* Hidden PDF Template (Rendered off-screen) */
+        #pdf-export-container {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+        }
+        #pdf-template {
+            width: 800px; /* Standard letter width approximation */
+            background: white;
+            color: #111827; /* Very dark gray/black */
+            padding: 40px 50px;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+        }
+        .pdf-header { border-bottom: 3px solid #111827; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .pdf-section-title { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; color: #374151; }
+        .pdf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .pdf-data-label { font-size: 10px; text-transform: uppercase; color: #6b7280; font-weight: 700; margin-bottom: 2px; }
+        .pdf-data-value { font-size: 14px; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #111827; }
+        .pdf-pricing-box { background: #f3f4f6; border: 1px solid #d1d5db; padding: 20px; border-radius: 4px; margin-bottom: 25px; }
+        .pdf-legal-text { font-size: 11px; line-height: 1.6; color: #4b5563; text-align: justify; }
+        .pdf-legal-text h4 { font-size: 12px; font-weight: 700; color: #111827; margin-top: 15px; margin-bottom: 5px; text-transform: uppercase; }
+        .pdf-legal-text ul { padding-left: 20px; margin-top: 5px; margin-bottom: 10px; list-style-type: disc; }
+        .pdf-sig-block { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .pdf-sig-line { border-bottom: 1px solid #111827; height: 40px; margin-bottom: 5px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="bg-brand-card border-b border-brand-border px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-shield-alt text-brand-accent text-2xl"></i>
+            <span class="font-bold text-white tracking-widest uppercase">Caprock Operations</span>
+        </div>
+        <div class="text-xs font-mono text-brand-muted border border-brand-border px-3 py-1 rounded">
+            INTERNAL ONBOARDING SECURE PORTAL
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center p-6">
+        <div class="w-full max-w-3xl">
+            
+            <!-- Progress Tracker -->
+            <div class="flex items-center justify-between mb-8 px-4 relative">
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-brand-border -z-10"></div>
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-brand-accent -z-10 transition-all duration-300" id="progress-bar" style="width: 0%;"></div>
+                
+                <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-brand-accent text-brand-bg step-indicator" id="ind-1">1</div>
+                <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-brand-card border-2 border-brand-border text-brand-muted step-indicator" id="ind-2">2</div>
+                <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-brand-card border-2 border-brand-border text-brand-muted step-indicator" id="ind-3">3</div>
+                <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-brand-card border-2 border-brand-border text-brand-muted step-indicator" id="ind-4">4</div>
+            </div>
+
+            <!-- WIZARD CONTAINER -->
+            <div class="bg-brand-card border border-brand-border rounded-xl shadow-2xl p-8">
+                
+                <!-- STEP 1: Client Information -->
+                <div id="step-1" class="step-container active">
+                    <h2 class="text-2xl font-bold text-white mb-6 uppercase tracking-tight">Client Information</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Legal Company Name</label>
+                            <input type="text" id="c-company" placeholder="e.g. Panhandle Construction LLC" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Primary Contact Name</label>
+                            <input type="text" id="c-name" placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Title / Role</label>
+                            <input type="text" id="c-title" placeholder="Owner / CEO">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Email Address</label>
+                            <input type="email" id="c-email" placeholder="john@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Direct Phone</label>
+                            <input type="tel" id="c-phone" placeholder="(806) 555-0199">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Physical Service Address</label>
+                            <input type="text" id="c-address" placeholder="123 Main St, Amarillo, TX 79101">
+                        </div>
+                    </div>
+                    <div class="mt-8 flex justify-end">
+                        <button onclick="goToStep(2)" class="bg-brand-accent text-brand-bg font-bold px-8 py-3 rounded uppercase tracking-wider hover:brightness-110">Next: Select Plan <i class="fas fa-arrow-right ml-2"></i></button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Service Selection -->
+                <div id="step-2" class="step-container">
+                    <h2 class="text-2xl font-bold text-white mb-6 uppercase tracking-tight">Service Architecture</h2>
+                    
+                    <div class="space-y-4 mb-8">
+                        <!-- Watchtower -->
+                        <div class="plan-card" onclick="selectPlan('Watchtower', 75, this)">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="plan-radio"></div>
+                                    <span class="font-bold text-lg text-white">The Watchtower (Tier 1)</span>
+                                </div>
+                                <div class="font-mono text-xl text-white">$75<span class="text-sm text-brand-muted">/mo</span></div>
+                            </div>
+                            <p class="text-sm text-brand-muted ml-8 mt-1">Silent Protection. AV/EDR, Patching, Monitoring. (Labor billed hourly).</p>
+                        </div>
+
+                        <!-- Partner -->
+                        <div class="plan-card selected" onclick="selectPlan('Partner', 125, this)">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="plan-radio"></div>
+                                    <span class="font-bold text-lg text-white">The Partner (Tier 2)</span>
+                                </div>
+                                <div class="font-mono text-xl text-white">$125<span class="text-sm text-brand-muted">/mo</span></div>
+                            </div>
+                            <p class="text-sm text-brand-muted ml-8 mt-1">Full stack + Unlimited Remote Support. (Discounted On-Site).</p>
+                        </div>
+
+                        <!-- VIP -->
+                        <div class="plan-card" onclick="selectPlan('VIP', 175, this)">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="plan-radio"></div>
+                                    <span class="font-bold text-lg text-white">The VIP (Tier 3)</span>
+                                </div>
+                                <div class="font-mono text-xl text-white">$175<span class="text-sm text-brand-muted">/mo</span></div>
+                            </div>
+                            <p class="text-sm text-brand-muted ml-8 mt-1">Virtual CIO. Unlimited Remote & On-Site Support. MDR + Server Backup.</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-brand-border pt-6 flex items-end gap-6">
+                        <div class="flex-grow">
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Total Managed Users / Endpoints</label>
+                            <input type="number" id="c-users" value="10" min="1" oninput="calculateTotal()" class="text-2xl font-bold">
+                        </div>
+                        <div class="text-right bg-brand-bg border border-brand-border px-6 py-4 rounded">
+                            <div class="text-xs font-bold text-brand-muted uppercase tracking-widest mb-1">Estimated MRR</div>
+                            <div id="ui-total-mrr" class="text-3xl font-black text-brand-accent font-mono">$1,250.00</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-between">
+                        <button onclick="goToStep(1)" class="text-brand-muted hover:text-white font-bold px-6 py-3 uppercase tracking-wider"><i class="fas fa-arrow-left mr-2"></i> Back</button>
+                        <button onclick="goToStep(3)" class="bg-brand-accent text-brand-bg font-bold px-8 py-3 rounded uppercase tracking-wider hover:brightness-110">Next: Scope <i class="fas fa-arrow-right ml-2"></i></button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Environment Scope & Add-ons -->
+                <div id="step-3" class="step-container">
+                    <h2 class="text-2xl font-bold text-white mb-6 uppercase tracking-tight">Environment Scope</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Number of Servers</label>
+                            <input type="number" id="c-servers" value="0" min="0">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Number of Network Sites/Locations</label>
+                            <input type="number" id="c-sites" value="1" min="1">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Line of Business Applications (Comma separated)</label>
+                            <input type="text" id="c-software" placeholder="e.g. QuickBooks, Sage, Procore, Dentrix">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Additional Onboarding Notes / Exclusions</label>
+                            <input type="text" id="c-notes" placeholder="e.g. Client retains admin access to legacy server.">
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-between">
+                        <button onclick="goToStep(2)" class="text-brand-muted hover:text-white font-bold px-6 py-3 uppercase tracking-wider"><i class="fas fa-arrow-left mr-2"></i> Back</button>
+                        <button onclick="goToStep(4)" class="bg-brand-accent text-brand-bg font-bold px-8 py-3 rounded uppercase tracking-wider hover:brightness-110">Review & Generate <i class="fas fa-file-contract ml-2"></i></button>
+                    </div>
+                </div>
+
+                <!-- STEP 4: Review & Export -->
+                <div id="step-4" class="step-container">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 rounded-full bg-green-900/30 text-brand-accent flex items-center justify-center text-3xl mx-auto mb-4 border border-brand-accent">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-white uppercase tracking-tight">Ready for Deployment</h2>
+                        <p class="text-brand-muted mt-2">All parameters captured. Ready to generate the binding SLA.</p>
+                    </div>
+                    
+                    <div class="bg-brand-bg border border-brand-border rounded p-6 mb-8">
+                        <div class="grid grid-cols-2 gap-4 text-sm font-mono">
+                            <div class="text-brand-muted">Client:</div>
+                            <div class="text-white font-bold" id="rev-company">--</div>
+                            <div class="text-brand-muted">Selected Tier:</div>
+                            <div class="text-white font-bold" id="rev-plan">Partner (Tier 2)</div>
+                            <div class="text-brand-muted">Managed Users:</div>
+                            <div class="text-white font-bold" id="rev-users">10</div>
+                            <div class="text-brand-muted border-t border-brand-border pt-2 mt-2">Initial MRR:</div>
+                            <div class="text-brand-accent font-black text-xl border-t border-brand-border pt-2 mt-2" id="rev-mrr">$1,250.00</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-4">
+                        <button onclick="generatePDF()" id="pdf-btn" class="w-full bg-brand-accent text-brand-bg font-black text-lg px-8 py-4 rounded uppercase tracking-widest hover:brightness-110 shadow-lg active:scale-95 transition-all">
+                            <i class="fas fa-file-pdf mr-2"></i> Export SLA Document
+                        </button>
+                        <button onclick="goToStep(3)" class="w-full text-brand-muted hover:text-white font-bold px-6 py-3 uppercase tracking-wider">
+                            Edit Scope
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ==========================================
+         HIDDEN PDF TEMPLATE (The Actual SLA Document)
+         ========================================== -->
+    <div id="pdf-export-container">
+        <div id="pdf-template">
+            <!-- Header -->
+            <div class="pdf-header">
+                <div>
+                    <h1 style="font-size: 24px; font-weight: 900; text-transform: uppercase; margin:0; line-height: 1;">Managed IT Services Agreement</h1>
+                    <p style="margin: 5px 0 0 0; font-size: 11px; color: #6b7280; font-family: 'JetBrains Mono', monospace;">SERVICE LEVEL AGREEMENT (SLA) & ONBOARDING SCOPE</p>
+                </div>
+                <div style="text-align: right;">
+                    <img src="https://caprocktech.com/caprock%20logo%20transparent%20BG%201.png" alt="Caprock Logo" style="height: 40px; filter: invert(1) brightness(0);">
+                    <div style="font-size: 10px; font-weight: bold; margin-top: 5px; color: #374151;">CAPROCK TECHNOLOGY GROUP, LLC</div>
+                    <div style="font-size: 10px; color: #6b7280;">Amarillo, TX • (806) 316-5070</div>
+                </div>
+            </div>
+
+            <p style="font-size: 12px; color: #4b5563; margin-bottom: 20px;">
+                This Service Level Agreement ("Agreement") is entered into as of <strong><span id="pdf-date"></span></strong> (the "Effective Date"), by and between Caprock Technology Group, LLC ("Provider") and the client identified below ("Client").
+            </p>
+
+            <!-- Client Info -->
+            <div class="pdf-section-title">1. Client Information</div>
+            <div class="pdf-grid">
+                <div>
+                    <div class="pdf-data-label">Legal Company Name</div>
+                    <div class="pdf-data-value" id="pdf-company">--</div>
+                </div>
+                <div>
+                    <div class="pdf-data-label">Primary Contact</div>
+                    <div class="pdf-data-value"><span id="pdf-name">--</span> (<span id="pdf-title">--</span>)</div>
+                </div>
+                <div>
+                    <div class="pdf-data-label">Email Address</div>
+                    <div class="pdf-data-value" id="pdf-email">--</div>
+                </div>
+                <div>
+                    <div class="pdf-data-label">Phone Number</div>
+                    <div class="pdf-data-value" id="pdf-phone">--</div>
+                </div>
+                <div style="grid-column: span 2;">
+                    <div class="pdf-data-label">Service Address</div>
+                    <div class="pdf-data-value" id="pdf-address">--</div>
+                </div>
+            </div>
+
+            <!-- Scope & Pricing -->
+            <div class="pdf-section-title">2. Scope of Services & Investment</div>
+            <div class="pdf-grid" style="margin-bottom: 10px;">
+                <div>
+                    <div class="pdf-data-label">Environment Scope</div>
+                    <div style="font-size: 12px; color: #374151;">
+                        Servers: <strong id="pdf-servers">0</strong> | Locations: <strong id="pdf-sites">1</strong><br>
+                        LOB Apps: <span id="pdf-software">None specified</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="pdf-data-label">Special Inclusions/Exclusions</div>
+                    <div style="font-size: 12px; color: #374151; font-style: italic;" id="pdf-notes">Standard deployment parameters apply.</div>
+                </div>
+            </div>
+
+            <div class="pdf-pricing-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #d1d5db; padding-bottom: 10px; margin-bottom: 10px;">
+                    <div>
+                        <div style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Selected Support Tier</div>
+                        <div style="font-size: 18px; font-weight: 800; color: #111827; text-transform: uppercase;" id="pdf-plan-name">The Partner</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Managed Users</div>
+                        <div style="font-size: 18px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #111827;" id="pdf-user-count">10</div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-size: 12px; font-weight: 600; color: #374151;" id="pdf-plan-desc">
+                        Includes RMM, EDR, Backup, and Unlimited Remote Support.
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Total Monthly Recurring (MRR)</div>
+                        <div style="font-size: 24px; font-family: 'JetBrains Mono', monospace; font-weight: 900; color: #166534;" id="pdf-total-mrr">$1,250.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- The Rock Solid SLA Terms -->
+            <div class="pdf-section-title">3. Service Level Agreement (SLA) Terms</div>
+            <div class="pdf-legal-text">
+                <h4>3.1 Coverage Hours & Availability</h4>
+                Provider’s standard business hours are 8:00 AM to 5:00 PM Central Time, Monday through Friday, excluding standard US holidays. Support requested outside these hours constitutes Emergency After-Hours Support and is billable at 1.5x the standard rate unless explicitly included in the Client's selected Service Tier.
+                
+                <h4>3.2 Targeted Response Times</h4>
+                Provider utilizes a triage system to prioritize operational impact. Targeted response times during business hours are as follows:
+                <ul>
+                    <li><strong>Critical (Severity 1):</strong> Complete network outage or active security breach. Target Response: <strong>1 Hour</strong>.</li>
+                    <li><strong>High (Severity 2):</strong> Significant operational impairment affecting multiple users. Target Response: <strong>4 Hours</strong>.</li>
+                    <li><strong>Normal (Severity 3):</strong> Standard user requests, password resets, minor bugs. Target Response: <strong>Next Business Day</strong>.</li>
+                </ul>
+
+                <h4>3.3 The Panhandle Travel Policy</h4>
+                On-site support travel within the city limits of Amarillo and Canyon, TX incurs no trip charge. Travel to locations outside this primary zone will be billed a travel surcharge of $1.50 per mile (round trip) from Provider headquarters, regardless of Service Tier, unless a superseding written addendum is provided.
+
+                <h4>3.4 Exclusions from Managed Services</h4>
+                The Monthly Recurring Revenue (MRR) covers maintenance, monitoring, and support of the existing environment as scoped. It <strong>does not</strong> include: (a) The cost of new hardware or software licensing not explicitly bundled; (b) Major project labor (e.g., server migrations, office moves, complete network rebuilds); (c) Support for proprietary Line of Business software beyond basic vendor liaison services. Major projects will be quoted separately.
+
+                <h4>3.5 Term and Termination</h4>
+                This Agreement is effective upon execution and operates on a month-to-month basis unless an annual discount term is selected. Either party may terminate this Agreement without cause by providing thirty (30) days written notice. Upon termination, Client is responsible for all fees accrued up to the termination date. Provider will cooperatively hand over administrative credentials upon account settlement.
+            </div>
+
+            <!-- Signature Block -->
+            <div class="pdf-sig-block">
+                <div>
+                    <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 20px;">Accepted by Client</div>
+                    <div class="pdf-sig-line"></div>
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #4b5563;">
+                        <span>Authorized Signature</span>
+                        <span>Date</span>
+                    </div>
+                    <div class="pdf-sig-line" style="margin-top: 15px;"></div>
+                    <div style="font-size: 11px; color: #4b5563;">Printed Name & Title</div>
+                </div>
+                <div>
+                    <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 20px;">Accepted by Caprock Technology Group</div>
+                    <div class="pdf-sig-line"></div>
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #4b5563;">
+                        <span>Nick Stevens, Founder</span>
+                        <span>Date</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        // State
+        let currentStep = 1;
+        let selectedPlan = { name: 'Partner', price: 125, desc: "Full stack + Unlimited Remote Support. (Discounted On-Site)." };
+
+        // Set Date
+        document.getElementById('pdf-date').innerText = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+        // Navigation
+        function goToStep(step) {
+            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${step}`).classList.add('active');
+            
+            // Update Indicators
+            for(let i=1; i<=4; i++) {
+                const ind = document.getElementById(`ind-${i}`);
+                if(i < step) {
+                    ind.className = "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-brand-accent text-brand-bg step-indicator";
+                    ind.innerHTML = '<i class="fas fa-check"></i>';
+                } else if (i === step) {
+                    ind.className = "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-brand-accent text-brand-bg step-indicator ring-4 ring-brand-accent/30";
+                    ind.innerHTML = i;
+                } else {
+                    ind.className = "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-brand-card border-2 border-brand-border text-brand-muted step-indicator";
+                    ind.innerHTML = i;
+                }
+            }
+            
+            // Progress Bar
+            document.getElementById('progress-bar').style.width = ((step - 1) / 3 * 100) + '%';
+            currentStep = step;
+
+            // If going to Step 4, populate review data
+            if(step === 4) {
+                populateReview();
+            }
+        }
+
+        // Plan Selection
+        function selectPlan(name, price, element) {
+            document.querySelectorAll('.plan-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            let desc = "";
+            if(name === 'Watchtower') desc = "Silent Protection. AV/EDR, Patching, Monitoring. (Labor billed hourly).";
+            if(name === 'Partner') desc = "Full stack + Unlimited Remote Support. (Discounted On-Site).";
+            if(name === 'VIP') desc = "Virtual CIO. Unlimited Remote & On-Site. MDR + Server Backup.";
+
+            selectedPlan = { name, price, desc };
+            calculateTotal();
+        }
+
+        // Calculation
+        function calculateTotal() {
+            const users = parseInt(document.getElementById('c-users').value) || 0;
+            const total = users * selectedPlan.price;
+            
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+            document.getElementById('ui-total-mrr').innerText = formatter.format(total);
+        }
+
+        // Populate Final Review & PDF Template
+        function populateReview() {
+            // Get values
+            const company = document.getElementById('c-company').value || "Company Not Specified";
+            const name = document.getElementById('c-name').value || "Not Specified";
+            const title = document.getElementById('c-title').value || "Not Specified";
+            const email = document.getElementById('c-email').value || "Not Specified";
+            const phone = document.getElementById('c-phone').value || "Not Specified";
+            const address = document.getElementById('c-address').value || "Not Specified";
+            const users = document.getElementById('c-users').value || 0;
+            const servers = document.getElementById('c-servers').value || 0;
+            const sites = document.getElementById('c-sites').value || 1;
+            const software = document.getElementById('c-software').value || "None specified";
+            const notes = document.getElementById('c-notes').value || "Standard deployment parameters apply.";
+            
+            const mrr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(users * selectedPlan.price);
+
+            // Update Screen 4 UI
+            document.getElementById('rev-company').innerText = company;
+            document.getElementById('rev-plan').innerText = selectedPlan.name;
+            document.getElementById('rev-users').innerText = users;
+            document.getElementById('rev-mrr').innerText = mrr;
+
+            // Update PDF Template
+            document.getElementById('pdf-company').innerText = company;
+            document.getElementById('pdf-name').innerText = name;
+            document.getElementById('pdf-title').innerText = title;
+            document.getElementById('pdf-email').innerText = email;
+            document.getElementById('pdf-phone').innerText = phone;
+            document.getElementById('pdf-address').innerText = address;
+            
+            document.getElementById('pdf-servers').innerText = servers;
+            document.getElementById('pdf-sites').innerText = sites;
+            document.getElementById('pdf-software').innerText = software;
+            document.getElementById('pdf-notes').innerText = notes;
+
+            document.getElementById('pdf-plan-name').innerText = "Tier: " + selectedPlan.name;
+            document.getElementById('pdf-plan-desc').innerText = selectedPlan.desc;
+            document.getElementById('pdf-user-count').innerText = users;
+            document.getElementById('pdf-total-mrr').innerText = mrr;
+        }
+
+        // PDF Generation
+        function generatePDF() {
+            const btn = document.getElementById('pdf-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating SLA...';
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            const element = document.getElementById('pdf-template');
+            const companyName = document.getElementById('c-company').value.replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'client';
+            
+            const opt = {
+                margin:       0, // Margins are handled by CSS padding
+                filename:     `Caprock_SLA_${companyName}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                btn.innerHTML = '<i class="fas fa-check mr-2"></i> PDF Downloaded';
+                btn.classList.replace('bg-brand-accent', 'bg-green-600');
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.replace('bg-green-600', 'bg-brand-accent');
+                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                }, 3000);
+            });
+        }
+
+        // Init calculations
+        calculateTotal();
+    </script>
+</body>
+</html>
+
