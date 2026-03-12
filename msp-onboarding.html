@@ -44,10 +44,10 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         /* Custom Inputs */
-        input[type="text"], input[type="email"], input[type="tel"], input[type="number"] {
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
             background-color: #0f172a; border: 1px solid #334155; color: white; padding: 12px 16px; border-radius: 6px; width: 100%; font-family: 'JetBrains Mono', monospace; font-size: 14px;
         }
-        input:focus { outline: none; border-color: #4ade80; box-shadow: 0 0 0 1px #4ade80; }
+        input:focus, select:focus { outline: none; border-color: #4ade80; box-shadow: 0 0 0 1px #4ade80; }
         
         /* Plan Cards */
         .plan-card { border: 2px solid #334155; border-radius: 8px; padding: 20px; cursor: pointer; transition: all 0.2s; background: #1e293b; }
@@ -78,10 +78,13 @@
         .pdf-data-value { font-size: 14px; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #111827; }
         .pdf-pricing-box { background: #f3f4f6; border: 1px solid #d1d5db; padding: 20px; border-radius: 4px; margin-bottom: 25px; }
         .pdf-legal-text { font-size: 11px; line-height: 1.6; color: #4b5563; text-align: justify; }
-        .pdf-legal-text h4 { font-size: 12px; font-weight: 700; color: #111827; margin-top: 15px; margin-bottom: 5px; text-transform: uppercase; }
+        .pdf-legal-text h4 { font-size: 12px; font-weight: 700; color: #111827; margin-top: 0; margin-bottom: 5px; text-transform: uppercase; }
         .pdf-legal-text ul { padding-left: 20px; margin-top: 5px; margin-bottom: 10px; list-style-type: disc; }
         .pdf-sig-block { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         .pdf-sig-line { border-bottom: 1px solid #111827; height: 40px; margin-bottom: 5px; }
+
+        /* PDF Page Break Fix */
+        .avoid-break { page-break-inside: avoid; margin-bottom: 20px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -191,14 +194,25 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-brand-border pt-6 flex items-end gap-6">
-                        <div class="flex-grow">
-                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Total Managed Users / Endpoints</label>
-                            <input type="number" id="c-users" value="10" min="1" oninput="calculateTotal()" class="text-2xl font-bold">
+                    <!-- Config Grid -->
+                    <div class="border-t border-brand-border pt-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                        <div>
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Managed Users / Endpoints</label>
+                            <input type="number" id="c-users" value="10" min="1" oninput="calculateTotal()" class="text-2xl font-bold text-center">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Contract Term</label>
+                            <select id="c-term" class="text-center font-bold">
+                                <option value="MTM">Month-to-Month</option>
+                                <option value="6">6 Months</option>
+                                <option value="12" selected>12 Months</option>
+                                <option value="18">18 Months</option>
+                                <option value="24">24 Months</option>
+                            </select>
                         </div>
                         <div class="text-right bg-brand-bg border border-brand-border px-6 py-4 rounded">
                             <div class="text-xs font-bold text-brand-muted uppercase tracking-widest mb-1">Estimated MRR</div>
-                            <div id="ui-total-mrr" class="text-3xl font-black text-brand-accent font-mono">$1,250.00</div>
+                            <div id="ui-total-mrr" class="text-2xl font-black text-brand-accent font-mono">$1,250.00</div>
                         </div>
                     </div>
 
@@ -286,8 +300,8 @@
                     <p style="margin: 5px 0 0 0; font-size: 11px; color: #6b7280; font-family: 'JetBrains Mono', monospace;">SERVICE LEVEL AGREEMENT (SLA) & ONBOARDING SCOPE</p>
                 </div>
                 <div style="text-align: right;">
-                    <img src="https://caprocktech.com/caprock%20logo%20transparent%20BG%201.png" alt="Caprock Logo" style="height: 40px; filter: invert(1) brightness(0);">
-                    <div style="font-size: 10px; font-weight: bold; margin-top: 5px; color: #374151;">CAPROCK TECHNOLOGY GROUP, LLC</div>
+                    <!-- Fallback if image doesn't load: just text -->
+                    <div style="font-size: 14px; font-weight: 900; margin-top: 5px; color: #111827;">CAPROCK TECHNOLOGY GROUP, LLC</div>
                     <div style="font-size: 10px; color: #6b7280;">Amarillo, TX • (806) 316-5070</div>
                 </div>
             </div>
@@ -362,29 +376,46 @@
             <!-- The Rock Solid SLA Terms -->
             <div class="pdf-section-title">3. Service Level Agreement (SLA) Terms</div>
             <div class="pdf-legal-text">
-                <h4>3.1 Coverage Hours & Availability</h4>
-                Provider’s standard business hours are 8:00 AM to 5:00 PM Central Time, Monday through Friday, excluding standard US holidays. Support requested outside these hours constitutes Emergency After-Hours Support and is billable at 1.5x the standard rate unless explicitly included in the Client's selected Service Tier.
                 
-                <h4>3.2 Targeted Response Times</h4>
-                Provider utilizes a triage system to prioritize operational impact. Targeted response times during business hours are as follows:
-                <ul>
-                    <li><strong>Critical (Severity 1):</strong> Complete network outage or active security breach. Target Response: <strong>1 Hour</strong>.</li>
-                    <li><strong>High (Severity 2):</strong> Significant operational impairment affecting multiple users. Target Response: <strong>4 Hours</strong>.</li>
-                    <li><strong>Normal (Severity 3):</strong> Standard user requests, password resets, minor bugs. Target Response: <strong>Next Business Day</strong>.</li>
-                </ul>
+                <!-- NOTE: 'avoid-break' class prevents the paragraph from splitting across pages -->
+                <div class="avoid-break">
+                    <h4>3.1 Coverage Hours & Availability</h4>
+                    Provider’s standard business hours are 8:00 AM to 5:00 PM Central Time, Monday through Friday, excluding standard US holidays. Support requested outside these hours constitutes Emergency After-Hours Support and is billable at 1.5x the standard rate unless explicitly included in the Client's selected Service Tier.
+                </div>
+                
+                <div class="avoid-break">
+                    <h4>3.2 Targeted Response Times</h4>
+                    Provider utilizes a triage system to prioritize operational impact. Targeted response times during business hours are as follows:
+                    <ul>
+                        <li><strong>Critical (Severity 1):</strong> Complete network outage or active security breach. Target Response: <strong>1 Hour</strong>.</li>
+                        <li><strong>High (Severity 2):</strong> Significant operational impairment affecting multiple users. Target Response: <strong>4 Hours</strong>.</li>
+                        <li><strong>Normal (Severity 3):</strong> Standard user requests, password resets, minor bugs. Target Response: <strong>Next Business Day</strong>.</li>
+                    </ul>
+                </div>
 
-                <h4>3.3 The Panhandle Travel Policy</h4>
-                On-site support travel within the city limits of Amarillo and Canyon, TX incurs no trip charge. Travel to locations outside this primary zone will be billed a travel surcharge of $1.50 per mile (round trip) from Provider headquarters, regardless of Service Tier, unless a superseding written addendum is provided.
+                <div class="avoid-break">
+                    <h4>3.3 The Panhandle Travel Policy</h4>
+                    On-site support travel within the city limits of Amarillo and Canyon, TX incurs no trip charge. Travel to locations outside this primary zone will be billed a travel surcharge of $1.50 per mile (round trip) from Provider headquarters, regardless of Service Tier, unless a superseding written addendum is provided.
+                </div>
 
-                <h4>3.4 Exclusions from Managed Services</h4>
-                The Monthly Recurring Revenue (MRR) covers maintenance, monitoring, and support of the existing environment as scoped. It <strong>does not</strong> include: (a) The cost of new hardware or software licensing not explicitly bundled; (b) Major project labor (e.g., server migrations, office moves, complete network rebuilds); (c) Support for proprietary Line of Business software beyond basic vendor liaison services. Major projects will be quoted separately.
+                <div class="avoid-break">
+                    <h4>3.4 Support Labor Rates & Inclusions</h4>
+                    <span id="pdf-labor-text">Under the selected tier, specific labor inclusions apply.</span>
+                </div>
 
-                <h4>3.5 Term and Termination</h4>
-                This Agreement is effective upon execution and operates on a month-to-month basis unless an annual discount term is selected. Either party may terminate this Agreement without cause by providing thirty (30) days written notice. Upon termination, Client is responsible for all fees accrued up to the termination date. Provider will cooperatively hand over administrative credentials upon account settlement.
+                <div class="avoid-break">
+                    <h4>3.5 Exclusions from Managed Services</h4>
+                    The Monthly Recurring Revenue (MRR) covers maintenance, monitoring, and support of the existing environment as scoped. It <strong>does not</strong> include: (a) The cost of new hardware or software licensing not explicitly bundled; (b) Major project labor (e.g., server migrations, office moves, complete network rebuilds); (c) Support for proprietary Line of Business software beyond basic vendor liaison services. Major projects will be quoted separately.
+                </div>
+
+                <div class="avoid-break">
+                    <h4>3.6 Term and Termination</h4>
+                    <span id="pdf-term-text">This Agreement operates on a month-to-month basis.</span>
+                </div>
             </div>
 
             <!-- Signature Block -->
-            <div class="pdf-sig-block">
+            <div class="pdf-sig-block avoid-break">
                 <div>
                     <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 20px;">Accepted by Client</div>
                     <div class="pdf-sig-line"></div>
@@ -480,6 +511,7 @@
             const phone = document.getElementById('c-phone').value || "Not Specified";
             const address = document.getElementById('c-address').value || "Not Specified";
             const users = document.getElementById('c-users').value || 0;
+            const term = document.getElementById('c-term').value;
             const servers = document.getElementById('c-servers').value || 0;
             const sites = document.getElementById('c-sites').value || 1;
             const software = document.getElementById('c-software').value || "None specified";
@@ -493,7 +525,27 @@
             document.getElementById('rev-users').innerText = users;
             document.getElementById('rev-mrr').innerText = mrr;
 
-            // Update PDF Template
+            // DYNAMIC LABOR TEXT LOGIC
+            let laborText = "";
+            if (selectedPlan.name === 'Watchtower') {
+                laborText = "Under the Watchtower tier, Remote Support and On-Site Support are billed at the preferred Member Rate of $125/hr. Emergency After-Hours support is billed at $225/hr. Major projects are quoted separately.";
+            } else if (selectedPlan.name === 'Partner') {
+                laborText = "Under the Partner tier, Unlimited Remote Support during standard business hours is included at no additional charge. On-Site dispatch is billed at the discounted Partner Rate of $95/hr. Emergency After-Hours support is billed at $225/hr. Major projects are quoted separately.";
+            } else if (selectedPlan.name === 'VIP') {
+                laborText = "Under the VIP tier, Unlimited Remote Support and On-Site Support during standard business hours are fully INCLUDED at no additional charge. Emergency After-Hours support is also included. Major projects (e.g., complete network rebuilds) fall outside standard maintenance and will be quoted separately.";
+            }
+            document.getElementById('pdf-labor-text').innerHTML = `<strong>${laborText}</strong>`;
+
+            // DYNAMIC TERMINATION TEXT LOGIC
+            let termText = "";
+            if (term === "MTM") {
+                termText = "This Agreement operates on a month-to-month basis. Either party may terminate this Agreement without cause by providing thirty (30) days written notice. Upon termination, Client is responsible for all fees accrued up to the termination date.";
+            } else {
+                termText = `This Agreement operates on a fixed term of <strong>${term} months</strong> from the Effective Date. Either party may terminate this Agreement without cause by providing thirty (30) days written notice; however, if Client terminates prior to the end of the ${term}-month term, Client shall be responsible for the remaining balance of the contract term.`;
+            }
+            document.getElementById('pdf-term-text').innerHTML = termText;
+
+            // Update Rest of PDF Template
             document.getElementById('pdf-company').innerText = company;
             document.getElementById('pdf-name').innerText = name;
             document.getElementById('pdf-title').innerText = title;
@@ -523,10 +575,11 @@
             const companyName = document.getElementById('c-company').value.replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'client';
             
             const opt = {
-                margin:       0, // Margins are handled by CSS padding
+                margin:       0, // Margins handled by CSS padding inside the template
                 filename:     `Caprock_SLA_${companyName}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true },
+                pagebreak:    { mode: ['css'] }, // Explicitly tell html2pdf to respect CSS page breaks
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
 
@@ -546,4 +599,5 @@
     </script>
 </body>
 </html>
+
 
