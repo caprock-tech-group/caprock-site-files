@@ -24,7 +24,7 @@
                             bg: '#0f172a',
                             card: '#1e293b',
                             border: '#334155',
-                            accent: '#4ade80', /* Industrial Green */
+                            accent: '#4ade80',
                             text: '#cbd5e1',
                             muted: '#94a3b8'
                         }
@@ -57,34 +57,40 @@
         .plan-card.selected .plan-radio::after { content: ''; width: 8px; height: 8px; background: #0f172a; border-radius: 50%; display: block; margin: 4px auto; }
         .plan-radio { width: 20px; height: 20px; border: 2px solid #64748b; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 12px; transition: all 0.2s; }
 
-        /* Hidden PDF Template (Rendered off-screen) */
+        /* Hidden PDF Template Container */
         #pdf-export-container {
             position: absolute;
-            left: -9999px;
+            left: -9999px; /* Hide off-screen, don't use display:none or html2canvas fails */
             top: 0;
+            width: 800px; /* Fixed width for standard rendering */
+            background: white; /* Ensure solid background */
         }
+        
+        /* PDF Specific Styles */
         #pdf-template {
-            width: 800px; /* Standard letter width approximation */
             background: white;
-            color: #111827; /* Very dark gray/black */
-            padding: 40px 50px;
+            color: #111827;
             font-family: 'Inter', sans-serif;
-            box-sizing: border-box;
+            width: 100%;
         }
-        .pdf-header { border-bottom: 3px solid #111827; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .pdf-section-title { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; color: #374151; }
+        .pdf-header { border-bottom: 3px solid #111827; padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .pdf-section-title { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; color: #111827; }
         .pdf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .pdf-data-label { font-size: 10px; text-transform: uppercase; color: #6b7280; font-weight: 700; margin-bottom: 2px; }
-        .pdf-data-value { font-size: 14px; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #111827; }
-        .pdf-pricing-box { background: #f3f4f6; border: 1px solid #d1d5db; padding: 20px; border-radius: 4px; margin-bottom: 25px; }
-        .pdf-legal-text { font-size: 11px; line-height: 1.6; color: #4b5563; text-align: justify; }
-        .pdf-legal-text h4 { font-size: 12px; font-weight: 700; color: #111827; margin-top: 0; margin-bottom: 5px; text-transform: uppercase; }
-        .pdf-legal-text ul { padding-left: 20px; margin-top: 5px; margin-bottom: 10px; list-style-type: disc; }
-        .pdf-sig-block { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        .pdf-sig-line { border-bottom: 1px solid #111827; height: 40px; margin-bottom: 5px; }
+        .pdf-data-value { font-size: 13px; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #111827; }
+        .pdf-pricing-box { background: #f9fafb; border: 2px solid #e5e7eb; padding: 15px 20px; border-radius: 6px; margin-bottom: 25px; }
+        
+        .pdf-legal-text { font-size: 10px; line-height: 1.5; color: #374151; text-align: justify; }
+        .pdf-legal-text h4 { font-size: 11px; font-weight: 800; color: #111827; margin-top: 0; margin-bottom: 4px; text-transform: uppercase; }
+        .pdf-legal-text ul { padding-left: 15px; margin-top: 4px; margin-bottom: 8px; list-style-type: disc; }
+        .pdf-legal-text li { margin-bottom: 4px; }
+        
+        .pdf-sig-block { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+        .pdf-sig-line { border-bottom: 1px solid #111827; height: 30px; margin-bottom: 5px; }
 
-        /* PDF Page Break Fix */
-        .avoid-break { page-break-inside: avoid; margin-bottom: 20px; }
+        /* VITAL FOR MULTI-PAGE PDFS */
+        .html2pdf__page-break { height: 0; page-break-before: always; border: none; margin: 0; padding: 0; }
+        .avoid-break { page-break-inside: avoid; margin-bottom: 16px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -202,7 +208,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Contract Term</label>
-                            <select id="c-term" class="text-center font-bold">
+                            <select id="c-term" class="text-center font-bold text-lg">
                                 <option value="MTM">Month-to-Month</option>
                                 <option value="6">6 Months</option>
                                 <option value="12" selected>12 Months</option>
@@ -296,21 +302,20 @@
             <!-- Header -->
             <div class="pdf-header">
                 <div>
-                    <h1 style="font-size: 24px; font-weight: 900; text-transform: uppercase; margin:0; line-height: 1;">Managed IT Services Agreement</h1>
-                    <p style="margin: 5px 0 0 0; font-size: 11px; color: #6b7280; font-family: 'JetBrains Mono', monospace;">SERVICE LEVEL AGREEMENT (SLA) & ONBOARDING SCOPE</p>
+                    <h1 style="font-size: 20px; font-weight: 900; text-transform: uppercase; margin:0; line-height: 1;">Managed IT Services Agreement</h1>
+                    <p style="margin: 5px 0 0 0; font-size: 10px; color: #6b7280; font-family: 'JetBrains Mono', monospace;">SERVICE LEVEL AGREEMENT (SLA) & ONBOARDING SCOPE</p>
                 </div>
                 <div style="text-align: right;">
-                    <!-- Fallback if image doesn't load: just text -->
-                    <div style="font-size: 14px; font-weight: 900; margin-top: 5px; color: #111827;">CAPROCK TECHNOLOGY GROUP, LLC</div>
-                    <div style="font-size: 10px; color: #6b7280;">Amarillo, TX • (806) 316-5070</div>
+                    <div style="font-size: 12px; font-weight: 900; margin-top: 5px; color: #111827; text-transform: uppercase;">Caprock Technology Group, LLC</div>
+                    <div style="font-size: 9px; color: #6b7280; font-weight: bold;">Amarillo, TX • (806) 316-5070</div>
                 </div>
             </div>
 
-            <p style="font-size: 12px; color: #4b5563; margin-bottom: 20px;">
+            <p style="font-size: 11px; color: #374151; margin-bottom: 15px;">
                 This Service Level Agreement ("Agreement") is entered into as of <strong><span id="pdf-date"></span></strong> (the "Effective Date"), by and between Caprock Technology Group, LLC ("Provider") and the client identified below ("Client").
             </p>
 
-            <!-- Client Info -->
+            <!-- 1. Client Info -->
             <div class="pdf-section-title">1. Client Information</div>
             <div class="pdf-grid">
                 <div>
@@ -335,52 +340,51 @@
                 </div>
             </div>
 
-            <!-- Scope & Pricing -->
+            <!-- 2. Scope & Pricing -->
             <div class="pdf-section-title">2. Scope of Services & Investment</div>
             <div class="pdf-grid" style="margin-bottom: 10px;">
                 <div>
                     <div class="pdf-data-label">Environment Scope</div>
-                    <div style="font-size: 12px; color: #374151;">
+                    <div style="font-size: 11px; color: #374151;">
                         Servers: <strong id="pdf-servers">0</strong> | Locations: <strong id="pdf-sites">1</strong><br>
                         LOB Apps: <span id="pdf-software">None specified</span>
                     </div>
                 </div>
                 <div>
                     <div class="pdf-data-label">Special Inclusions/Exclusions</div>
-                    <div style="font-size: 12px; color: #374151; font-style: italic;" id="pdf-notes">Standard deployment parameters apply.</div>
+                    <div style="font-size: 11px; color: #374151; font-style: italic;" id="pdf-notes">Standard deployment parameters apply.</div>
                 </div>
             </div>
 
-            <div class="pdf-pricing-box">
+            <div class="pdf-pricing-box avoid-break">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #d1d5db; padding-bottom: 10px; margin-bottom: 10px;">
                     <div>
-                        <div style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Selected Support Tier</div>
-                        <div style="font-size: 18px; font-weight: 800; color: #111827; text-transform: uppercase;" id="pdf-plan-name">The Partner</div>
+                        <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Selected Support Tier</div>
+                        <div style="font-size: 16px; font-weight: 800; color: #111827; text-transform: uppercase;" id="pdf-plan-name">The Partner</div>
                     </div>
                     <div style="text-align: right;">
-                        <div style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Managed Users</div>
-                        <div style="font-size: 18px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #111827;" id="pdf-user-count">10</div>
+                        <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Managed Users/Endpoints</div>
+                        <div style="font-size: 16px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #111827;" id="pdf-user-count">10</div>
                     </div>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div style="font-size: 12px; font-weight: 600; color: #374151;" id="pdf-plan-desc">
+                    <div style="font-size: 11px; font-weight: 600; color: #374151;" id="pdf-plan-desc">
                         Includes RMM, EDR, Backup, and Unlimited Remote Support.
                     </div>
                     <div style="text-align: right;">
-                        <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Total Monthly Recurring (MRR)</div>
-                        <div style="font-size: 24px; font-family: 'JetBrains Mono', monospace; font-weight: 900; color: #166534;" id="pdf-total-mrr">$1,250.00</div>
+                        <div style="font-size: 9px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Total Monthly Recurring (MRR)</div>
+                        <div style="font-size: 20px; font-family: 'JetBrains Mono', monospace; font-weight: 900; color: #166534;" id="pdf-total-mrr">$1,250.00</div>
                     </div>
                 </div>
             </div>
 
-            <!-- The Rock Solid SLA Terms -->
+            <!-- 3. The Rock Solid SLA Terms -->
             <div class="pdf-section-title">3. Service Level Agreement (SLA) Terms</div>
             <div class="pdf-legal-text">
                 
-                <!-- NOTE: 'avoid-break' class prevents the paragraph from splitting across pages -->
                 <div class="avoid-break">
                     <h4>3.1 Coverage Hours & Availability</h4>
-                    Provider’s standard business hours are 8:00 AM to 5:00 PM Central Time, Monday through Friday, excluding standard US holidays. Support requested outside these hours constitutes Emergency After-Hours Support and is billable at 1.5x the standard rate unless explicitly included in the Client's selected Service Tier.
+                    Provider’s standard business hours are 8:00 AM to 5:00 PM Central Time, Monday through Friday, excluding standard US holidays. Support requested outside these hours constitutes Emergency After-Hours Support and is billable at standard emergency rates unless explicitly included in the Client's selected Service Tier.
                 </div>
                 
                 <div class="avoid-break">
@@ -394,42 +398,58 @@
                 </div>
 
                 <div class="avoid-break">
-                    <h4>3.3 The Panhandle Travel Policy</h4>
-                    On-site support travel within the city limits of Amarillo and Canyon, TX incurs no trip charge. Travel to locations outside this primary zone will be billed a travel surcharge of $1.50 per mile (round trip) from Provider headquarters, regardless of Service Tier, unless a superseding written addendum is provided.
-                </div>
-
-                <div class="avoid-break">
-                    <h4>3.4 Support Labor Rates & Inclusions</h4>
+                    <h4>3.3 Support Labor Rates & Inclusions</h4>
                     <span id="pdf-labor-text">Under the selected tier, specific labor inclusions apply.</span>
                 </div>
 
                 <div class="avoid-break">
-                    <h4>3.5 Exclusions from Managed Services</h4>
-                    The Monthly Recurring Revenue (MRR) covers maintenance, monitoring, and support of the existing environment as scoped. It <strong>does not</strong> include: (a) The cost of new hardware or software licensing not explicitly bundled; (b) Major project labor (e.g., server migrations, office moves, complete network rebuilds); (c) Support for proprietary Line of Business software beyond basic vendor liaison services. Major projects will be quoted separately.
+                    <h4>3.4 The Panhandle Travel Policy</h4>
+                    On-site support travel within the city limits of Amarillo and Canyon, TX incurs no trip charge. Travel to locations outside this primary zone will be billed a travel surcharge of $1.50 per mile (round trip) from Provider headquarters, regardless of Service Tier, unless a superseding written addendum is provided.
+                </div>
+
+                <!-- NEW GRANULAR SECTIONS -->
+                <div class="avoid-break">
+                    <h4>3.5 Client Responsibilities</h4>
+                    Client agrees to: (a) Provide Provider with physical and remote access to the premises and network necessary to perform the services; (b) Designate a primary Point of Contact to authorize approvals and coordinate with Provider; (c) Maintain an active, business-grade internet connection; and (d) Promptly report all issues or suspected security incidents to Provider’s helpdesk.
                 </div>
 
                 <div class="avoid-break">
-                    <h4>3.6 Term and Termination</h4>
+                    <h4>3.6 Exclusions from Managed Services</h4>
+                    The Monthly Recurring Revenue (MRR) covers maintenance, monitoring, and support of the existing environment as scoped. It <strong>does not</strong> include: (a) The cost of new hardware, parts, or software licensing not explicitly bundled in the service tier; (b) Major project labor (e.g., server migrations, office moves, complete network rebuilds); (c) Support for proprietary Line of Business software beyond basic vendor liaison services. Major projects will be scoped and quoted separately.
+                </div>
+
+                <div class="avoid-break">
+                    <h4>3.7 Payment Terms</h4>
+                    Invoices for Monthly Recurring Revenue (MRR) are generated and due on the 1st of each month. Payment terms are Net 15. Provider reserves the right to assess a late fee of 1.5% per month on past due balances. Provider reserves the right to suspend services, including helpdesk support and backups, if an account becomes more than 30 days past due, until the balance is resolved.
+                </div>
+
+                <div class="avoid-break">
+                    <h4>3.8 Limitation of Liability</h4>
+                    To the maximum extent permitted by law, Provider shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses resulting from cyberattacks, hardware failure, or service interruptions. In no event shall Provider's aggregate liability exceed the total amount paid by Client to Provider during the three (3) month period immediately preceding the event giving rise to the claim.
+                </div>
+
+                <div class="avoid-break">
+                    <h4>3.9 Term and Termination</h4>
                     <span id="pdf-term-text">This Agreement operates on a month-to-month basis.</span>
                 </div>
             </div>
 
-            <!-- Signature Block -->
-            <div class="pdf-sig-block avoid-break">
+            <!-- Page Break For Signatures if needed (handled cleanly by avoid-break) -->
+            <div class="pdf-sig-block avoid-break" style="margin-top: 50px;">
                 <div>
-                    <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 20px;">Accepted by Client</div>
+                    <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 25px;">Accepted by Client</div>
                     <div class="pdf-sig-line"></div>
-                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #4b5563;">
+                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: #4b5563;">
                         <span>Authorized Signature</span>
                         <span>Date</span>
                     </div>
-                    <div class="pdf-sig-line" style="margin-top: 15px;"></div>
-                    <div style="font-size: 11px; color: #4b5563;">Printed Name & Title</div>
+                    <div class="pdf-sig-line" style="margin-top: 25px;"></div>
+                    <div style="font-size: 10px; color: #4b5563;">Printed Name & Title</div>
                 </div>
                 <div>
-                    <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 20px;">Accepted by Caprock Technology Group</div>
+                    <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 25px;">Accepted by Caprock Technology Group</div>
                     <div class="pdf-sig-line"></div>
-                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #4b5563;">
+                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: #4b5563;">
                         <span>Nick Stevens, Founder</span>
                         <span>Date</span>
                     </div>
@@ -528,20 +548,20 @@
             // DYNAMIC LABOR TEXT LOGIC
             let laborText = "";
             if (selectedPlan.name === 'Watchtower') {
-                laborText = "Under the Watchtower tier, Remote Support and On-Site Support are billed at the preferred Member Rate of $125/hr. Emergency After-Hours support is billed at $225/hr. Major projects are quoted separately.";
+                laborText = "Under the Watchtower tier, Remote Support and On-Site Support are billed at the preferred Member Rate of <strong>$125/hr</strong>. Emergency After-Hours support is billed at <strong>$225/hr</strong>. Major projects are quoted separately.";
             } else if (selectedPlan.name === 'Partner') {
-                laborText = "Under the Partner tier, Unlimited Remote Support during standard business hours is included at no additional charge. On-Site dispatch is billed at the discounted Partner Rate of $95/hr. Emergency After-Hours support is billed at $225/hr. Major projects are quoted separately.";
+                laborText = "Under the Partner tier, Unlimited Remote Support during standard business hours is included at no additional charge. On-Site dispatch is billed at the discounted Partner Rate of <strong>$95/hr</strong>. Emergency After-Hours support is billed at <strong>$225/hr</strong>. Major projects are quoted separately.";
             } else if (selectedPlan.name === 'VIP') {
-                laborText = "Under the VIP tier, Unlimited Remote Support and On-Site Support during standard business hours are fully INCLUDED at no additional charge. Emergency After-Hours support is also included. Major projects (e.g., complete network rebuilds) fall outside standard maintenance and will be quoted separately.";
+                laborText = "Under the VIP tier, Unlimited Remote Support and On-Site Support during standard business hours are fully <strong>INCLUDED at no additional charge</strong>. Emergency After-Hours support is also included. Major projects (e.g., complete network rebuilds) fall outside standard maintenance and will be quoted separately.";
             }
-            document.getElementById('pdf-labor-text').innerHTML = `<strong>${laborText}</strong>`;
+            document.getElementById('pdf-labor-text').innerHTML = laborText;
 
             // DYNAMIC TERMINATION TEXT LOGIC
             let termText = "";
             if (term === "MTM") {
                 termText = "This Agreement operates on a month-to-month basis. Either party may terminate this Agreement without cause by providing thirty (30) days written notice. Upon termination, Client is responsible for all fees accrued up to the termination date.";
             } else {
-                termText = `This Agreement operates on a fixed term of <strong>${term} months</strong> from the Effective Date. Either party may terminate this Agreement without cause by providing thirty (30) days written notice; however, if Client terminates prior to the end of the ${term}-month term, Client shall be responsible for the remaining balance of the contract term.`;
+                termText = `This Agreement operates on a fixed term of <strong>${term} months</strong> from the Effective Date. Either party may terminate this Agreement without cause by providing thirty (30) days written notice; however, if Client terminates prior to the end of the ${term}-month term, Client shall be responsible for the remaining balance of the contract term (calculated as the current MRR multiplied by the remaining months).`;
             }
             document.getElementById('pdf-term-text').innerHTML = termText;
 
@@ -564,7 +584,7 @@
             document.getElementById('pdf-total-mrr').innerText = mrr;
         }
 
-        // PDF Generation
+        // PDF Generation Engine (Updated for precise multi-page rendering)
         function generatePDF() {
             const btn = document.getElementById('pdf-btn');
             const originalText = btn.innerHTML;
@@ -574,12 +594,13 @@
             const element = document.getElementById('pdf-template');
             const companyName = document.getElementById('c-company').value.replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'client';
             
+            // The new config perfectly handles multiple pages and margins
             const opt = {
-                margin:       0, // Margins handled by CSS padding inside the template
+                margin:       [0.5, 0.5, 0.5, 0.5], // Top, Left, Bottom, Right margins in inches
                 filename:     `Caprock_SLA_${companyName}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                pagebreak:    { mode: ['css'] }, // Explicitly tell html2pdf to respect CSS page breaks
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }, // Prevents slicing paragraphs in half
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
 
