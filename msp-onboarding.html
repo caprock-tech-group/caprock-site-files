@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caprock Operations - Client Onboarding</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Caprock Operations - MSA & Onboarding</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -44,7 +44,7 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         /* Custom Inputs */
-        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select, input[type="date"] {
             background-color: #0f172a; border: 1px solid #334155; color: white; padding: 12px 16px; border-radius: 6px; width: 100%; font-family: 'JetBrains Mono', monospace; font-size: 14px;
         }
         input:focus, select:focus { outline: none; border-color: #4ade80; box-shadow: 0 0 0 1px #4ade80; }
@@ -57,40 +57,55 @@
         .plan-card.selected .plan-radio::after { content: ''; width: 8px; height: 8px; background: #0f172a; border-radius: 50%; display: block; margin: 4px auto; }
         .plan-radio { width: 20px; height: 20px; border: 2px solid #64748b; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 12px; transition: all 0.2s; }
 
+        /* Signature Pad */
+        #sig-canvas {
+            border: 2px dashed #4ade80;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            width: 100%;
+            height: 200px;
+            cursor: crosshair;
+            touch-action: none; /* Prevents page scroll while signing on tablet */
+        }
+
         /* Hidden PDF Template Container */
         #pdf-export-container {
             position: absolute;
-            left: -9999px; /* Hide off-screen, don't use display:none or html2canvas fails */
+            left: -9999px;
             top: 0;
-            width: 800px; /* Fixed width for standard rendering */
-            background: white; /* Ensure solid background */
-        }
-        
-        /* PDF Specific Styles */
-        #pdf-template {
+            width: 800px;
             background: white;
-            color: #111827;
-            font-family: 'Inter', sans-serif;
-            width: 100%;
         }
-        .pdf-header { border-bottom: 3px solid #111827; padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .pdf-section-title { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; color: #111827; }
-        .pdf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .pdf-data-label { font-size: 10px; text-transform: uppercase; color: #6b7280; font-weight: 700; margin-bottom: 2px; }
-        .pdf-data-value { font-size: 13px; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #111827; }
-        .pdf-pricing-box { background: #f9fafb; border: 2px solid #e5e7eb; padding: 15px 20px; border-radius: 6px; margin-bottom: 25px; }
         
-        .pdf-legal-text { font-size: 10px; line-height: 1.5; color: #374151; text-align: justify; }
-        .pdf-legal-text h4 { font-size: 11px; font-weight: 800; color: #111827; margin-top: 0; margin-bottom: 4px; text-transform: uppercase; }
-        .pdf-legal-text ul { padding-left: 15px; margin-top: 4px; margin-bottom: 8px; list-style-type: disc; }
-        .pdf-legal-text li { margin-bottom: 4px; }
+        /* PDF Specific Styles (Matches the uploaded document) */
+        #pdf-template {
+            background: white; color: #000; font-family: 'Inter', sans-serif; width: 100%; padding: 40px; box-sizing: border-box;
+        }
+        .pdf-title-block { text-align: center; border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
+        .pdf-title-block h1 { font-size: 28px; font-weight: 900; text-transform: uppercase; margin: 0 0 5px 0; letter-spacing: -0.02em; }
+        .pdf-title-block h2 { font-size: 18px; font-weight: 700; margin: 0 0 10px 0; }
+        .pdf-title-block p { font-size: 11px; color: #4b5563; font-weight: 600; margin: 0; }
         
-        .pdf-sig-block { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
-        .pdf-sig-line { border-bottom: 1px solid #111827; height: 30px; margin-bottom: 5px; }
-
-        /* VITAL FOR MULTI-PAGE PDFS */
+        .pdf-section { margin-bottom: 20px; }
+        .pdf-section h3 { font-size: 14px; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid #d1d5db; padding-bottom: 4px; margin-bottom: 8px; color: #111827; }
+        .pdf-text { font-size: 11px; line-height: 1.5; color: #111827; margin-bottom: 8px; }
+        .pdf-text strong { font-weight: 700; }
+        .pdf-list { margin: 5px 0 10px 20px; font-size: 11px; line-height: 1.5; color: #111827; }
+        .pdf-list li { margin-bottom: 4px; list-style-type: disc; }
+        
+        .pdf-schedule-box { border: 2px solid #000; padding: 15px; margin-bottom: 20px; background: #f9fafb; }
+        .pdf-schedule-title { font-size: 14px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px dotted #9ca3af; padding-bottom: 5px; }
+        
+        .pdf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .pdf-label { font-size: 10px; text-transform: uppercase; color: #6b7280; font-weight: 700; margin-bottom: 2px; }
+        .pdf-value { font-size: 12px; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #000; }
+        
+        .pdf-sig-block { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .pdf-sig-line { border-bottom: 1px solid #000; height: 60px; margin-bottom: 5px; position: relative; }
+        .pdf-sig-image { position: absolute; bottom: 0; left: 10px; max-height: 55px; max-width: 90%; }
+        
+        .avoid-break { page-break-inside: avoid; margin-bottom: 15px; }
         .html2pdf__page-break { height: 0; page-break-before: always; border: none; margin: 0; padding: 0; }
-        .avoid-break { page-break-inside: avoid; margin-bottom: 16px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -98,11 +113,8 @@
     <!-- Navbar -->
     <nav class="bg-brand-card border-b border-brand-border px-6 py-4 flex justify-between items-center">
         <div class="flex items-center gap-3">
-            <i class="fas fa-shield-alt text-brand-accent text-2xl"></i>
-            <span class="font-bold text-white tracking-widest uppercase">Caprock Operations</span>
-        </div>
-        <div class="text-xs font-mono text-brand-muted border border-brand-border px-3 py-1 rounded">
-            INTERNAL ONBOARDING SECURE PORTAL
+            <i class="fas fa-file-contract text-brand-accent text-2xl"></i>
+            <span class="font-bold text-white tracking-widest uppercase">Caprock Ops: MSA Generator</span>
         </div>
     </nav>
 
@@ -126,134 +138,123 @@
                 
                 <!-- STEP 1: Client Information -->
                 <div id="step-1" class="step-container active">
-                    <h2 class="text-2xl font-bold text-white mb-6 uppercase tracking-tight">Client Information</h2>
+                    <h2 class="text-2xl font-bold text-white mb-6 uppercase tracking-tight">Entity & Scope</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="md:col-span-2">
-                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Legal Company Name</label>
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Legal Entity Name</label>
                             <input type="text" id="c-company" placeholder="e.g. Panhandle Construction LLC" required>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Primary Contact Name</label>
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Authorized Signer</label>
                             <input type="text" id="c-name" placeholder="John Doe">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Title / Role</label>
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Signer Title</label>
                             <input type="text" id="c-title" placeholder="Owner / CEO">
                         </div>
-                        <div>
-                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Email Address</label>
-                            <input type="email" id="c-email" placeholder="john@example.com">
+                        <div class="md:col-span-2 border-t border-brand-border pt-4 mt-2">
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Service Anniversary Date (Start Date)</label>
+                            <input type="date" id="c-date">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Direct Phone</label>
-                            <input type="tel" id="c-phone" placeholder="(806) 555-0199">
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Active Users/Endpoints</label>
+                            <input type="number" id="c-users" value="10" min="1" oninput="calculateTotal()" class="text-xl font-bold">
                         </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Physical Service Address</label>
-                            <input type="text" id="c-address" placeholder="123 Main St, Amarillo, TX 79101">
+                        <div>
+                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Locations / Sites</label>
+                            <input type="number" id="c-sites" value="1" min="1">
                         </div>
                     </div>
                     <div class="mt-8 flex justify-end">
-                        <button onclick="goToStep(2)" class="bg-brand-accent text-brand-bg font-bold px-8 py-3 rounded uppercase tracking-wider hover:brightness-110">Next: Select Plan <i class="fas fa-arrow-right ml-2"></i></button>
+                        <button onclick="goToStep(2)" class="bg-brand-accent text-brand-bg font-bold px-8 py-3 rounded uppercase tracking-wider hover:brightness-110">Next: Architecture <i class="fas fa-arrow-right ml-2"></i></button>
                     </div>
                 </div>
 
-                <!-- STEP 2: Service Selection -->
+                <!-- STEP 2: Service & Term Selection (Schedule A & B) -->
                 <div id="step-2" class="step-container">
-                    <h2 class="text-2xl font-bold text-white mb-6 uppercase tracking-tight">Service Architecture</h2>
+                    <h2 class="text-2xl font-bold text-white mb-6 uppercase tracking-tight">Schedule A & B Config</h2>
                     
+                    <label class="block text-xs font-bold text-brand-accent uppercase mb-3">Schedule A: Service Tier</label>
                     <div class="space-y-4 mb-8">
-                        <!-- Watchtower -->
                         <div class="plan-card" onclick="selectPlan('Watchtower', 75, this)">
                             <div class="flex justify-between items-center">
                                 <div>
                                     <div class="plan-radio"></div>
-                                    <span class="font-bold text-lg text-white">The Watchtower (Tier 1)</span>
+                                    <span class="font-bold text-lg text-white">The Watchtower (Security-as-a-Service)</span>
                                 </div>
                                 <div class="font-mono text-xl text-white">$75<span class="text-sm text-brand-muted">/mo</span></div>
                             </div>
-                            <p class="text-sm text-brand-muted ml-8 mt-1">Silent Protection. AV/EDR, Patching, Monitoring. (Labor billed hourly).</p>
+                            <p class="text-xs text-brand-muted ml-8 mt-1">SentinelOne EDR, NinjaOne Patching, 24/7 Monitoring. (NO Helpdesk).</p>
                         </div>
-
-                        <!-- Partner -->
                         <div class="plan-card selected" onclick="selectPlan('Partner', 125, this)">
                             <div class="flex justify-between items-center">
                                 <div>
                                     <div class="plan-radio"></div>
-                                    <span class="font-bold text-lg text-white">The Partner (Tier 2)</span>
+                                    <span class="font-bold text-lg text-white">The Partner (Productivity Engine)</span>
                                 </div>
                                 <div class="font-mono text-xl text-white">$125<span class="text-sm text-brand-muted">/mo</span></div>
                             </div>
-                            <p class="text-sm text-brand-muted ml-8 mt-1">Full stack + Unlimited Remote Support. (Discounted On-Site).</p>
+                            <p class="text-xs text-brand-muted ml-8 mt-1">Watchtower + Unlimited Remote Helpdesk (M-F).</p>
                         </div>
-
-                        <!-- VIP -->
                         <div class="plan-card" onclick="selectPlan('VIP', 175, this)">
                             <div class="flex justify-between items-center">
                                 <div>
                                     <div class="plan-radio"></div>
-                                    <span class="font-bold text-lg text-white">The VIP (Tier 3)</span>
+                                    <span class="font-bold text-lg text-white">The VIP (Virtual CIO)</span>
                                 </div>
                                 <div class="font-mono text-xl text-white">$175<span class="text-sm text-brand-muted">/mo</span></div>
                             </div>
-                            <p class="text-sm text-brand-muted ml-8 mt-1">Virtual CIO. Unlimited Remote & On-Site Support. MDR + Server Backup.</p>
+                            <p class="text-xs text-brand-muted ml-8 mt-1">Partner + Disaster Recovery + Unlimited On-Site/Remote Labor.</p>
                         </div>
                     </div>
 
-                    <!-- Config Grid -->
-                    <div class="border-t border-brand-border pt-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                    <label class="block text-xs font-bold text-brand-accent uppercase mb-3">Schedule B: Term & Incentives</label>
+                    <select id="c-term" class="text-lg font-bold mb-6" onchange="calculateTotal()">
+                        <option value="MTM">Option A: Flexibility (Month-to-Month) - $500 Onboarding Fee</option>
+                        <option value="12">Option B: Stability (12 Months) - Waived Onboarding Fee</option>
+                        <option value="24" selected>Option C: Fiscal Lock (24 Months) - 5% Discount + Waived Fee</option>
+                        <option value="36">Option D: Partnership (36 Months) - 10% Discount + Waived Fee</option>
+                    </select>
+
+                    <div class="bg-brand-bg border border-brand-border p-4 rounded grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Managed Users / Endpoints</label>
-                            <input type="number" id="c-users" value="10" min="1" oninput="calculateTotal()" class="text-2xl font-bold text-center">
+                            <div class="text-xs text-brand-muted uppercase">One-Time Strategic Fee</div>
+                            <div id="ui-setup-fee" class="text-xl text-white font-mono">$0.00 <span class="text-xs text-brand-accent">(Waived)</span></div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Contract Term</label>
-                            <select id="c-term" class="text-center font-bold text-lg">
-                                <option value="MTM">Month-to-Month</option>
-                                <option value="6">6 Months</option>
-                                <option value="12" selected>12 Months</option>
-                                <option value="18">18 Months</option>
-                                <option value="24">24 Months</option>
-                            </select>
-                        </div>
-                        <div class="text-right bg-brand-bg border border-brand-border px-6 py-4 rounded">
-                            <div class="text-xs font-bold text-brand-muted uppercase tracking-widest mb-1">Estimated MRR</div>
-                            <div id="ui-total-mrr" class="text-2xl font-black text-brand-accent font-mono">$1,250.00</div>
+                        <div class="text-right border-l border-brand-border pl-4">
+                            <div class="text-xs text-brand-muted uppercase font-bold text-brand-accent">Total Adjusted MRR</div>
+                            <div id="ui-total-mrr" class="text-3xl font-black text-brand-accent font-mono">$0.00</div>
                         </div>
                     </div>
 
                     <div class="mt-8 flex justify-between">
                         <button onclick="goToStep(1)" class="text-brand-muted hover:text-white font-bold px-6 py-3 uppercase tracking-wider"><i class="fas fa-arrow-left mr-2"></i> Back</button>
-                        <button onclick="goToStep(3)" class="bg-brand-accent text-brand-bg font-bold px-8 py-3 rounded uppercase tracking-wider hover:brightness-110">Next: Scope <i class="fas fa-arrow-right ml-2"></i></button>
+                        <button onclick="goToStep(3)" class="bg-brand-accent text-brand-bg font-bold px-8 py-3 rounded uppercase tracking-wider hover:brightness-110">Next: Execution <i class="fas fa-arrow-right ml-2"></i></button>
                     </div>
                 </div>
 
-                <!-- STEP 3: Environment Scope & Add-ons -->
+                <!-- STEP 3: Execution & Digital Signature -->
                 <div id="step-3" class="step-container">
-                    <h2 class="text-2xl font-bold text-white mb-6 uppercase tracking-tight">Environment Scope</h2>
+                    <h2 class="text-2xl font-bold text-white mb-2 uppercase tracking-tight">Execution & Signature</h2>
+                    <p class="text-brand-muted text-sm mb-6">Please have the authorized signer complete the section below.</p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        <div>
-                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Number of Servers</label>
-                            <input type="number" id="c-servers" value="0" min="0">
+                    <div class="bg-brand-bg p-4 rounded border border-brand-border mb-6">
+                        <p class="text-xs text-gray-400 mb-2 text-justify">By signing below, the Client authorizes the Service Tier, binds the entity to the Term Commitment, and agrees to all stipulations within the Master Service Agreement.</p>
+                        <div class="flex justify-between items-center text-sm font-mono text-white">
+                            <span>Total MRR: <strong id="sig-mrr" class="text-brand-accent"></strong></span>
+                            <span>Setup Fee: <strong id="sig-setup" class="text-brand-accent"></strong></span>
                         </div>
-                        <div>
-                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Number of Network Sites/Locations</label>
-                            <input type="number" id="c-sites" value="1" min="1">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Line of Business Applications (Comma separated)</label>
-                            <input type="text" id="c-software" placeholder="e.g. QuickBooks, Sage, Procore, Dentrix">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Additional Onboarding Notes / Exclusions</label>
-                            <input type="text" id="c-notes" placeholder="e.g. Client retains admin access to legacy server.">
-                        </div>
+                    </div>
+
+                    <label class="block text-xs font-bold text-brand-muted uppercase mb-2">Authorized Signature</label>
+                    <canvas id="sig-canvas"></canvas>
+                    <div class="flex justify-end mt-2">
+                        <button onclick="clearSignature()" class="text-xs text-brand-muted hover:text-brand-red uppercase font-bold tracking-widest"><i class="fas fa-eraser mr-1"></i> Clear Canvas</button>
                     </div>
 
                     <div class="mt-8 flex justify-between">
                         <button onclick="goToStep(2)" class="text-brand-muted hover:text-white font-bold px-6 py-3 uppercase tracking-wider"><i class="fas fa-arrow-left mr-2"></i> Back</button>
-                        <button onclick="goToStep(4)" class="bg-brand-accent text-brand-bg font-bold px-8 py-3 rounded uppercase tracking-wider hover:brightness-110">Review & Generate <i class="fas fa-file-contract ml-2"></i></button>
+                        <button onclick="goToStep(4)" class="bg-brand-accent text-brand-bg font-bold px-8 py-3 rounded uppercase tracking-wider hover:brightness-110">Compile Document <i class="fas fa-cogs ml-2"></i></button>
                     </div>
                 </div>
 
@@ -261,33 +262,18 @@
                 <div id="step-4" class="step-container">
                     <div class="text-center mb-8">
                         <div class="w-16 h-16 rounded-full bg-green-900/30 text-brand-accent flex items-center justify-center text-3xl mx-auto mb-4 border border-brand-accent">
-                            <i class="fas fa-check"></i>
+                            <i class="fas fa-check-double"></i>
                         </div>
-                        <h2 class="text-3xl font-bold text-white uppercase tracking-tight">Ready for Deployment</h2>
-                        <p class="text-brand-muted mt-2">All parameters captured. Ready to generate the binding SLA.</p>
+                        <h2 class="text-3xl font-bold text-white uppercase tracking-tight">MSA Compiled</h2>
+                        <p class="text-brand-muted mt-2">Signature captured. Ready to execute PDF.</p>
                     </div>
                     
-                    <div class="bg-brand-bg border border-brand-border rounded p-6 mb-8">
-                        <div class="grid grid-cols-2 gap-4 text-sm font-mono">
-                            <div class="text-brand-muted">Client:</div>
-                            <div class="text-white font-bold" id="rev-company">--</div>
-                            <div class="text-brand-muted">Selected Tier:</div>
-                            <div class="text-white font-bold" id="rev-plan">Partner (Tier 2)</div>
-                            <div class="text-brand-muted">Managed Users:</div>
-                            <div class="text-white font-bold" id="rev-users">10</div>
-                            <div class="text-brand-muted border-t border-brand-border pt-2 mt-2">Initial MRR:</div>
-                            <div class="text-brand-accent font-black text-xl border-t border-brand-border pt-2 mt-2" id="rev-mrr">$1,250.00</div>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col gap-4">
-                        <button onclick="generatePDF()" id="pdf-btn" class="w-full bg-brand-accent text-brand-bg font-black text-lg px-8 py-4 rounded uppercase tracking-widest hover:brightness-110 shadow-lg active:scale-95 transition-all">
-                            <i class="fas fa-file-pdf mr-2"></i> Export SLA Document
-                        </button>
-                        <button onclick="goToStep(3)" class="w-full text-brand-muted hover:text-white font-bold px-6 py-3 uppercase tracking-wider">
-                            Edit Scope
-                        </button>
-                    </div>
+                    <button onclick="generatePDF()" id="pdf-btn" class="w-full bg-brand-accent text-brand-bg font-black text-lg px-8 py-4 rounded uppercase tracking-widest hover:brightness-110 shadow-lg active:scale-95 transition-all mb-4">
+                        <i class="fas fa-file-pdf mr-2"></i> Download Signed MSA
+                    </button>
+                    <button onclick="goToStep(3)" class="w-full text-brand-muted hover:text-white font-bold px-6 py-3 uppercase tracking-wider text-sm">
+                        Re-Sign Document
+                    </button>
                 </div>
 
             </div>
@@ -295,165 +281,154 @@
     </main>
 
     <!-- ==========================================
-         HIDDEN PDF TEMPLATE (The Actual SLA Document)
+         HIDDEN PDF TEMPLATE (The Actual MSA Document)
          ========================================== -->
     <div id="pdf-export-container">
         <div id="pdf-template">
             <!-- Header -->
-            <div class="pdf-header">
-                <div>
-                    <h1 style="font-size: 20px; font-weight: 900; text-transform: uppercase; margin:0; line-height: 1;">Managed IT Services Agreement</h1>
-                    <p style="margin: 5px 0 0 0; font-size: 10px; color: #6b7280; font-family: 'JetBrains Mono', monospace;">SERVICE LEVEL AGREEMENT (SLA) & ONBOARDING SCOPE</p>
-                </div>
-                <div style="text-align: right;">
-                    <div style="font-size: 12px; font-weight: 900; margin-top: 5px; color: #111827; text-transform: uppercase;">Caprock Technology Group, LLC</div>
-                    <div style="font-size: 9px; color: #6b7280; font-weight: bold;">Amarillo, TX • (806) 316-5070</div>
-                </div>
+            <div class="pdf-title-block">
+                <img src="https://caprocktech.com/caprock%20logo%20transparent%20BG%201.png" style="height: 50px; margin: 0 auto 10px auto; filter: invert(1) brightness(0);">
+                <h1>Caprock Technology Group</h1>
+                <h2>MASTER SERVICE AGREEMENT (MSA)</h2>
+                <p>Governing Law: State of Texas | Venue: Potter/Randall County</p>
             </div>
 
-            <p style="font-size: 11px; color: #374151; margin-bottom: 15px;">
-                This Service Level Agreement ("Agreement") is entered into as of <strong><span id="pdf-date"></span></strong> (the "Effective Date"), by and between Caprock Technology Group, LLC ("Provider") and the client identified below ("Client").
-            </p>
-
-            <!-- 1. Client Info -->
-            <div class="pdf-section-title">1. Client Information</div>
-            <div class="pdf-grid">
-                <div>
-                    <div class="pdf-data-label">Legal Company Name</div>
-                    <div class="pdf-data-value" id="pdf-company">--</div>
-                </div>
-                <div>
-                    <div class="pdf-data-label">Primary Contact</div>
-                    <div class="pdf-data-value"><span id="pdf-name">--</span> (<span id="pdf-title">--</span>)</div>
-                </div>
-                <div>
-                    <div class="pdf-data-label">Email Address</div>
-                    <div class="pdf-data-value" id="pdf-email">--</div>
-                </div>
-                <div>
-                    <div class="pdf-data-label">Phone Number</div>
-                    <div class="pdf-data-value" id="pdf-phone">--</div>
-                </div>
-                <div style="grid-column: span 2;">
-                    <div class="pdf-data-label">Service Address</div>
-                    <div class="pdf-data-value" id="pdf-address">--</div>
-                </div>
+            <!-- 1. Preamble & Scope -->
+            <div class="pdf-section avoid-break">
+                <h3>1. Preamble & Scope</h3>
+                <p class="pdf-text">This Master Service Agreement ("Agreement") is entered into by and between <strong>Caprock Technology Group, LLC</strong> ("Caprock"), a Texas Limited Liability Company based in Amarillo, and the undersigned entity ("Client").</p>
+                <p class="pdf-text"><strong>Purpose:</strong> This Agreement governs the provision of Mission Critical Managed IT Services. This Agreement serves as the umbrella for all services selected in Schedule A and the Term commitments in Schedule B.</p>
             </div>
 
-            <!-- 2. Scope & Pricing -->
-            <div class="pdf-section-title">2. Scope of Services & Investment</div>
-            <div class="pdf-grid" style="margin-bottom: 10px;">
-                <div>
-                    <div class="pdf-data-label">Environment Scope</div>
-                    <div style="font-size: 11px; color: #374151;">
-                        Servers: <strong id="pdf-servers">0</strong> | Locations: <strong id="pdf-sites">1</strong><br>
-                        LOB Apps: <span id="pdf-software">None specified</span>
-                    </div>
-                </div>
-                <div>
-                    <div class="pdf-data-label">Special Inclusions/Exclusions</div>
-                    <div style="font-size: 11px; color: #374151; font-style: italic;" id="pdf-notes">Standard deployment parameters apply.</div>
-                </div>
+            <!-- 2. Term & Termination -->
+            <div class="pdf-section avoid-break">
+                <h3>2. Term & Termination</h3>
+                <p class="pdf-text"><strong>2.1. Initial Term & Renewal:</strong> The "Initial Term" of this Agreement shall be determined by the selection made in Schedule B. <strong>Automatic Renewal:</strong> Upon expiration of the Initial Term, this Agreement shall automatically renew for subsequent terms of equal length unless either Party provides written notice of non-renewal at least sixty (60) days prior to the expiration date.</p>
+                <p class="pdf-text"><strong>2.2. Termination for Convenience & Acceleration:</strong></p>
+                <ul class="pdf-list">
+                    <li><strong>Month-to-Month Agreements:</strong> May be terminated by Client with thirty (30) days' written notice.</li>
+                    <li><strong>Fixed Term Agreements (12, 24, 36 Months):</strong> Client acknowledges that the rates and discounts provided in Schedule B are contingent upon the commitment to the full Initial Term. In the event Client terminates this Agreement for convenience prior to the end of the Initial Term, all remaining monthly fees for the remainder of the Term shall immediately become due and payable as a liquidated debt, not as a penalty. (e.g., cancelling a 12-month contract at Month 6 requires immediate payment of the remaining 6 months).</li>
+                </ul>
             </div>
 
-            <div class="pdf-pricing-box avoid-break">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #d1d5db; padding-bottom: 10px; margin-bottom: 10px;">
+            <!-- 3. Financial Integrity -->
+            <div class="pdf-section avoid-break">
+                <h3>3. Financial Integrity</h3>
+                <p class="pdf-text"><strong>3.1. Strategic Onboarding & Standardization Fee (One-Time):</strong> To cover the labor and tooling required for initial network mapping, security agent deployment, and technical standardization, a one-time Strategic Onboarding & Standardization Fee of $500.00 is assessed upon execution of this Agreement. <strong>Waiver Protocol:</strong> This fee may be waived strictly contingent upon the selection of a qualifying Term in Schedule B.</p>
+                <p class="pdf-text"><strong>3.2. Automated Anniversary Billing:</strong> Client agrees to maintain a valid ACH Authorization or Credit Card on file.</p>
+                <ul class="pdf-list">
+                    <li><strong>Billing Cycle:</strong> Service fees are billed in advance on a recurring monthly basis, triggered on the Service Anniversary Date (the day of the month service was activated).</li>
+                    <li><strong>Reconciliation:</strong> Client billing will automatically adjust each month based on the active user/endpoint count detected by Caprock's auditing tools on the day prior to the Service Anniversary Date.</li>
+                </ul>
+                <p class="pdf-text"><strong>3.3. Non-Payment & Suspension:</strong></p>
+                <ul class="pdf-list">
+                    <li><strong>Late Fees:</strong> Invoices unpaid after ten (10) days are subject to a 1.5% monthly late fee.</li>
+                    <li><strong>Suspension:</strong> Caprock reserves the right to suspend all services if payment is delinquent by fifteen (15) days. Reactivation following suspension requires a $150.00 administrative fee.</li>
+                </ul>
+            </div>
+
+            <!-- 4. Liability -->
+            <div class="pdf-section avoid-break">
+                <h3>4. Liability</h3>
+                <p class="pdf-text"><strong>4.1. Limitation of Liability:</strong> Caprock's total aggregate liability arising out of this Agreement shall be strictly limited to the total amount of service fees paid by Client to Caprock during the three (3) months immediately preceding the claim.</p>
+                <p class="pdf-text"><strong>4.2. "Shadow IT" Indemnification:</strong> Client agrees to indemnify and hold Caprock harmless against any claims or data breaches resulting from hardware, software, or personal devices (BYOD) installed or utilized without the express written vetting of Caprock.</p>
+            </div>
+
+            <!-- Page Break -->
+            <div class="html2pdf__page-break"></div>
+
+            <!-- SCHEDULE A -->
+            <div class="pdf-schedule-box avoid-break">
+                <div class="pdf-schedule-title">Schedule A: Service Tier Configuration</div>
+                <div class="pdf-grid">
                     <div>
-                        <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Selected Support Tier</div>
-                        <div style="font-size: 16px; font-weight: 800; color: #111827; text-transform: uppercase;" id="pdf-plan-name">The Partner</div>
+                        <div class="pdf-label">Selected Operational Tier</div>
+                        <div class="pdf-value" id="pdf-tier-name" style="font-size: 16px;">--</div>
                     </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Managed Users/Endpoints</div>
-                        <div style="font-size: 16px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #111827;" id="pdf-user-count">10</div>
+                    <div>
+                        <div class="pdf-label">Base Rate (Pre-Discount)</div>
+                        <div class="pdf-value" id="pdf-tier-rate">--</div>
                     </div>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div style="font-size: 11px; font-weight: 600; color: #374151;" id="pdf-plan-desc">
-                        Includes RMM, EDR, Backup, and Unlimited Remote Support.
+                <div class="pdf-text"><strong>Inclusions:</strong> <span id="pdf-tier-inc">--</span></div>
+                <div class="pdf-text"><strong>Labor Policy:</strong> <span id="pdf-tier-labor">--</span></div>
+            </div>
+
+            <!-- SCHEDULE B -->
+            <div class="pdf-schedule-box avoid-break">
+                <div class="pdf-schedule-title">Schedule B: Term Selection & Incentives</div>
+                <div class="pdf-grid">
+                    <div>
+                        <div class="pdf-label">Selected Term Commitment</div>
+                        <div class="pdf-value" id="pdf-term-name" style="font-size: 16px;">--</div>
                     </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 9px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Total Monthly Recurring (MRR)</div>
-                        <div style="font-size: 20px; font-family: 'JetBrains Mono', monospace; font-weight: 900; color: #166534;" id="pdf-total-mrr">$1,250.00</div>
+                    <div>
+                        <div class="pdf-label">One-Time Onboarding Fee</div>
+                        <div class="pdf-value" id="pdf-term-fee">--</div>
+                    </div>
+                </div>
+                <div class="pdf-text"><strong>Applied Incentive:</strong> <span id="pdf-term-inc">--</span></div>
+                <div class="pdf-text"><strong>Rationale:</strong> <span id="pdf-term-rat">--</span></div>
+            </div>
+
+            <!-- FINAL METRICS -->
+            <div class="pdf-grid avoid-break" style="margin-top: 20px;">
+                <div>
+                    <div class="pdf-label">Client Entity</div>
+                    <div class="pdf-value" id="pdf-final-company">--</div>
+                </div>
+                <div>
+                    <div class="pdf-label">Managed Users/Endpoints</div>
+                    <div class="pdf-value" id="pdf-final-users">--</div>
+                </div>
+                <div style="grid-column: span 2; background: #e5e7eb; padding: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                    <div class="pdf-label" style="margin:0; color:#000;">Total Initial Monthly Recurring Revenue (MRR)</div>
+                    <div class="pdf-value" id="pdf-final-mrr" style="font-size: 20px;">--</div>
+                </div>
+            </div>
+
+            <!-- Execution Block with Signature -->
+            <div class="pdf-section avoid-break" style="margin-top: 40px;">
+                <div class="pdf-schedule-title" style="border:none; text-align:center;">EXECUTION & APPROVAL</div>
+                <p class="pdf-text" style="text-align:center; margin-bottom: 30px;">By signing below, Client authorizes the Service Tier (Schedule A) and binds the entity to the Term Commitment (Schedule B).</p>
+                
+                <p class="pdf-text" style="margin-bottom: 20px;"><strong>Service Anniversary Date:</strong> <span id="pdf-final-date" style="border-bottom: 1px solid #000; padding: 0 20px;">--</span></p>
+
+                <div class="pdf-sig-block">
+                    <!-- Client Side -->
+                    <div>
+                        <div class="pdf-label">Client</div>
+                        <div class="pdf-sig-line">
+                            <img id="pdf-sig-img" class="pdf-sig-image" src="" alt="">
+                        </div>
+                        <div style="display: flex; justify-content: space-between;" class="pdf-text">
+                            <span>Signature</span>
+                            <span id="pdf-sig-date1">Date</span>
+                        </div>
+                        <div class="pdf-sig-line" style="height: 30px; margin-top: 20px; display: flex; align-items: flex-end; padding-bottom:2px;">
+                            <span id="pdf-final-signer" style="font-size: 14px; font-family: 'JetBrains Mono', monospace; font-weight: bold;"></span>
+                        </div>
+                        <div class="pdf-text">Printed Name & Title</div>
+                    </div>
+                    
+                    <!-- Caprock Side -->
+                    <div>
+                        <div class="pdf-label">Caprock Technology Group, LLC</div>
+                        <div class="pdf-sig-line"></div>
+                        <div style="display: flex; justify-content: space-between;" class="pdf-text">
+                            <span>Signature</span>
+                            <span id="pdf-sig-date2">Date</span>
+                        </div>
+                        <div class="pdf-sig-line" style="height: 30px; margin-top: 20px; display: flex; align-items: flex-end; padding-bottom:2px;">
+                            <span style="font-size: 14px; font-family: 'JetBrains Mono', monospace; font-weight: bold;">Nick Stevens, Lead Strategic Counsel</span>
+                        </div>
+                        <div class="pdf-text">Printed Name & Title</div>
                     </div>
                 </div>
             </div>
 
-            <!-- 3. The Rock Solid SLA Terms -->
-            <div class="pdf-section-title">3. Service Level Agreement (SLA) Terms</div>
-            <div class="pdf-legal-text">
-                
-                <div class="avoid-break">
-                    <h4>3.1 Coverage Hours & Availability</h4>
-                    Provider’s standard business hours are 8:00 AM to 5:00 PM Central Time, Monday through Friday, excluding standard US holidays. Support requested outside these hours constitutes Emergency After-Hours Support and is billable at standard emergency rates unless explicitly included in the Client's selected Service Tier.
-                </div>
-                
-                <div class="avoid-break">
-                    <h4>3.2 Targeted Response Times</h4>
-                    Provider utilizes a triage system to prioritize operational impact. Targeted response times during business hours are as follows:
-                    <ul>
-                        <li><strong>Critical (Severity 1):</strong> Complete network outage or active security breach. Target Response: <strong>1 Hour</strong>.</li>
-                        <li><strong>High (Severity 2):</strong> Significant operational impairment affecting multiple users. Target Response: <strong>4 Hours</strong>.</li>
-                        <li><strong>Normal (Severity 3):</strong> Standard user requests, password resets, minor bugs. Target Response: <strong>Next Business Day</strong>.</li>
-                    </ul>
-                </div>
-
-                <div class="avoid-break">
-                    <h4>3.3 Support Labor Rates & Inclusions</h4>
-                    <span id="pdf-labor-text">Under the selected tier, specific labor inclusions apply.</span>
-                </div>
-
-                <div class="avoid-break">
-                    <h4>3.4 The Panhandle Travel Policy</h4>
-                    On-site support travel within the city limits of Amarillo and Canyon, TX incurs no trip charge. Travel to locations outside this primary zone will be billed a travel surcharge of $1.50 per mile (round trip) from Provider headquarters, regardless of Service Tier, unless a superseding written addendum is provided.
-                </div>
-
-                <!-- NEW GRANULAR SECTIONS -->
-                <div class="avoid-break">
-                    <h4>3.5 Client Responsibilities</h4>
-                    Client agrees to: (a) Provide Provider with physical and remote access to the premises and network necessary to perform the services; (b) Designate a primary Point of Contact to authorize approvals and coordinate with Provider; (c) Maintain an active, business-grade internet connection; and (d) Promptly report all issues or suspected security incidents to Provider’s helpdesk.
-                </div>
-
-                <div class="avoid-break">
-                    <h4>3.6 Exclusions from Managed Services</h4>
-                    The Monthly Recurring Revenue (MRR) covers maintenance, monitoring, and support of the existing environment as scoped. It <strong>does not</strong> include: (a) The cost of new hardware, parts, or software licensing not explicitly bundled in the service tier; (b) Major project labor (e.g., server migrations, office moves, complete network rebuilds); (c) Support for proprietary Line of Business software beyond basic vendor liaison services. Major projects will be scoped and quoted separately.
-                </div>
-
-                <div class="avoid-break">
-                    <h4>3.7 Payment Terms</h4>
-                    Invoices for Monthly Recurring Revenue (MRR) are generated and due on the 1st of each month. Payment terms are Net 15. Provider reserves the right to assess a late fee of 1.5% per month on past due balances. Provider reserves the right to suspend services, including helpdesk support and backups, if an account becomes more than 30 days past due, until the balance is resolved.
-                </div>
-
-                <div class="avoid-break">
-                    <h4>3.8 Limitation of Liability</h4>
-                    To the maximum extent permitted by law, Provider shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses resulting from cyberattacks, hardware failure, or service interruptions. In no event shall Provider's aggregate liability exceed the total amount paid by Client to Provider during the three (3) month period immediately preceding the event giving rise to the claim.
-                </div>
-
-                <div class="avoid-break">
-                    <h4>3.9 Term and Termination</h4>
-                    <span id="pdf-term-text">This Agreement operates on a month-to-month basis.</span>
-                </div>
-            </div>
-
-            <!-- Page Break For Signatures if needed (handled cleanly by avoid-break) -->
-            <div class="pdf-sig-block avoid-break" style="margin-top: 50px;">
-                <div>
-                    <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 25px;">Accepted by Client</div>
-                    <div class="pdf-sig-line"></div>
-                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: #4b5563;">
-                        <span>Authorized Signature</span>
-                        <span>Date</span>
-                    </div>
-                    <div class="pdf-sig-line" style="margin-top: 25px;"></div>
-                    <div style="font-size: 10px; color: #4b5563;">Printed Name & Title</div>
-                </div>
-                <div>
-                    <div style="font-size: 10px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 25px;">Accepted by Caprock Technology Group</div>
-                    <div class="pdf-sig-line"></div>
-                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: #4b5563;">
-                        <span>Nick Stevens, Founder</span>
-                        <span>Date</span>
-                    </div>
-                </div>
+            <div style="text-align: center; margin-top: 40px; font-size: 9px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 10px;">
+                Phone: (806) 316-5070 | Email: support@caprocktech.com | Web: www.caprocktech.com
             </div>
 
         </div>
@@ -461,19 +436,19 @@
 
     <!-- Application Logic -->
     <script>
-        // State
-        let currentStep = 1;
-        let selectedPlan = { name: 'Partner', price: 125, desc: "Full stack + Unlimited Remote Support. (Discounted On-Site)." };
+        // --- State Variables ---
+        let selectedPlan = { name: 'Partner', baseRate: 125 };
+        let financialState = { users: 10, term: '24', setupFee: 0, mrr: 0 };
+        let signatureData = null;
 
-        // Set Date
-        document.getElementById('pdf-date').innerText = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        // Set default date
+        document.getElementById('c-date').valueAsDate = new Date();
 
-        // Navigation
+        // --- Navigation ---
         function goToStep(step) {
             document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
             document.getElementById(`step-${step}`).classList.add('active');
             
-            // Update Indicators
             for(let i=1; i<=4; i++) {
                 const ind = document.getElementById(`ind-${i}`);
                 if(i < step) {
@@ -487,125 +462,193 @@
                     ind.innerHTML = i;
                 }
             }
-            
-            // Progress Bar
             document.getElementById('progress-bar').style.width = ((step - 1) / 3 * 100) + '%';
-            currentStep = step;
 
-            // If going to Step 4, populate review data
+            if(step === 3) {
+                // Initialize canvas sizes precisely when it becomes visible
+                resizeCanvas();
+                document.getElementById('sig-mrr').innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(financialState.mrr);
+                document.getElementById('sig-setup').innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(financialState.setupFee);
+            }
             if(step === 4) {
-                populateReview();
+                populatePDF();
             }
         }
 
-        // Plan Selection
+        // --- Pricing Logic ---
         function selectPlan(name, price, element) {
             document.querySelectorAll('.plan-card').forEach(card => card.classList.remove('selected'));
             element.classList.add('selected');
-            
-            let desc = "";
-            if(name === 'Watchtower') desc = "Silent Protection. AV/EDR, Patching, Monitoring. (Labor billed hourly).";
-            if(name === 'Partner') desc = "Full stack + Unlimited Remote Support. (Discounted On-Site).";
-            if(name === 'VIP') desc = "Virtual CIO. Unlimited Remote & On-Site. MDR + Server Backup.";
-
-            selectedPlan = { name, price, desc };
+            selectedPlan = { name, baseRate: price };
             calculateTotal();
         }
 
-        // Calculation
         function calculateTotal() {
             const users = parseInt(document.getElementById('c-users').value) || 0;
-            const total = users * selectedPlan.price;
-            
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-            document.getElementById('ui-total-mrr').innerText = formatter.format(total);
-        }
-
-        // Populate Final Review & PDF Template
-        function populateReview() {
-            // Get values
-            const company = document.getElementById('c-company').value || "Company Not Specified";
-            const name = document.getElementById('c-name').value || "Not Specified";
-            const title = document.getElementById('c-title').value || "Not Specified";
-            const email = document.getElementById('c-email').value || "Not Specified";
-            const phone = document.getElementById('c-phone').value || "Not Specified";
-            const address = document.getElementById('c-address').value || "Not Specified";
-            const users = document.getElementById('c-users').value || 0;
             const term = document.getElementById('c-term').value;
-            const servers = document.getElementById('c-servers').value || 0;
-            const sites = document.getElementById('c-sites').value || 1;
-            const software = document.getElementById('c-software').value || "None specified";
-            const notes = document.getElementById('c-notes').value || "Standard deployment parameters apply.";
             
-            const mrr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(users * selectedPlan.price);
+            let setupFee = 0;
+            let discountMultiplier = 1;
 
-            // Update Screen 4 UI
-            document.getElementById('rev-company').innerText = company;
-            document.getElementById('rev-plan').innerText = selectedPlan.name;
-            document.getElementById('rev-users').innerText = users;
-            document.getElementById('rev-mrr').innerText = mrr;
+            if(term === "MTM") { setupFee = 500; discountMultiplier = 1; }
+            if(term === "12") { setupFee = 0; discountMultiplier = 1; }
+            if(term === "24") { setupFee = 0; discountMultiplier = 0.95; } // 5% off
+            if(term === "36") { setupFee = 0; discountMultiplier = 0.90; } // 10% off
 
-            // DYNAMIC LABOR TEXT LOGIC
-            let laborText = "";
-            if (selectedPlan.name === 'Watchtower') {
-                laborText = "Under the Watchtower tier, Remote Support and On-Site Support are billed at the preferred Member Rate of <strong>$125/hr</strong>. Emergency After-Hours support is billed at <strong>$225/hr</strong>. Major projects are quoted separately.";
-            } else if (selectedPlan.name === 'Partner') {
-                laborText = "Under the Partner tier, Unlimited Remote Support during standard business hours is included at no additional charge. On-Site dispatch is billed at the discounted Partner Rate of <strong>$95/hr</strong>. Emergency After-Hours support is billed at <strong>$225/hr</strong>. Major projects are quoted separately.";
-            } else if (selectedPlan.name === 'VIP') {
-                laborText = "Under the VIP tier, Unlimited Remote Support and On-Site Support during standard business hours are fully <strong>INCLUDED at no additional charge</strong>. Emergency After-Hours support is also included. Major projects (e.g., complete network rebuilds) fall outside standard maintenance and will be quoted separately.";
-            }
-            document.getElementById('pdf-labor-text').innerHTML = laborText;
+            const rawMrr = users * selectedPlan.baseRate;
+            const finalMrr = rawMrr * discountMultiplier;
 
-            // DYNAMIC TERMINATION TEXT LOGIC
-            let termText = "";
-            if (term === "MTM") {
-                termText = "This Agreement operates on a month-to-month basis. Either party may terminate this Agreement without cause by providing thirty (30) days written notice. Upon termination, Client is responsible for all fees accrued up to the termination date.";
+            financialState = { users, term, setupFee, mrr: finalMrr };
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+            
+            if(setupFee > 0) {
+                document.getElementById('ui-setup-fee').innerHTML = `${formatter.format(setupFee)} <span class="text-xs text-brand-muted">(Due Today)</span>`;
             } else {
-                termText = `This Agreement operates on a fixed term of <strong>${term} months</strong> from the Effective Date. Either party may terminate this Agreement without cause by providing thirty (30) days written notice; however, if Client terminates prior to the end of the ${term}-month term, Client shall be responsible for the remaining balance of the contract term (calculated as the current MRR multiplied by the remaining months).`;
+                document.getElementById('ui-setup-fee').innerHTML = `$0.00 <span class="text-xs text-brand-accent font-bold">(WAIVED)</span>`;
             }
-            document.getElementById('pdf-term-text').innerHTML = termText;
-
-            // Update Rest of PDF Template
-            document.getElementById('pdf-company').innerText = company;
-            document.getElementById('pdf-name').innerText = name;
-            document.getElementById('pdf-title').innerText = title;
-            document.getElementById('pdf-email').innerText = email;
-            document.getElementById('pdf-phone').innerText = phone;
-            document.getElementById('pdf-address').innerText = address;
             
-            document.getElementById('pdf-servers').innerText = servers;
-            document.getElementById('pdf-sites').innerText = sites;
-            document.getElementById('pdf-software').innerText = software;
-            document.getElementById('pdf-notes').innerText = notes;
-
-            document.getElementById('pdf-plan-name').innerText = "Tier: " + selectedPlan.name;
-            document.getElementById('pdf-plan-desc').innerText = selectedPlan.desc;
-            document.getElementById('pdf-user-count').innerText = users;
-            document.getElementById('pdf-total-mrr').innerText = mrr;
+            document.getElementById('ui-total-mrr').innerText = formatter.format(finalMrr);
         }
 
-        // PDF Generation Engine (Updated for precise multi-page rendering)
+        // --- Signature Pad Logic ---
+        const canvas = document.getElementById('sig-canvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+
+        function resizeCanvas() {
+            // Make internal resolution match CSS resolution for clean lines
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#0f172a'; // Dark ink
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            if(e.touches) {
+                return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+            }
+            return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        }
+
+        function startPos(e) {
+            drawing = true;
+            const pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+            e.preventDefault(); // Stop scrolling on touch
+        }
+        function endPos(e) { 
+            drawing = false; 
+            signatureData = canvas.toDataURL(); // Save to Base64
+            e.preventDefault();
+        }
+        function draw(e) {
+            if (!drawing) return;
+            const pos = getPos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            e.preventDefault();
+        }
+
+        canvas.addEventListener('mousedown', startPos);
+        canvas.addEventListener('mouseup', endPos);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchstart', startPos, {passive: false});
+        canvas.addEventListener('touchend', endPos, {passive: false});
+        canvas.addEventListener('touchmove', draw, {passive: false});
+
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            signatureData = null;
+        }
+
+        // --- Compile PDF Data ---
+        function populatePDF() {
+            const company = document.getElementById('c-company').value || "ENTITY NOT SPECIFIED";
+            const name = document.getElementById('c-name').value || "SIGNER";
+            const title = document.getElementById('c-title').value || "TITLE";
+            const theDate = document.getElementById('c-date').value || new Date().toISOString().split('T')[0];
+            const displayDate = new Date(theDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+            
+            // Map Schedule A
+            document.getElementById('pdf-tier-name').innerText = `OPTION ${selectedPlan.name === 'Watchtower' ? '1' : selectedPlan.name === 'Partner' ? '2' : '3'}: THE ${selectedPlan.name.toUpperCase()}`;
+            document.getElementById('pdf-tier-rate').innerText = `$${selectedPlan.baseRate}.00 per user/month`;
+            
+            let inc = "", lab = "";
+            if(selectedPlan.name === 'Watchtower') {
+                inc = "SentinelOne EDR, NinjaOne Auto-Patching, 24/7 Monitoring, Ransomware Reversal.";
+                lab = "NO Helpdesk. Manual labor billed at $125.00/hr.";
+            } else if(selectedPlan.name === 'Partner') {
+                inc = "Watchtower + Unlimited Remote Helpdesk (M-F).";
+                lab = "On-Site labor discounted to $95.00/hr.";
+            } else {
+                inc = "Partner + Hybrid Disaster Recovery + Unlimited On-Site/Remote Labor + Vendor Management.";
+                lab = "Included.";
+            }
+            document.getElementById('pdf-tier-inc').innerText = inc;
+            document.getElementById('pdf-tier-labor').innerText = lab;
+
+            // Map Schedule B
+            let termObj = {name: "", inc: "", rat: ""};
+            if(financialState.term === "MTM") termObj = {name: "OPTION A: FLEXIBILITY (Month-to-Month)", inc: "None.", rat: "None."};
+            if(financialState.term === "12") termObj = {name: "OPTION B: STABILITY (12 Months)", inc: "Waived Strategic Onboarding & Standardization Fee ($500.00 Savings).", rat: "Provides mission stability and ensures the 'Self-Healing' engine has time to work."};
+            if(financialState.term === "24") termObj = {name: "OPTION C: FISCAL LOCK (24 Months)", inc: "5% Discount on monthly per-user fees + Waived Strategic Onboarding & Standardization Fee.", rat: "Locks in regional labor rates against inflation."};
+            if(financialState.term === "36") termObj = {name: "OPTION D: PARTNERSHIP (36 Months)", inc: "10% Discount on monthly per-user fees + Waived Strategic Onboarding & Standardization Fee + Guaranteed $0 Rate for Quarterly Strategic Business Reviews (QSBRs).", rat: "Full 'Partnership' alignment."};
+            
+            document.getElementById('pdf-term-name').innerText = termObj.name;
+            document.getElementById('pdf-term-fee').innerText = financialState.setupFee > 0 ? "$500.00" : "$0.00 (Waived)";
+            document.getElementById('pdf-term-inc').innerText = termObj.inc;
+            document.getElementById('pdf-term-rat').innerText = termObj.rat;
+
+            // Final Metrics
+            document.getElementById('pdf-final-company').innerText = company;
+            document.getElementById('pdf-final-users').innerText = financialState.users;
+            document.getElementById('pdf-final-mrr').innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(financialState.mrr);
+            document.getElementById('pdf-final-date').innerText = displayDate;
+            document.getElementById('pdf-sig-date1').innerText = displayDate;
+            document.getElementById('pdf-sig-date2').innerText = displayDate;
+            document.getElementById('pdf-final-signer').innerText = `${name}, ${title}`;
+
+            // Inject Signature Image
+            if(signatureData) {
+                document.getElementById('pdf-sig-img').src = signatureData;
+                document.getElementById('pdf-sig-img').style.display = 'block';
+            } else {
+                document.getElementById('pdf-sig-img').style.display = 'none';
+            }
+        }
+
+        // --- PDF Generation Engine ---
         function generatePDF() {
+            if(!signatureData) {
+                alert("Please return to Step 3 and capture the Client's Signature before executing the MSA.");
+                return;
+            }
+
             const btn = document.getElementById('pdf-btn');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating SLA...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Executing Document...';
             btn.classList.add('opacity-75', 'cursor-not-allowed');
 
             const element = document.getElementById('pdf-template');
             const companyName = document.getElementById('c-company').value.replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'client';
             
-            // The new config perfectly handles multiple pages and margins
             const opt = {
-                margin:       [0.5, 0.5, 0.5, 0.5], // Top, Left, Bottom, Right margins in inches
-                filename:     `Caprock_SLA_${companyName}.pdf`,
+                margin:       [0.5, 0.5, 0.5, 0.5],
+                filename:     `Caprock_MSA_${companyName}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
-                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }, // Prevents slicing paragraphs in half
+                html2canvas:  { scale: 2, useCORS: true },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
 
             html2pdf().set(opt).from(element).save().then(() => {
-                btn.innerHTML = '<i class="fas fa-check mr-2"></i> PDF Downloaded';
+                btn.innerHTML = '<i class="fas fa-check mr-2"></i> MSA Exported';
                 btn.classList.replace('bg-brand-accent', 'bg-green-600');
                 setTimeout(() => {
                     btn.innerHTML = originalText;
@@ -620,5 +663,3 @@
     </script>
 </body>
 </html>
-
-
