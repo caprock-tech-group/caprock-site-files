@@ -74,23 +74,25 @@
             left: -9999px;
             top: 0;
             width: 800px;
+            height: max-content;
+            overflow: visible;
             background: white;
         }
         
         /* PDF Specific Styles (Matches the uploaded document) */
         #pdf-template {
-            background: white; color: #000; font-family: 'Inter', sans-serif; width: 100%; padding: 40px; box-sizing: border-box;
+            background: white; color: #000; font-family: 'Inter', sans-serif; width: 100%; padding: 20px 40px; box-sizing: border-box;
         }
-        .pdf-title-block { text-align: center; border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
+        .pdf-title-block { text-align: center; border-bottom: 3px solid #000; padding-bottom: 15px; margin-bottom: 25px; }
         .pdf-title-block h1 { font-size: 28px; font-weight: 900; text-transform: uppercase; margin: 0 0 5px 0; letter-spacing: -0.02em; }
         .pdf-title-block h2 { font-size: 18px; font-weight: 700; margin: 0 0 10px 0; }
         .pdf-title-block p { font-size: 11px; color: #4b5563; font-weight: 600; margin: 0; }
         
-        .pdf-section { margin-bottom: 20px; }
+        .pdf-section { margin-bottom: 15px; }
         .pdf-section h3 { font-size: 14px; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid #d1d5db; padding-bottom: 4px; margin-bottom: 8px; color: #111827; }
-        .pdf-text { font-size: 11px; line-height: 1.5; color: #111827; margin-bottom: 8px; }
+        .pdf-text { font-size: 11px; line-height: 1.4; color: #111827; margin-bottom: 8px; }
         .pdf-text strong { font-weight: 700; }
-        .pdf-list { margin: 5px 0 10px 20px; font-size: 11px; line-height: 1.5; color: #111827; }
+        .pdf-list { margin: 5px 0 10px 20px; font-size: 11px; line-height: 1.4; color: #111827; }
         .pdf-list li { margin-bottom: 4px; list-style-type: disc; }
         
         .pdf-schedule-box { border: 2px solid #000; padding: 15px; margin-bottom: 20px; background: #f9fafb; }
@@ -100,11 +102,11 @@
         .pdf-label { font-size: 10px; text-transform: uppercase; color: #6b7280; font-weight: 700; margin-bottom: 2px; }
         .pdf-value { font-size: 12px; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #000; }
         
-        .pdf-sig-block { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .pdf-sig-block { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         .pdf-sig-line { border-bottom: 1px solid #000; height: 60px; margin-bottom: 5px; position: relative; }
         .pdf-sig-image { position: absolute; bottom: 0; left: 10px; max-height: 55px; max-width: 90%; }
         
-        .avoid-break { page-break-inside: avoid; margin-bottom: 15px; }
+        .avoid-break { page-break-inside: avoid; margin-bottom: 12px; }
         .html2pdf__page-break { height: 0; page-break-before: always; border: none; margin: 0; padding: 0; }
     </style>
 </head>
@@ -287,7 +289,7 @@
         <div id="pdf-template">
             <!-- Header -->
             <div class="pdf-title-block">
-                <img src="https://caprocktech.com/caprock%20logo%20transparent%20BG%201.png" style="height: 50px; margin: 0 auto 10px auto; filter: invert(1) brightness(0);">
+                <img src="https://caprocktech.com/caprock%20logo%20transparent%20BG%201.png" style="height: 50px; margin: 0 auto 10px auto; filter: invert(1) brightness(0);" onerror="this.style.display='none'">
                 <h1>Caprock Technology Group</h1>
                 <h2>MASTER SERVICE AGREEMENT (MSA)</h2>
                 <p>Governing Law: State of Texas | Venue: Potter/Randall County</p>
@@ -311,20 +313,41 @@
                 </ul>
             </div>
 
-            <!-- 3. Financial Integrity -->
-            <div class="pdf-section avoid-break">
-                <h3>3. Financial Integrity</h3>
-                <p class="pdf-text"><strong>3.1. Strategic Onboarding & Standardization Fee (One-Time):</strong> To cover the labor and tooling required for initial network mapping, security agent deployment, and technical standardization, a one-time Strategic Onboarding & Standardization Fee of $500.00 is assessed upon execution of this Agreement. <strong>Waiver Protocol:</strong> This fee may be waived strictly contingent upon the selection of a qualifying Term in Schedule B.</p>
-                <p class="pdf-text"><strong>3.2. Automated Anniversary Billing:</strong> Client agrees to maintain a valid ACH Authorization or Credit Card on file.</p>
-                <ul class="pdf-list">
-                    <li><strong>Billing Cycle:</strong> Service fees are billed in advance on a recurring monthly basis, triggered on the Service Anniversary Date (the day of the month service was activated).</li>
-                    <li><strong>Reconciliation:</strong> Client billing will automatically adjust each month based on the active user/endpoint count detected by Caprock's auditing tools on the day prior to the Service Anniversary Date.</li>
-                </ul>
-                <p class="pdf-text"><strong>3.3. Non-Payment & Suspension:</strong></p>
-                <ul class="pdf-list">
-                    <li><strong>Late Fees:</strong> Invoices unpaid after ten (10) days are subject to a 1.5% monthly late fee.</li>
-                    <li><strong>Suspension:</strong> Caprock reserves the right to suspend all services if payment is delinquent by fifteen (15) days. Reactivation following suspension requires a $150.00 administrative fee.</li>
-                </ul>
+            <!-- 3. Financial & Operational Integrity -->
+            <div class="pdf-section">
+                <h3>3. Financial & Operational Integrity</h3>
+                
+                <div class="avoid-break">
+                    <p class="pdf-text"><strong>3.1. Strategic Onboarding & Standardization Fee (One-Time):</strong> To cover the labor and tooling required for initial network mapping, security agent deployment, and technical standardization, a one-time Strategic Onboarding & Standardization Fee of $500.00 is assessed upon execution of this Agreement. <strong>Waiver Protocol:</strong> This fee may be waived strictly contingent upon the selection of a qualifying Term in Schedule B.</p>
+                </div>
+                
+                <div class="avoid-break">
+                    <p class="pdf-text"><strong>3.2. Automated Anniversary Billing:</strong> Client agrees to maintain a valid ACH Authorization or Credit Card on file.</p>
+                    <ul class="pdf-list">
+                        <li><strong>Billing Cycle:</strong> Service fees are billed in advance on a recurring monthly basis, triggered on the Service Anniversary Date (the day of the month service was activated).</li>
+                        <li><strong>Reconciliation:</strong> Client billing will automatically adjust each month based on the active user/endpoint count detected by Caprock's auditing tools on the day prior to the Service Anniversary Date.</li>
+                    </ul>
+                </div>
+
+                <div class="avoid-break">
+                    <p class="pdf-text"><strong>3.3. Non-Payment & Suspension:</strong></p>
+                    <ul class="pdf-list">
+                        <li><strong>Late Fees:</strong> Invoices unpaid after ten (10) days are subject to a 1.5% monthly late fee.</li>
+                        <li><strong>Suspension:</strong> Caprock reserves the right to suspend all services if payment is delinquent by fifteen (15) days. Reactivation following suspension requires a $150.00 administrative fee.</li>
+                    </ul>
+                </div>
+
+                <div class="avoid-break">
+                    <p class="pdf-text"><strong>3.4. Support Labor Rates & Inclusions:</strong> <span id="pdf-labor-text">Under the selected tier, specific labor inclusions apply.</span></p>
+                </div>
+
+                <div class="avoid-break">
+                    <p class="pdf-text"><strong>3.5. Coverage Scope Limitation (Device Truing):</strong> All Service Tier inclusions, including unlimited remote/on-site support, SLA response times, and discounted labor rates, apply <strong>strictly and exclusively to the designated number of Managed Users/Endpoints</strong> billed in this Agreement. Technical support requested for unmanaged devices, unauthorized BYOD (Bring Your Own Device) equipment, or endpoints exceeding the active licensed count will be billed at standard non-member emergency rates ($150.00/hr) unless a licensing true-up is executed.</p>
+                </div>
+
+                <div class="avoid-break">
+                    <p class="pdf-text"><strong>3.6. Exclusions from Managed Services:</strong> The Monthly Recurring Revenue (MRR) covers maintenance, monitoring, and support of the existing environment as scoped. It <strong>does not</strong> include: (a) The cost of new hardware, parts, or software licensing not explicitly bundled; (b) Major project labor (e.g., server migrations, office moves, complete network rebuilds); (c) Support for proprietary Line of Business software beyond basic vendor liaison services.</p>
+                </div>
             </div>
 
             <!-- 4. Liability -->
@@ -334,16 +357,13 @@
                 <p class="pdf-text"><strong>4.2. "Shadow IT" Indemnification:</strong> Client agrees to indemnify and hold Caprock harmless against any claims or data breaches resulting from hardware, software, or personal devices (BYOD) installed or utilized without the express written vetting of Caprock.</p>
             </div>
 
-            <!-- Page Break -->
-            <div class="html2pdf__page-break"></div>
-
             <!-- SCHEDULE A -->
             <div class="pdf-schedule-box avoid-break">
                 <div class="pdf-schedule-title">Schedule A: Service Tier Configuration</div>
                 <div class="pdf-grid">
                     <div>
                         <div class="pdf-label">Selected Operational Tier</div>
-                        <div class="pdf-value" id="pdf-tier-name" style="font-size: 16px;">--</div>
+                        <div class="pdf-value" id="pdf-tier-name" style="font-size: 14px;">--</div>
                     </div>
                     <div>
                         <div class="pdf-label">Base Rate (Pre-Discount)</div>
@@ -360,7 +380,7 @@
                 <div class="pdf-grid">
                     <div>
                         <div class="pdf-label">Selected Term Commitment</div>
-                        <div class="pdf-value" id="pdf-term-name" style="font-size: 16px;">--</div>
+                        <div class="pdf-value" id="pdf-term-name" style="font-size: 14px;">--</div>
                     </div>
                     <div>
                         <div class="pdf-label">One-Time Onboarding Fee</div>
@@ -383,14 +403,14 @@
                 </div>
                 <div style="grid-column: span 2; background: #e5e7eb; padding: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                     <div class="pdf-label" style="margin:0; color:#000;">Total Initial Monthly Recurring Revenue (MRR)</div>
-                    <div class="pdf-value" id="pdf-final-mrr" style="font-size: 20px;">--</div>
+                    <div class="pdf-value" id="pdf-final-mrr" style="font-size: 18px;">--</div>
                 </div>
             </div>
 
             <!-- Execution Block with Signature -->
-            <div class="pdf-section avoid-break" style="margin-top: 40px;">
+            <div class="pdf-section avoid-break" style="margin-top: 30px;">
                 <div class="pdf-schedule-title" style="border:none; text-align:center;">EXECUTION & APPROVAL</div>
-                <p class="pdf-text" style="text-align:center; margin-bottom: 30px;">By signing below, Client authorizes the Service Tier (Schedule A) and binds the entity to the Term Commitment (Schedule B).</p>
+                <p class="pdf-text" style="text-align:center; margin-bottom: 20px;">By signing below, Client authorizes the Service Tier (Schedule A) and binds the entity to the Term Commitment (Schedule B).</p>
                 
                 <p class="pdf-text" style="margin-bottom: 20px;"><strong>Service Anniversary Date:</strong> <span id="pdf-final-date" style="border-bottom: 1px solid #000; padding: 0 20px;">--</span></p>
 
@@ -405,8 +425,8 @@
                             <span>Signature</span>
                             <span id="pdf-sig-date1">Date</span>
                         </div>
-                        <div class="pdf-sig-line" style="height: 30px; margin-top: 20px; display: flex; align-items: flex-end; padding-bottom:2px;">
-                            <span id="pdf-final-signer" style="font-size: 14px; font-family: 'JetBrains Mono', monospace; font-weight: bold;"></span>
+                        <div class="pdf-sig-line" style="height: 30px; margin-top: 15px; display: flex; align-items: flex-end; padding-bottom:2px;">
+                            <span id="pdf-final-signer" style="font-size: 12px; font-family: 'JetBrains Mono', monospace; font-weight: bold;"></span>
                         </div>
                         <div class="pdf-text">Printed Name & Title</div>
                     </div>
@@ -419,15 +439,15 @@
                             <span>Signature</span>
                             <span id="pdf-sig-date2">Date</span>
                         </div>
-                        <div class="pdf-sig-line" style="height: 30px; margin-top: 20px; display: flex; align-items: flex-end; padding-bottom:2px;">
-                            <span style="font-size: 14px; font-family: 'JetBrains Mono', monospace; font-weight: bold;">Nick Stevens, Lead Strategic Counsel</span>
+                        <div class="pdf-sig-line" style="height: 30px; margin-top: 15px; display: flex; align-items: flex-end; padding-bottom:2px;">
+                            <span style="font-size: 12px; font-family: 'JetBrains Mono', monospace; font-weight: bold;">Nick Stevens, Lead Strategic Counsel</span>
                         </div>
                         <div class="pdf-text">Printed Name & Title</div>
                     </div>
                 </div>
             </div>
 
-            <div style="text-align: center; margin-top: 40px; font-size: 9px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 10px;">
+            <div style="text-align: center; margin-top: 30px; font-size: 9px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 10px;">
                 Phone: (806) 316-5070 | Email: support@caprocktech.com | Web: www.caprocktech.com
             </div>
 
@@ -573,25 +593,34 @@
             const name = document.getElementById('c-name').value || "SIGNER";
             const title = document.getElementById('c-title').value || "TITLE";
             const theDate = document.getElementById('c-date').value || new Date().toISOString().split('T')[0];
-            const displayDate = new Date(theDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+            
+            // Format date carefully avoiding timezone offset issues
+            const dParts = theDate.split('-');
+            const displayDate = new Date(dParts[0], dParts[1] - 1, dParts[2]).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
             
             // Map Schedule A
             document.getElementById('pdf-tier-name').innerText = `OPTION ${selectedPlan.name === 'Watchtower' ? '1' : selectedPlan.name === 'Partner' ? '2' : '3'}: THE ${selectedPlan.name.toUpperCase()}`;
             document.getElementById('pdf-tier-rate').innerText = `$${selectedPlan.baseRate}.00 per user/month`;
             
             let inc = "", lab = "";
+            let laborText = "";
+
             if(selectedPlan.name === 'Watchtower') {
                 inc = "SentinelOne EDR, NinjaOne Auto-Patching, 24/7 Monitoring, Ransomware Reversal.";
                 lab = "NO Helpdesk. Manual labor billed at $125.00/hr.";
+                laborText = "Under the Watchtower tier, Remote Support and On-Site Support are billed at the preferred Member Rate of $125/hr. Emergency After-Hours support is billed at $225/hr. Major projects are quoted separately.";
             } else if(selectedPlan.name === 'Partner') {
                 inc = "Watchtower + Unlimited Remote Helpdesk (M-F).";
                 lab = "On-Site labor discounted to $95.00/hr.";
+                laborText = "Under the Partner tier, Unlimited Remote Support during standard business hours is included at no additional charge. On-Site dispatch is billed at the discounted Partner Rate of $95/hr. Emergency After-Hours support is billed at $225/hr. Major projects are quoted separately.";
             } else {
                 inc = "Partner + Hybrid Disaster Recovery + Unlimited On-Site/Remote Labor + Vendor Management.";
                 lab = "Included.";
+                laborText = "Under the VIP tier, Unlimited Remote Support and On-Site Support during standard business hours are fully INCLUDED at no additional charge. Emergency After-Hours support is also included. Major projects (e.g., complete network rebuilds) fall outside standard maintenance and will be quoted separately.";
             }
             document.getElementById('pdf-tier-inc').innerText = inc;
             document.getElementById('pdf-tier-labor').innerText = lab;
+            document.getElementById('pdf-labor-text').innerText = laborText;
 
             // Map Schedule B
             let termObj = {name: "", inc: "", rat: ""};
@@ -623,7 +652,7 @@
             }
         }
 
-        // --- PDF Generation Engine ---
+        // --- PDF Generation Engine (Optimized for Multi-Page without blanks) ---
         function generatePDF() {
             if(!signatureData) {
                 alert("Please return to Step 3 and capture the Client's Signature before executing the MSA.");
@@ -638,12 +667,13 @@
             const element = document.getElementById('pdf-template');
             const companyName = document.getElementById('c-company').value.replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'client';
             
+            // Adjust options to prevent blank pages
             const opt = {
-                margin:       [0.5, 0.5, 0.5, 0.5],
+                margin:       [0.4, 0.4, 0.4, 0.4], // Moderate margins to fit nicely
                 filename:     `Caprock_MSA_${companyName}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] },
+                html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+                pagebreak:    { mode: ['css', 'legacy'] }, // Removed 'avoid-all' which can force huge gaps and blank trailing pages
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
 
