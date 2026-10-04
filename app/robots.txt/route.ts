@@ -1,0 +1,1 @@
+import {origin} from '@/lib/seo';export async function GET(){return new Response('User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /dashboard\nDisallow: /receipt/\nDisallow: /login\nDisallow: /signup\nSitemap: '+origin+'/sitemap.xml\n',{headers:{'Content-Type':'text/plain'}});}

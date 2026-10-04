@@ -1,0 +1,3 @@
+import {notFound} from 'next/navigation';import Checkout from '@/components/checkout';import {getPublicProduct} from '@/lib/server';import {seo} from '@/lib/seo';
+export async function generateMetadata({params}:{params:Promise<{handle:string;id:string}>}){const {handle,id}=await params;const d=await getPublicProduct(id);return seo(d?`${d.product.title} by ${d.store.name} | Folio`:'Product | Folio',d?.product.description.slice(0,155)||'Explore a creator offer.',`/s/${handle}/p/${id}`,!!d?.store.demo);}
+export default async function Page({params}:{params:Promise<{handle:string;id:string}>}){const {handle,id}=await params;const d=await getPublicProduct(id);if(!d||d.store.handle!==handle)notFound();return <Checkout {...d}/>}

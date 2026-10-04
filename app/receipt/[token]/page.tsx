@@ -1,0 +1,1 @@
+import Receipt from '@/components/receipt';import {seo} from '@/lib/seo';export const metadata=seo('Your product access | Folio','View your order, download your file, access your course or see booking details.','/receipt',true);export default async function Page({params}:{params:Promise<{token:string}>}){const {token}=await params;return <Receipt token={token}/>}

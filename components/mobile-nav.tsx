@@ -1,0 +1,3 @@
+'use client';
+import Link from 'next/link';import {Menu} from 'lucide-react';import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuItem} from '@/components/ui/dropdown-menu';
+export default function MobileNav(){return <DropdownMenu><DropdownMenuTrigger asChild><button className="mobile-nav" aria-label="Open navigation" style={{border:0,background:'transparent',color:'inherit',padding:7}}><Menu size={23}/></button></DropdownMenuTrigger><DropdownMenuContent align="end">{[['Features','/#features'],['Our mission','/about'],['Resources','/learn'],['Compare','/compare'],['Log in','/login']].map(([label,path])=><DropdownMenuItem asChild key={path}><Link href={path}>{label}</Link></DropdownMenuItem>)}</DropdownMenuContent></DropdownMenu>}

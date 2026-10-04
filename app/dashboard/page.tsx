@@ -1,0 +1,1 @@
+import Dashboard from '@/components/dashboard';import {seo} from '@/lib/seo';export const metadata=seo('Your creator studio | Folio','Manage your products, customize your creator store and view customer orders.','/dashboard',true);export default function Page(){return <Dashboard/>}

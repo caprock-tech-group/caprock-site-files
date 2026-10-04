@@ -1,0 +1,2 @@
+export async function api(path:string,body?:unknown,method?:string){const r=await fetch('/api/'+path,{method:method||(body?'POST':'GET'),headers:body instanceof FormData?{}:{'Content-Type':'application/json'},body:body instanceof FormData?body:body?JSON.stringify(body):undefined});const v:any=await r.json();if(!r.ok)throw new Error(v.error||'Something went wrong. Try again.');return v;}
+export async function upload(file:File,kind='product'){const data=new FormData();data.append('file',file);data.append('kind',kind);return api('upload',data);}

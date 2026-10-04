@@ -1,0 +1,1 @@
+import Auth from '@/components/auth';import {seo} from '@/lib/seo';export const metadata=seo('Create your creator store | Folio','Sign up for Folio and create a storefront for downloads, online courses and bookings. Start with no card required.','/signup',true);export default function Page(){return <Auth mode="signup"/>}

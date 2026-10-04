@@ -1,0 +1,1 @@
+import Auth from '@/components/auth';import {seo} from '@/lib/seo';export const metadata=seo('Log in to your creator studio | Folio','Sign in to manage your Folio products, storefront and customer orders.','/login',true);export default function Page(){return <Auth mode="login"/>}
