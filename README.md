@@ -5,17 +5,24 @@ private delivery links, creator accounts, and eight researched comparison pages.
 
 ## Netlify deployment
 
-- Next.js App Router with Netlify's automatic Next.js runtime.
-- PostgreSQL via `@netlify/database`. Schema migrations are in
-  `netlify/database/migrations/` and apply during deployment.
-- Netlify Blobs for uploads. Production files persist across deployments;
-  preview files use deploy-scoped storage.
-- A fresh pilot database, independent of the earlier Sites deployment.
-- Uploads are limited to 4 MB to fit the synchronous server request budget.
+- Next.js App Router, packaged with an explicit `@netlify/plugin-nextjs` build plugin.
+- Netlify serves the UI and same-origin server API routes.
+- A separate private Worker API provides isolated SQLite (D1) records and R2 uploads.
+  Its source is in the dedicated backend source repository; no data is shared with
+  the earlier Folio Site.
+- The API service credential is stored only in Netlify's encrypted server environment variable
+  `FOLIO_BACKEND_TOKEN` (the Free plan requires all scopes and contexts). Never put it in browser code or Git.
+- Browser sessions remain HttpOnly cookies on the Netlify domain. User ownership and
+  purchased-content authorization are enforced by the backend. Mutation origins are
+  checked against the configured public pilot URL by both server layers.
+- Uploads are limited to 4 MB to fit Netlify's synchronous request budget.
+- Netlify Database requires a credit-based team plan; the pilot avoids changing the
+  existing team's billing. The unused PostgreSQL migration is archived for a future
+  database migration. No relational state is stored in object-storage blobs.
 
-Run `npm ci`, `npm test`, and `npm run build`. Use `npx netlify dev` for local
-platform emulation. The test suite uses actual PostgreSQL-compatible PGlite
-queries and a local file-store substitute; live uploads must also be checked.
+Run `npm ci`, `npm run typecheck`, `npm test`, and `npm run build`.
+Run `node tests/live-flow.mjs` only against the designated pilot: it creates test
+accounts, files, products and orders, then unpublishes the test storefronts.
 
 ## Try the flow
 
@@ -28,8 +35,8 @@ with a calendar file. Demo previews are marked separately from sales.
 
 Free checkout works without credentials. Paid checkout requires a Stripe Connect
 platform account, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, connected-account
-webhooks at `/api/webhook`, and creator onboarding. These secrets must be stored
-in Netlify environment settings and never in source control. No test or live
+webhooks at `/api/webhook`, and creator onboarding. These Stripe secrets must be stored
+in the private backend environment settings and never in source control. No test or live
 Stripe credentials are configured by this migration. There is no fake payment
 success. Tax, refund/dispute operations, subscriptions, and receipt email are not
 configured. Accounts retain the existing salted password and hashed-session

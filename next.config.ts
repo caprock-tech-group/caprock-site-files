@@ -1,5 +1,3 @@
 import type { NextConfig } from 'next';
-const config: NextConfig = {
-  serverExternalPackages: ['@netlify/database', '@netlify/blobs', 'pg'],
-};
+const config: NextConfig = {};
 export default config;
